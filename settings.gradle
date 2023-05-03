@@ -10,7 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        //Aggiunta per grafici
+        maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "AppWidget"
+rootProject.name = "MiaProvaWidget"
 include ':app'

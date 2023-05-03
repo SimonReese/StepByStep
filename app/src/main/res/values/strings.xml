@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MiaProvaWidget</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+
+    <string-array name="unità">
+        <item>km/h</item>
+        <item>m/s</item>
+        <item>Mph</item>
+        <item>boh</item>
+    </string-array>
+</resources>
