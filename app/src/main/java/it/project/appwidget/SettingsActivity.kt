@@ -2,6 +2,7 @@ package it.project.appwidget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -13,6 +14,9 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 
 class SettingsActivity:AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
@@ -51,7 +55,6 @@ class SettingsActivity:AppCompatActivity() {
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION),
                 MY_PERMISSIONS_REQUEST_LOCATION)
         }
-
 
     }
 }

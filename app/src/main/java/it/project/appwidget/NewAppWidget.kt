@@ -8,9 +8,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat.stopForeground
+import androidx.core.content.ContextCompat.startForegroundService
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 
 class NewAppWidget : AppWidgetProvider() {
 
@@ -28,43 +34,30 @@ class NewAppWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.small_view_layout)
             //Imposto intent al click
             views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
-
-            // Avvia WorkManager per ricevere gli aggiornamenti sulla posizione
-            // Serve workaround perchè questo causa la continua chiamata di OnUpdate() che rende il layout small_view_layout a ogni sua chiamata
-            val request: OneTimeWorkRequest = OneTimeWorkRequest.Builder(LocationWorker::class.java).addTag("LOCATION_WORKER_TAG").build()
-            WorkManager.getInstance(context).enqueue(request)
-
-            //Aggiorno le RemoteViews associate al widget
+            //Worker
+            scheduleLocationUpdates(context)
             appWidgetManager.updateAppWidget(appWidgetId, views)
-
-
-
         }
     }
 
+    private fun scheduleLocationUpdates(context: Context) {
+
+        val locationWorkRequest = PeriodicWorkRequestBuilder<LocationWorker>(15, TimeUnit.MINUTES)
+            .build()
+        WorkManager.getInstance(context).enqueue(locationWorkRequest)
+    }
+
+
+
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-
-        //Workaround che tuttavia attiva il work una sola volta rendendolo quindi inutile
-        /*
-        val alwaysPendingWork = OneTimeWorkRequestBuilder<LocationWorker>()
-            .setInitialDelay(5000L, TimeUnit.DAYS)
-            .build()
-
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            "always_pending_work",
-            ExistingWorkPolicy.KEEP,
-            alwaysPendingWork
-        )
-
-         */
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
         //Controllo se il bottone è stato premuto
-        if(intent.action == ACTION_BTN_SETTINGS ){
+        if (intent.action == ACTION_BTN_SETTINGS) {
             Log.d("OnReceive", "Bottone impostazioni premuto")
             // Creo intent per lanciare SettingsActivity
             val settingsIntent = Intent(context, SettingsActivity::class.java)
@@ -78,7 +71,7 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray?) {
         super.onDeleted(context, appWidgetIds)
         //Cancella work
-        WorkManager.getInstance(context).cancelAllWorkByTag("LOCATION_WORKER_TAG")
+        WorkManager.getInstance(context).cancelAllWork()
         Log.d("onDeleted", "Widget eliminato")
     }
 
@@ -114,7 +107,3 @@ private fun getPendingSelfIntent(context: Context, action: String): PendingInten
         NewAppWidget.REQUEST_CODE_BTN_SETTINGS, intent, PendingIntent.FLAG_IMMUTABLE)
 }
 
-private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle)
-{
-
-}
