@@ -4,10 +4,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
-import kotlin.random.Random
 
 class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
@@ -17,14 +16,22 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
     var mTextPos: Int
         get() = mTextPos
 
+    var valueArray: IntArray = intArrayOf(10, 20, 70, 30, 60, 40, 50)
+        set(newArray) {
+            if (newArray.size != this.valueArray.size)
+                return
+            field = newArray
+            invalidate()
+            requestLayout()
+        }
 
-    private var center_width: Float
-    private var center_height: Float
-    private val paint: Paint
-    private var centered_square: RectF
+    private val barPaint: Paint
+    private val textPaint: Paint
 
     init {
+        //Leggo gli attributi definiti per la classe dal file strings.xml
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.PieChart, 0, 0)
+
 
         typedArray.apply {
             try {
@@ -36,46 +43,68 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             }
         }
 
-        //Start drawing
-        paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.apply {
+        //Impostazioni oggetto paint
+        barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        barPaint.apply {
             color = Color.CYAN
         }
 
-        center_width = 0F
-        center_height = 0F
-        centered_square = RectF()
+        textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        textPaint.apply {
+            color = Color.RED
+            textAlign = Paint.Align.LEFT
+            textSize = 60f
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-
-        //Calculate center of view
-        center_width = w.toFloat() / 2
-        center_height = h.toFloat() / 2
-
-        centered_square.apply {
-            left = center_width - 500
-            right = center_width + 500
-            top = center_height - 500
-            bottom = center_height + 500
-        }
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        //canvas?.drawOval(centered_square, paint)
+        val lowerMargin = 200f
+        val upperMargin = 400f
 
-        var numbars = 5
+        //Numero di barre
+        var numbars = valueArray.size
+        //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
         var space = width / numbars
+        //Distanza del centro della barra dall'inizio dello spazio
         var relative_center = space / 2
 
-        for (i in 0..4){
-            var abs_center = relative_center + (i * space)
+        // Bordo inferiore con margine
+        val bottom = height - lowerMargin
+
+        //Cerco l'elemento più grande
+        val maxValue: Float = valueArray.max().toFloat()
+
+        // 623.0, 723.0, 6159, 5873
+        //$top, $bottom, $right, $left
+        //canvas?.drawRect(0 + 20F, 0 + 20F, width -20F, height -20F, paint)
+
+        //return
+
+        //Per ogni barra
+        for ((position, value) in valueArray.withIndex()){
+            //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
+            var abs_center = relative_center + (position * space)
+            //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
             var left = abs_center - space/4
+            //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
             var right = abs_center + space/4
-            var top = 600F + Random.nextInt(8) * 100
-            canvas?.drawRect(left.toFloat(), top, right.toFloat(), height.toFloat()-200F, paint)
+
+            //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
+            val scale: Float = value / maxValue
+
+            // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
+            var top = bottom - (height - upperMargin)*scale
+
+            Log.d("Canvas", "$position: $top, $bottom, $right, $left")
+            //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
+            canvas?.drawRect(left.toFloat(), top, right.toFloat(), bottom, barPaint)
+            canvas?.drawText(value.toString(), left.toFloat(), top, textPaint)
+            canvas?.drawText(position.toString(), left.toFloat(), bottom + 50, textPaint)
         }
 
     }
