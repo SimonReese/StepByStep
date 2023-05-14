@@ -20,18 +20,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppWidget"
         tools:targetApi="31">
+        <activity
+            android:name=".ServiceMonitorActivity"
+            android:exported="false" />
         <!-- TODO: è necessario impostare il targetAPI? -->
-
         <service
             android:name=".LocationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location"/>
+            android:foregroundServiceType="location" />
 
         <activity
             android:name=".GraphActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -41,7 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
@@ -58,7 +58,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
         </receiver>
-        
     </application>
 
 </manifest>
