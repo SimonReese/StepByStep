@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!--TODO: Probabilemente il permesso ACCESS_BACKGROUND_LOCATION non serve, ma bisogna testare-->
 
     <application
         android:allowBackup="true"
@@ -20,7 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppWidget"
-        tools:targetApi="31"> <!--TODO: è necessario impostare il targetAPI?-->
+        tools:targetApi="31">
+        <!-- TODO: è necessario impostare il targetAPI? -->
+
+        <service
+            android:name=".LocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location"/>
 
         <activity
             android:name=".GraphActivity"
@@ -38,7 +44,7 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name=".NewAppWidget"
@@ -52,7 +58,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
         </receiver>
-
+        
     </application>
 
 </manifest>
