@@ -1,7 +1,6 @@
 package it.project.appwidget
 
 import android.Manifest
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -38,13 +37,27 @@ class LocationService : Service() {
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
     private val minLocationUpdateIntervalMs: Long = 0
-    private val minLocationUpdateDistanceM: Float = 0F
+    /* Chiedere la posizione a distanza troppo piccola può portare ad errori sul calcolo della distanza
+    * totale finale (vedi anche https://stackoverflow.com/questions/60978504/android-how-to-calculate-distance-traveled).
+    * Conviene quindi aumentare la distanza minima richiesta tra due location affinchè la nuova location
+    * venga inviata al listener
+    */
+    private val minLocationUpdateDistanceM: Float = 10F
+
+    // Salvataggio locations
+    private lateinit var locationList: ArrayList<Location>
+    private var sumDistance: Float = 0F
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, velocità: ${location.speed}")
-
+            if (locationList.size > 0){
+                sumDistance += location.distanceTo(locationList[locationList.size -1])
+                Log.d("LocationService", "Accuracy:${location.accuracy}, dist: ${location.distanceTo(locationList[locationList.size -1])}")
+            }
+            // Salvo location
+            locationList.add(location)
             // Controllo che la notifica sia già impostata
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
                 // Aggiorno valori sulla notifica
@@ -61,6 +74,8 @@ class LocationService : Service() {
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         locationListener = CustomLocationListener()
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        // Lista locations
+        locationList = arrayListOf()
 
         // Creo canale per le notifiche
         val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_DESCRIPTION, NotificationManager.IMPORTANCE_DEFAULT)
@@ -111,6 +126,8 @@ class LocationService : Service() {
         locationManager.removeUpdates(locationListener)
         // Rimuovo notifica
         stopForeground(STOP_FOREGROUND_REMOVE)
+        Log.d("LocationSerivce", "Valori salvati:\n${locationList}")
+        Log.d("LocationSerivce", "Distanza percorsa:\n${sumDistance}")
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
     }
 
