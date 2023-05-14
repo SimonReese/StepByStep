@@ -11,13 +11,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Bottoni per aprire le activity graph e service monitor
         val graphButton: Button = findViewById(R.id.graphButton)
+        val serviceMonitorButton: Button = findViewById(R.id.serviceMonitorButton)
 
-        graphButton.setOnClickListener{clickedButton: View ->
-            clickedButton as Button //Cast a Button
-            //Creo intent per aprire activity grafico
-            val intent = Intent(clickedButton.context, GraphActivity::class.java)
-            startActivity(intent) //Lancio nuova activity
+        // Imposto listener per lanciare intent e aprire activity graph
+        graphButton.setOnClickListener{ clickedButton: View ->
+            // Creo intent e lancio activity
+            val intent = Intent(this, GraphActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Imposto listener per lanciare intent e aprire service monitor activity
+        serviceMonitorButton.setOnClickListener{ clickedButton: View ->
+            // Creo intent e lancio activity
+            val intent = Intent(this, ServiceMonitorActivity::class.java)
+            startActivity(intent)
         }
     }
 }
