@@ -20,7 +20,7 @@
         android:id="@+id/startServiceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Avvia serivzio"
+        android:text="Avvia servizio"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/stopServiceButton"
         app:layout_constraintStart_toStartOf="parent"
