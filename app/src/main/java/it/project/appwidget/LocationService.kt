@@ -5,6 +5,8 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -12,6 +14,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.IBinder
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 
 /**
@@ -44,6 +47,9 @@ class LocationService : Service() {
     private inner class CustomLocationListener: LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, velocità: ${location.speed}")
+
+            // Aggiorno il testo del widget
+            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude)
 
             // Controllo che la notifica sia già impostata
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
@@ -113,6 +119,5 @@ class LocationService : Service() {
         stopForeground(STOP_FOREGROUND_REMOVE)
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
     }
-
 
 }
