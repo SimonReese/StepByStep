@@ -37,7 +37,7 @@ class LocationService : Service() {
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
     private val minLocationUpdateIntervalMs: Long = 0
-    private val minLocationUpdateDistanceM: Float = 0F
+    private val minLocationUpdateDistanceM: Float = 10F
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
