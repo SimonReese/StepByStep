@@ -1,7 +1,10 @@
 package it.project.appwidget
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +16,18 @@ class ServiceMonitorActivity : AppCompatActivity() {
 
     // Variabile per gestione dei permessi
     private var hasPermissions: Boolean = false //TODO: riprogettare la gestione dei permessi
+
+    private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
+
+    // Classe per ricezione broadcast messages
+    private inner class LocationBroadcastReceiver(val textView: TextView): BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val speed = intent?.getFloatExtra("speed", 0f)
+            textView.text = speed.toString()
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service_monitor)
@@ -20,6 +35,10 @@ class ServiceMonitorActivity : AppCompatActivity() {
         val statusTextView: TextView = findViewById(R.id.serviceStatusTextView)
         val startServiceButton: Button = findViewById(R.id.startServiceButton)
         val stopServiceButton: Button = findViewById(R.id.stopServiceButton)
+
+        // Registro receiver
+        locationBroadcastReceiver = LocationBroadcastReceiver(statusTextView)
+        registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
 
         // Controllo permessi
         hasPermissions = true // Devo supporla vera, perchè non è detto che onRequestPermissionsResult() sia stato chiamato
@@ -62,6 +81,11 @@ class ServiceMonitorActivity : AppCompatActivity() {
             stopService(serviceIntent)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(locationBroadcastReceiver)
     }
 
     override fun onRequestPermissionsResult(

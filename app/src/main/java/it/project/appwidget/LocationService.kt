@@ -1,12 +1,9 @@
 package it.project.appwidget
 
 import android.Manifest
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -14,7 +11,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.IBinder
 import android.util.Log
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 
 /**
@@ -58,6 +54,11 @@ class LocationService : Service() {
                 // Visualizzo aggiornamenti notifica
                 notificationManager.notify(SERVICE_NOTIFICATION_ID, notificationBuilder.build())
             }
+
+            // Invio broadcast
+            val intent = Intent("location-update")
+            intent.putExtra("speed", location.speed)
+            sendBroadcast(intent)
         }
     }
 
