@@ -13,6 +13,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import java.text.DecimalFormat
 
 class ServiceMonitorActivity : AppCompatActivity() {
 
@@ -42,9 +43,9 @@ class ServiceMonitorActivity : AppCompatActivity() {
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
             val distloc = intent?.getFloatExtra("distanza", 0f)
-            speed.text = speedloc.toString()
-            accuracy.text = accloc.toString()
-            distance.text = distloc.toString()
+            speed.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
+            accuracy.text = accloc.toString() + "m"
+            distance.text = distloc.toString() + "m"
         }
 
     }
