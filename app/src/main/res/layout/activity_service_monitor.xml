@@ -95,7 +95,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Distanza minima accuratezza"
+        android:text="Accuratezza minima richiesta"
         app:layout_constraintBottom_toTopOf="@+id/accuracyRow"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -130,7 +130,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Distanza somma posizioni"
+        android:text="Distanza minima per somma posizioni"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accuracyRow" />
 
