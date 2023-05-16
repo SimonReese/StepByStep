@@ -46,6 +46,9 @@ class LocationService : Service() {
         override fun onLocationChanged(location: Location) {
             Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, velocità: ${location.speed}")
 
+            // Aggiorno il testo del widget
+            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude)
+
             // Filtro locations inaccurate
             if (location.accuracy >= 20f){
                 return
@@ -61,8 +64,6 @@ class LocationService : Service() {
                 lastRelevantLocation = location
             }
 
-            // Aggiorno il testo del widget
-            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude)
 
             // Controllo che la notifica sia già impostata
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){

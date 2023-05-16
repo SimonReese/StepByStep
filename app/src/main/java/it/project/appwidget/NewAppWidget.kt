@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.work.OneTimeWorkRequestBuilder
@@ -20,8 +21,12 @@ class NewAppWidget : AppWidgetProvider() {
 
     companion object {
         const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS"
+        const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE"
         const val REQUEST_CODE_BTN_SETTINGS = 1
     }
+
+    private lateinit var sharedPrefsHelper: SharedPrefsHelper
+
 
     //Salva il testo di "tv_distance"
     private fun saveTvDistanceText(context: Context, appWidgetId: Int, text: String) {
@@ -42,12 +47,14 @@ class NewAppWidget : AppWidgetProvider() {
         //Ciclo tutti i widget
         for (appWidgetId in appWidgetIds) {
             //Ottengo le views
-            val views = RemoteViews(context.packageName, R.layout.small_view_layout)
+            val views = getWidgetSize(context, appWidgetId)
             //Imposto intent al click
             views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
             // Carica il testo salvato e impostalo sul TextView
             val savedText = loadTvDistanceText(context, appWidgetId)
             views.setTextViewText(R.id.tv_distance, savedText)
+            //Imposto elementi layout in base a quanto indicato nelle preferences
+            setNewViewVisibility(context,views)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
@@ -65,15 +72,27 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        //Controllo se il bottone è stato premuto
+        // Controllo se il bottone apri impostazioni è stato premuto
         if (intent.action == ACTION_BTN_SETTINGS) {
             Log.d("OnReceive", "Bottone impostazioni premuto")
             // Creo intent per lanciare SettingsActivity
             val settingsIntent = Intent(context, SettingsActivity::class.java)
-            // Imposto flag per creare l'activity in una nuova task (questa flag potrebbe non funzionare correttamente, vedi https://stackoverflow.com/questions/9772927/flag-activity-new-task-clarification-needed)
+            // Imposto flag per creare l'activity in una nuova task
             settingsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             // Lancio intent
             context.startActivity(settingsIntent)
+        }
+
+        // Controllo se il bottone save nelle impostazioni è stato premuto (oppure premuto back da SettingsActivity)
+        if (intent.action == ACTION_BTN_SAVE) {
+            Log.d("onReceive", ACTION_BTN_SAVE)
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            for (appWidgetId in appWidgetIds) {
+                val views = getWidgetSize(context, appWidgetId)
+                setNewViewVisibility(context, views)
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
         }
     }
 
@@ -85,15 +104,17 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
-
         val views = getWidgetSize(context, appWidgetId)
-
         // Carica il testo salvato e impostalo sul TextView
         val savedText = loadTvDistanceText(context, appWidgetId)
         views.setTextViewText(R.id.tv_distance, savedText)
 
+        //Aggiorno impostazioni
+        setNewViewVisibility(context,views)
+
         // Imposto Listener sul bottone
         views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
+
 
         // Aggiorno widget
         appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -114,6 +135,22 @@ class NewAppWidget : AppWidgetProvider() {
             // Salva il testo aggiornato
             saveTvDistanceText(context, appWidgetId, updatedText)
         }
+    }
+
+    private fun setNewViewVisibility(context: Context, views: RemoteViews)
+    {
+
+        sharedPrefsHelper = SharedPrefsHelper(context)
+        val isSpeedChecked = sharedPrefsHelper.isSpeedChecked()
+        val isDistanceChecked = sharedPrefsHelper.isDistanceChecked()
+        val isCaloriesChecked = sharedPrefsHelper.isCaloriesChecked()
+
+        // Aggiorna la visibilità dei campi nel layout del widget in base allo stato dei checkbox
+        views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_distance, if (isDistanceChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
+        // Imposto Listener sul bottone
+        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
     }
 
 
