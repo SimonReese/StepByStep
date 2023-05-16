@@ -8,12 +8,28 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 
 class ServiceMonitorActivity : AppCompatActivity() {
+
+    // Variabili views per salvataggio stato
+    // Informazioni posizione
+    private lateinit var statusTextView: TextView
+    private lateinit var accuracyTextView: TextView
+    private lateinit var distanceTextView: TextView
+
+    // DEBUG - parametri servizio
+    private lateinit var minDistSeekBar: SeekBar
+    private lateinit var minAccSeekBar: SeekBar
+    private lateinit var minSumSeekBar: SeekBar
+
+    private lateinit var minDistTextView: TextView
+    private lateinit var minAccTextView: TextView
+    private lateinit var minSumTextView: TextView
 
     // Variabile per gestione dei permessi
     private var hasPermissions: Boolean = false //TODO: riprogettare la gestione dei permessi
@@ -37,9 +53,9 @@ class ServiceMonitorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service_monitor)
 
-        val statusTextView: TextView = findViewById(R.id.serviceStatusTextView)
-        val accuracyTextView: TextView = findViewById(R.id.accuracyTextView)
-        val distanceTextView: TextView = findViewById(R.id.distanceTextView)
+        statusTextView = findViewById(R.id.serviceStatusTextView)
+        accuracyTextView = findViewById(R.id.accuracyTextView)
+        distanceTextView = findViewById(R.id.distanceTextView)
         val startServiceButton: Button = findViewById(R.id.startServiceButton)
         val stopServiceButton: Button = findViewById(R.id.stopServiceButton)
 
@@ -47,19 +63,18 @@ class ServiceMonitorActivity : AppCompatActivity() {
         val serviceIntent = Intent(this, LocationService::class.java)
 
         // VIEW DI DEBUG -------------------------------------------------------
-        val minDistSeekBar: SeekBar = findViewById(R.id.minDistSeekBar)
-        val minDistTextView: TextView = findViewById(R.id.minDistTextView)
+        minDistSeekBar = findViewById(R.id.minDistSeekBar)
+        minDistTextView = findViewById(R.id.minDistTextView)
         var minDistance: Float = (minDistSeekBar.progress * 10).toFloat()
         minDistTextView.text = minDistance.toString() + "m"
 
-
-        val minAccSeekBar: SeekBar = findViewById(R.id.minAccSeekBar)
-        val minAccTextView: TextView = findViewById(R.id.minAccTextView)
+        minAccSeekBar = findViewById(R.id.minAccSeekBar)
+        minAccTextView = findViewById(R.id.minAccTextView)
         var minAccuracy : Float = (minAccSeekBar.progress * 10).toFloat()
         minAccTextView.text = minAccuracy.toString() + "m"
 
-        val minSumSeekBar: SeekBar = findViewById(R.id.minSumSeekBar)
-        val minSumTextView: TextView = findViewById(R.id.minSumTextView)
+        minSumSeekBar = findViewById(R.id.minSumSeekBar)
+        minSumTextView = findViewById(R.id.minSumTextView)
         var minSum : Float = (minSumSeekBar.progress * 10).toFloat()
         minSumTextView.text = minSum.toString() + "m"
 
@@ -119,6 +134,7 @@ class ServiceMonitorActivity : AppCompatActivity() {
 
         // FINE VIEW DEBUG -----------------------------------------------
 
+        restoreState(savedInstanceState)
 
         // Registro receiver
         locationBroadcastReceiver = LocationBroadcastReceiver(statusTextView, accuracyTextView, distanceTextView)
@@ -158,8 +174,6 @@ class ServiceMonitorActivity : AppCompatActivity() {
             serviceIntent.putExtra("minDistance", minDistance)
             serviceIntent.putExtra("minAccuracy", minAccuracy)
             serviceIntent.putExtra("minSum", minSum)
-
-            minDistTextView.text = minDistSeekBar.progress.toString()
             startForegroundService(serviceIntent)
         }
 
@@ -168,6 +182,38 @@ class ServiceMonitorActivity : AppCompatActivity() {
             stopService(serviceIntent)
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        outState.putCharSequence("statusTextView", statusTextView.text)
+        outState.putCharSequence("accuracyTextView", accuracyTextView.text)
+        outState.putCharSequence("distanceTextView", distanceTextView.text)
+
+        outState.putInt("minDistSeekBar", minDistSeekBar.progress)
+        outState.putInt("minAccSeekBar", minAccSeekBar.progress)
+        outState.putInt("minSumSeekBar", minSumSeekBar.progress)
+
+        outState.putCharSequence("minDistTextView", minDistTextView.text)
+        outState.putCharSequence("minAccTextView", minAccTextView.text)
+        outState.putCharSequence("minSumTextView", minSumTextView.text)
+
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
+    private fun restoreState(inState: Bundle?){
+        if (inState == null)
+            return
+        statusTextView.text = inState.getCharSequence("statusTextView")
+        accuracyTextView.text = inState.getCharSequence("accuracyTextView")
+        distanceTextView.text = inState.getCharSequence("distanceTextView")
+
+        minDistSeekBar.progress = inState.getInt("minDistSeekBar")
+        minAccSeekBar.progress = inState.getInt("minAccSeekBar")
+        minSumSeekBar.progress = inState.getInt("minSumSeekBar")
+
+        minDistTextView.text = inState.getCharSequence("minDistTextView")
+        minAccTextView.text = inState.getCharSequence("minAccTextView")
+        minSumTextView.text = inState.getCharSequence("minSumTextView")
     }
 
     override fun onDestroy() {
