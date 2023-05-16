@@ -46,7 +46,9 @@ class LocationService : Service() {
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
         override fun onLocationChanged(location: Location) {
-            Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, velocità: ${location.speed}(+- ${location.speedAccuracyMetersPerSecond})")
+            Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, " +
+                    "velocità: ${location.speed}(+- ${location.speedAccuracyMetersPerSecond}), " +
+                    "accuratezza: ${location.accuracy}")
 
             // Controllo che la notifica sia già impostata
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
