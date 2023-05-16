@@ -185,7 +185,8 @@ class ServiceMonitorActivity : AppCompatActivity() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("ServiceMonitorActivity","Chiamato onSavedInstanceState")
         outState.putCharSequence("statusTextView", statusTextView.text)
         outState.putCharSequence("accuracyTextView", accuracyTextView.text)
         outState.putCharSequence("distanceTextView", distanceTextView.text)
@@ -198,12 +199,13 @@ class ServiceMonitorActivity : AppCompatActivity() {
         outState.putCharSequence("minAccTextView", minAccTextView.text)
         outState.putCharSequence("minSumTextView", minSumTextView.text)
 
-        super.onSaveInstanceState(outState, outPersistentState)
+        super.onSaveInstanceState(outState)
     }
 
     private fun restoreState(inState: Bundle?){
         if (inState == null)
             return
+        Log.d("ServiceMonitorActivity","Restore stato activity")
         statusTextView.text = inState.getCharSequence("statusTextView")
         accuracyTextView.text = inState.getCharSequence("accuracyTextView")
         distanceTextView.text = inState.getCharSequence("distanceTextView")
