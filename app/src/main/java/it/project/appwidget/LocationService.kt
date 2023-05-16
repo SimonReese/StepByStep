@@ -50,6 +50,8 @@ class LocationService : Service() {
                     "velocità: ${location.speed}(+- ${location.speedAccuracyMetersPerSecond}), " +
                     "accuratezza: ${location.accuracy}")
 
+            //TODO: Revisionare strategie localizzazione https://stuff.mit.edu/afs/sipb/project/android/docs/guide/topics/location/strategies.html
+
             // Controllo che la notifica sia già impostata
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
                 // Aggiorno valori sulla notifica
