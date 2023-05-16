@@ -3,20 +3,18 @@ package it.project.appwidget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat.stopForeground
 import androidx.core.content.ContextCompat.startForegroundService
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
+
 
 class NewAppWidget : AppWidgetProvider() {
 
@@ -24,6 +22,19 @@ class NewAppWidget : AppWidgetProvider() {
         const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS"
         const val REQUEST_CODE_BTN_SETTINGS = 1
     }
+
+    //Salva il testo di "tv_distance"
+    private fun saveTvDistanceText(context: Context, appWidgetId: Int, text: String) {
+        val sharedPreferences = context.getSharedPreferences("NewAppWidget", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("tv_distance_text_$appWidgetId", text).apply()
+    }
+
+    //carica  il testo di "tv_distance"
+    private fun loadTvDistanceText(context: Context, appWidgetId: Int): String {
+        val sharedPreferences = context.getSharedPreferences("NewAppWidget", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("tv_distance_text_$appWidgetId", "Latitudine: 0.0, Longitudine: 0.0") ?: "Latitudine: 0.0, Longitudine: 0.0"
+    }
+
 
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -34,18 +45,16 @@ class NewAppWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.small_view_layout)
             //Imposto intent al click
             views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
-            //Worker
-            scheduleLocationUpdates(context)
+            // Carica il testo salvato e impostalo sul TextView
+            val savedText = loadTvDistanceText(context, appWidgetId)
+            views.setTextViewText(R.id.tv_distance, savedText)
+
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
+
     }
 
-    private fun scheduleLocationUpdates(context: Context) {
 
-        val locationWorkRequest = PeriodicWorkRequestBuilder<LocationWorker>(15, TimeUnit.MINUTES)
-            .build()
-        WorkManager.getInstance(context).enqueue(locationWorkRequest)
-    }
 
 
 
@@ -70,8 +79,6 @@ class NewAppWidget : AppWidgetProvider() {
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray?) {
         super.onDeleted(context, appWidgetIds)
-        //Cancella work
-        WorkManager.getInstance(context).cancelAllWork()
         Log.d("onDeleted", "Widget eliminato")
     }
 
@@ -79,25 +86,38 @@ class NewAppWidget : AppWidgetProvider() {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
 
-        val minWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val minHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+        val views = getWidgetSize(context, appWidgetId)
 
-        val views = when {
-            minWidth <= 255 && minHeight < 130 -> {RemoteViews(context.packageName, R.layout.small_view_layout)}
-
-            (minWidth > 250 && minHeight > 130) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName, R.layout.large_view_layout)}
-
-            else -> {RemoteViews(context.packageName, R.layout.medium_view_layout)}
-        }
+        // Carica il testo salvato e impostalo sul TextView
+        val savedText = loadTvDistanceText(context, appWidgetId)
+        views.setTextViewText(R.id.tv_distance, savedText)
 
         // Imposto Listener sul bottone
-        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context,
-            NewAppWidget.ACTION_BTN_SETTINGS
-        ))
+        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
 
-        //Aggiorno widget
+        // Aggiorno widget
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
+
+
+    fun updateLocationText(context: Context, latitude: Double, longitude: Double) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val thisAppWidgetComponentName = ComponentName(context.packageName, javaClass.name)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName)
+
+        for (appWidgetId in appWidgetIds) {
+            val views = getWidgetSize(context, appWidgetId)
+            val updatedText = "Latitudine: $latitude, Longitudine: $longitude"
+            views.setTextViewText(R.id.tv_distance, updatedText)
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+
+            // Salva il testo aggiornato
+            saveTvDistanceText(context, appWidgetId, updatedText)
+        }
+    }
+
+
+
 }
 
 private fun getPendingSelfIntent(context: Context, action: String): PendingIntent{
@@ -107,3 +127,22 @@ private fun getPendingSelfIntent(context: Context, action: String): PendingInten
         NewAppWidget.REQUEST_CODE_BTN_SETTINGS, intent, PendingIntent.FLAG_IMMUTABLE)
 }
 
+fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
+{
+    val appWidgetManager = AppWidgetManager.getInstance(context)
+    val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
+
+    val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+    val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+
+
+    val views = when {
+        minWidth <= 255 && minHeight < 130 -> {RemoteViews(context.packageName, R.layout.small_view_layout)}
+
+        (minWidth > 250 && minHeight > 130) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName, R.layout.large_view_layout)}
+
+        else -> {RemoteViews(context.packageName, R.layout.medium_view_layout)}
+    }
+
+    return views
+}

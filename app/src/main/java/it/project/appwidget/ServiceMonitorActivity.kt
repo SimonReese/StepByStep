@@ -1,25 +1,56 @@
 package it.project.appwidget
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.TextView
 
 class ServiceMonitorActivity : AppCompatActivity() {
 
     // Variabile per gestione dei permessi
     private var hasPermissions: Boolean = false //TODO: riprogettare la gestione dei permessi
+
+    private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
+
+    // Classe per ricezione broadcast messages
+    private inner class LocationBroadcastReceiver(val speed: TextView, val accuracy: TextView, val distance: TextView): BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val speedloc = intent?.getFloatExtra("speed", 0f)
+            val accloc = intent?.getFloatExtra("accuracy", 0f)
+            val distloc = intent?.getFloatExtra("distanza", 0f)
+            speed.text = speedloc.toString()
+            accuracy.text = accloc.toString()
+            distance.text = distloc.toString()
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service_monitor)
 
         val statusTextView: TextView = findViewById(R.id.serviceStatusTextView)
+        val accuracyTextView: TextView = findViewById(R.id.accuracyTextView)
+        val distanceTextView: TextView = findViewById(R.id.distanceTextView)
         val startServiceButton: Button = findViewById(R.id.startServiceButton)
         val stopServiceButton: Button = findViewById(R.id.stopServiceButton)
+
+        // Debug metri
+        val seekBar: SeekBar = findViewById(R.id.seekBar)
+        val seekSettings: TextView = findViewById(R.id.seekSettings)
+
+
+        // Registro receiver
+        locationBroadcastReceiver = LocationBroadcastReceiver(statusTextView, accuracyTextView, distanceTextView)
+        registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
 
         // Controllo permessi
         hasPermissions = true // Devo supporla vera, perchè non è detto che onRequestPermissionsResult() sia stato chiamato
@@ -54,6 +85,8 @@ class ServiceMonitorActivity : AppCompatActivity() {
 
         // Listener per avviare il servizio
         startServiceButton.setOnClickListener{
+            intent.putExtra("metri", seekBar.progress)
+            seekSettings.text = seekBar.progress.toString()
             startForegroundService(serviceIntent)
         }
 
@@ -62,6 +95,11 @@ class ServiceMonitorActivity : AppCompatActivity() {
             stopService(serviceIntent)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(locationBroadcastReceiver)
     }
 
     override fun onRequestPermissionsResult(

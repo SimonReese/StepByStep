@@ -37,27 +37,33 @@ class LocationService : Service() {
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
     private val minLocationUpdateIntervalMs: Long = 0
-    /* Chiedere la posizione a distanza troppo piccola può portare ad errori sul calcolo della distanza
-    * totale finale (vedi anche https://stackoverflow.com/questions/60978504/android-how-to-calculate-distance-traveled).
-    * Conviene quindi aumentare la distanza minima richiesta tra due location affinchè la nuova location
-    * venga inviata al listener
-    */
-    private val minLocationUpdateDistanceM: Float = 10F
-
-    // Salvataggio locations
-    private lateinit var locationList: ArrayList<Location>
+    private var minLocationUpdateDistanceM: Float = 0F
+    private lateinit var lastRelevantLocation: Location
     private var sumDistance: Float = 0F
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, velocità: ${location.speed}")
-            if (locationList.size > 0){
-                sumDistance += location.distanceTo(locationList[locationList.size -1])
-                Log.d("LocationService", "Accuracy:${location.accuracy}, dist: ${location.distanceTo(locationList[locationList.size -1])}")
+
+            // Filtro locations inaccurate
+            if (location.accuracy >= 20f){
+                return
             }
-            // Salvo location
-            locationList.add(location)
+
+            // Salvo posizione rilevante, se non è mai stata salvata
+            if (!this@LocationService::lastRelevantLocation.isInitialized){
+                lastRelevantLocation = location
+            }
+            // Altrimenti, se la distanza di questa rispetto all'ultima rilevante è maggiore di 100m, aggiorniamo la distanza e aggionrniamo la somma
+            else if (lastRelevantLocation.distanceTo(location) >= 100f){
+                sumDistance += lastRelevantLocation.distanceTo(location)
+                lastRelevantLocation = location
+            }
+
+            // Aggiorno il testo del widget
+            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude)
+
             // Controllo che la notifica sia già impostata
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
                 // Aggiorno valori sulla notifica
@@ -65,6 +71,13 @@ class LocationService : Service() {
                 // Visualizzo aggiornamenti notifica
                 notificationManager.notify(SERVICE_NOTIFICATION_ID, notificationBuilder.build())
             }
+
+            // Invio broadcast
+            val intent = Intent("location-update")
+            intent.putExtra("speed", location.speed)
+            intent.putExtra("accuracy", location.accuracy)
+            intent.putExtra("distanza", sumDistance)
+            sendBroadcast(intent)
         }
     }
 
@@ -74,8 +87,6 @@ class LocationService : Service() {
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         locationListener = CustomLocationListener()
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        // Lista locations
-        locationList = arrayListOf()
 
         // Creo canale per le notifiche
         val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_DESCRIPTION, NotificationManager.IMPORTANCE_DEFAULT)
@@ -102,6 +113,9 @@ class LocationService : Service() {
             throw Error("Permesso non disponibile") //TODO: gestire il caso di assenza dei permessi
         }
 
+        val met = intent?.getIntExtra("metri", 0)
+        minLocationUpdateDistanceM = met!!.toFloat()
+
         // Imposto listener
         locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,
             minLocationUpdateIntervalMs, minLocationUpdateDistanceM, locationListener)
@@ -126,10 +140,8 @@ class LocationService : Service() {
         locationManager.removeUpdates(locationListener)
         // Rimuovo notifica
         stopForeground(STOP_FOREGROUND_REMOVE)
-        Log.d("LocationSerivce", "Valori salvati:\n${locationList}")
-        Log.d("LocationSerivce", "Distanza percorsa:\n${sumDistance}")
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
+        stopSelf()
     }
-
 
 }
