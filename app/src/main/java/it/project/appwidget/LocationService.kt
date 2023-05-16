@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.location.LocationRequest
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -125,8 +126,13 @@ class LocationService : Service() {
         minSum = intent?.getFloatExtra("minSum", 100F)!!
 
         // Imposto listener
-        locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,
-            minLocationUpdateIntervalMs, minLocationUpdateDistanceM, locationListener)
+        //locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,
+            //minLocationUpdateIntervalMs, minLocationUpdateDistanceM, locationListener)
+        val locationRequest:LocationRequest = LocationRequest.Builder(minLocationUpdateIntervalMs).apply {
+            setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
+            setMinUpdateDistanceMeters(minLocationUpdateDistanceM)
+        }.build()
+        locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, locationRequest, mainExecutor, locationListener)
 
         // Invio notifica e avvio del servizio in foreground
         startForeground(SERVICE_NOTIFICATION_ID, notificationBuilder.build())
