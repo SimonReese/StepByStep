@@ -43,9 +43,81 @@ class ServiceMonitorActivity : AppCompatActivity() {
         val startServiceButton: Button = findViewById(R.id.startServiceButton)
         val stopServiceButton: Button = findViewById(R.id.stopServiceButton)
 
-        // Debug metri
-        val seekBar: SeekBar = findViewById(R.id.seekBar)
-        val seekSettings: TextView = findViewById(R.id.seekSettings)
+        // Creo intent per il LocationService
+        val serviceIntent = Intent(this, LocationService::class.java)
+
+        // VIEW DI DEBUG -------------------------------------------------------
+        val minDistSeekBar: SeekBar = findViewById(R.id.minDistSeekBar)
+        val minDistTextView: TextView = findViewById(R.id.minDistTextView)
+        var minDistance: Float = (minDistSeekBar.progress * 10).toFloat()
+        minDistTextView.text = minDistance.toString() + "m"
+
+
+        val minAccSeekBar: SeekBar = findViewById(R.id.minAccSeekBar)
+        val minAccTextView: TextView = findViewById(R.id.minAccTextView)
+        var minAccuracy : Float = (minAccSeekBar.progress * 10).toFloat()
+        minAccTextView.text = minAccuracy.toString() + "m"
+
+        val minSumSeekBar: SeekBar = findViewById(R.id.minSumSeekBar)
+        val minSumTextView: TextView = findViewById(R.id.minSumTextView)
+        var minSum : Float = (minSumSeekBar.progress * 10).toFloat()
+        minSumTextView.text = minSum.toString() + "m"
+
+        // Listener per minDistSeekBar
+        minDistSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                minDistance = (minDistSeekBar.progress * 10).toFloat()
+                minDistTextView.text = minDistance.toString() + "m"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                minDistance = (minDistSeekBar.progress * 10).toFloat()
+                minDistTextView.text = minDistance.toString() + "m"
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                minDistance = (minDistSeekBar.progress * 10).toFloat()
+                minDistTextView.text = minDistance.toString() + "m"
+            }
+        })
+
+        // Listener per minAccSeekBar
+        minAccSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                minAccuracy = (minAccSeekBar.progress * 10).toFloat()
+                minAccTextView.text = minAccuracy.toString() + "m"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                minDistance = (minAccSeekBar.progress * 10).toFloat()
+                minAccTextView.text = minAccuracy.toString() + "m"
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                minDistance = (minAccSeekBar.progress * 10).toFloat()
+                minAccTextView.text = minAccuracy.toString() + "m"
+            }
+        })
+
+        // Listener per minSumSeekBar
+        minSumSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                minSum = (minSumSeekBar.progress * 10).toFloat()
+                minSumTextView.text = minSum.toString() + "m"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                minSum = (minSumSeekBar.progress * 10).toFloat()
+                minSumTextView.text = minSum.toString() + "m"
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                minSum = (minSumSeekBar.progress * 10).toFloat()
+                minSumTextView.text = minSum.toString() + "m"
+            }
+        })
+
+        // FINE VIEW DEBUG -----------------------------------------------
 
 
         // Registro receiver
@@ -80,13 +152,14 @@ class ServiceMonitorActivity : AppCompatActivity() {
             return
         }
 
-        // Creo intent per il servizio
-        val serviceIntent = Intent(this, LocationService::class.java)
-
         // Listener per avviare il servizio
         startServiceButton.setOnClickListener{
-            intent.putExtra("metri", seekBar.progress)
-            seekSettings.text = seekBar.progress.toString()
+            // PARAMETRI DI DEBUG
+            serviceIntent.putExtra("minDistance", minDistance)
+            serviceIntent.putExtra("minAccuracy", minAccuracy)
+            serviceIntent.putExtra("minSum", minSum)
+
+            minDistTextView.text = minDistSeekBar.progress.toString()
             startForegroundService(serviceIntent)
         }
 
