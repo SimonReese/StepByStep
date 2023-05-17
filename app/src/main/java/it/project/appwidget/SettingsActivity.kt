@@ -47,6 +47,7 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(this, NewAppWidget::class.java)
             intent.action = NewAppWidget.ACTION_BTN_SAVE
             sendBroadcast(intent)
+            finish()
         }
 
         //Permette di avere inizialmente (prima volta in assoluto che apro l'app) tutti i check a true
@@ -93,15 +94,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        //Salva stato check
         //TODO: togliere codice seguente in modo che dati vengano salvati solo con Save? Oppure togliere bottone Save?
-        sharedPrefsHelper.setSpeedChecked(cbSpeed.isChecked)
-        sharedPrefsHelper.setDistanceChecked(cbDistance.isChecked)
-        sharedPrefsHelper.setCaloriesChecked(cbCalories.isChecked)
-        //LANCIA INTENT
-        val intent = Intent(this, NewAppWidget::class.java)
-        intent.action = NewAppWidget.ACTION_BTN_SAVE
-        sendBroadcast(intent)
     }
 
 }

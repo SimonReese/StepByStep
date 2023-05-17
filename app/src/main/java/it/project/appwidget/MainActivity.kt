@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,5 +29,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ServiceMonitorActivity::class.java)
             startActivity(intent)
         }
+    }
+
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+        finish()
     }
 }

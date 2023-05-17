@@ -1,6 +1,7 @@
 package it.project.appwidget
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -33,6 +34,9 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.PieChart, 0, 0)
 
 
+        val nightModeFlags = getContext().resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+
         typedArray.apply {
             try {
                 mShowText = this.getBoolean(R.styleable.PieChart_showText, false)
@@ -43,6 +47,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             }
         }
 
+
         //Impostazioni oggetto paint
         barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         barPaint.apply {
@@ -51,7 +56,11 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
         textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         textPaint.apply {
-            color = Color.RED
+            when (nightModeFlags) {
+                Configuration.UI_MODE_NIGHT_YES -> color = Color.WHITE
+                Configuration.UI_MODE_NIGHT_NO -> color =Color.BLACK
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> color = Color.BLACK
+            }
             textAlign = Paint.Align.LEFT
             textSize = 60f
         }
