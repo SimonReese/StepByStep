@@ -45,7 +45,9 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".DetailActivity"
+            android:exported="false" />
         <receiver
             android:name=".NewAppWidget"
             android:exported="false">

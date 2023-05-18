@@ -43,6 +43,8 @@ class LocationService : Service() {
     private var minSum: Float = 100F
     private lateinit var lastRelevantLocation: Location
     private var sumDistance: Float = 0F
+    //Calcola tempo totale sessione
+    private lateinit var firstRelevantLocation: Location
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
@@ -72,6 +74,7 @@ class LocationService : Service() {
             // Salvo posizione rilevante, se non è mai stata salvata
             if (!this@LocationService::lastRelevantLocation.isInitialized){
                 lastRelevantLocation = location
+                firstRelevantLocation = location
             }
             // Altrimenti, se la distanza di questa rispetto all'ultima rilevante è maggiore di 100m, aggiorniamo la distanza e aggionrniamo la somma
             else if (lastRelevantLocation.distanceTo(location) >= minSum){
@@ -86,6 +89,56 @@ class LocationService : Service() {
             intent.putExtra("accuracy", location.accuracy)
             intent.putExtra("distanza", sumDistance)
             sendBroadcast(intent)
+
+            Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")
+            Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - lastRelevantLocation.time}\"")
+
+
+            //TODO: rivedere i valori degli if e else if che definiscono reset e salvataggio attività
+            //Controllo se non ho iniziato una sessione ovvero se non ho camminato per almeno 100 metri negli ultimi 10 minuti
+            if(sumDistance <= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 600000)
+            {
+                // Resetto i valori per creare una nuova sessione
+                Log.d("onLocationChanged","Sessione resettata")
+
+                sumDistance = 0F
+                lastRelevantLocation = location
+            }
+            // Controllo se la sessione deve essere salvata: devo aver fatto più di 100 metri e l'ultima location
+            // rilevante è stata aggiornata l'ultima volta più di xxxx fa (in questo caso 12 secondi per il testing)
+            else if (sumDistance >= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 12000) {
+                val endTime = System.currentTimeMillis()
+                var duration = endTime - firstRelevantLocation.time
+
+
+                // Calcolo i valori mancanti utilizzando SessionDataProcessor
+                val activityType = SessionDataProcessor.calculateActivityType(sumDistance, duration)
+                val averageSpeed = SessionDataProcessor.calculateAverageSpeed(sumDistance, duration)
+                val maxSpeed = SessionDataProcessor.calculateMaxSpeed(location.speed)
+
+                Log.d("onLocationChanged","Salvataggio sessione nel database")
+                // Creo una nuova sessione con i dati calcolati
+                val trackSession = TrackSession(
+                    startTime = firstRelevantLocation.time,
+                    endTime = endTime,
+                    duration = duration,
+                    distance = sumDistance.toDouble(),
+                    averageSpeed = averageSpeed,
+                    maxSpeed = maxSpeed,
+                    activityType = activityType
+                )
+
+                // Salvo la sessione nel database utilizzando trackSessionDao
+                val trackSessionDao = AppDatabase.getInstance(this@LocationService).trackSessionDao()
+                trackSessionDao.insertSession(trackSession)
+                Log.d("onLocationChanged","Sessione salvata nel database")
+
+                // Resetto i valori per creare una nuova sessione
+                sumDistance = 0F
+                lastRelevantLocation = location
+                firstRelevantLocation = location
+            }
+
         }
     }
 
