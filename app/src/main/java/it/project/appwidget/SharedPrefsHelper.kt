@@ -47,5 +47,25 @@ class SharedPrefsHelper(context: Context) {
         editor.putBoolean("calories", isChecked)
         editor.apply()
     }
+
+    fun isSessionDistanceChecked(): Boolean {
+        return sharedPreferences.getBoolean("sessionDistance", true)
+    }
+
+    fun setSessionDistanceChecked(isChecked: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("sessionDistance", isChecked)
+        editor.apply()
+    }
+
+    fun isTimeChecked(): Boolean {
+        return sharedPreferences.getBoolean("time", true)
+    }
+
+    fun setTimeChecked(isChecked: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("time", isChecked)
+        editor.apply()
+    }
 }
 

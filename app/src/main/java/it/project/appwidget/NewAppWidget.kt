@@ -105,9 +105,11 @@ class NewAppWidget : AppWidgetProvider() {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
         val views = getWidgetSize(context, appWidgetId)
+
         // Carica il testo salvato e impostalo sul TextView
-        val savedText = loadTvDistanceText(context, appWidgetId)
-        views.setTextViewText(R.id.tv_distance, savedText)
+        val savedDistance = loadTvDistanceText(context, appWidgetId)
+        views.setTextViewText(R.id.tv_distance, savedDistance)
+        //TODO: fare la stessa cosa con tv_sumDistance e tv_tempo_trascorso
 
         //Aggiorno impostazioni
         setNewViewVisibility(context,views)
@@ -121,7 +123,7 @@ class NewAppWidget : AppWidgetProvider() {
     }
 
 
-    fun updateLocationText(context: Context, latitude: Double, longitude: Double) {
+    fun updateLocationText(context: Context, latitude: Double, longitude: Double, sumDistance: Float, StartSessionTime: Long) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val thisAppWidgetComponentName = ComponentName(context.packageName, javaClass.name)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName)
@@ -130,6 +132,8 @@ class NewAppWidget : AppWidgetProvider() {
             val views = getWidgetSize(context, appWidgetId)
             val updatedText = "Latitudine: $latitude, Longitudine: $longitude"
             views.setTextViewText(R.id.tv_distance, updatedText)
+            views.setTextViewText(R.id.tv_sumDistance, "Session distance: $sumDistance")
+            views.setTextViewText(R.id.tv_tempo_trascorso, "Time: $StartSessionTime")
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             // Salva il testo aggiornato
@@ -144,11 +148,15 @@ class NewAppWidget : AppWidgetProvider() {
         val isSpeedChecked = sharedPrefsHelper.isSpeedChecked()
         val isDistanceChecked = sharedPrefsHelper.isDistanceChecked()
         val isCaloriesChecked = sharedPrefsHelper.isCaloriesChecked()
+        val isSessionDistanceChecked = sharedPrefsHelper.isSessionDistanceChecked()
+        val isTimeChecked = sharedPrefsHelper.isTimeChecked()
 
         // Aggiorna la visibilità dei campi nel layout del widget in base allo stato dei checkbox
         views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_distance, if (isDistanceChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_tempo_trascorso, if (isTimeChecked) View.VISIBLE else View.GONE)
         // Imposto Listener sul bottone
         views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
     }

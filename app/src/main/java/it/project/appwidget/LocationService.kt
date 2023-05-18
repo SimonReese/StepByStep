@@ -63,8 +63,7 @@ class LocationService : Service() {
                 notificationManager.notify(SERVICE_NOTIFICATION_ID, notificationBuilder.build())
             }
 
-            // Aggiorno il testo del widget
-            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude)
+
 
             // Filtro locations inaccurate
             if (location.accuracy >= minAccuracy){
@@ -82,6 +81,9 @@ class LocationService : Service() {
                 lastRelevantLocation = location
             }
 
+            // Aggiorno il testo del widget
+            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude, sumDistance,
+                location.time/1000)
 
             // Invio broadcast
             val intent = Intent("location-update")

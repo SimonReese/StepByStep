@@ -34,6 +34,26 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"/>
 
+    <TextView
+        android:id="@+id/tv_sumDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Session distance: "
+        android:layout_below="@id/tv_calories"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv_tempo_trascorso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Time: "
+        android:layout_below="@id/tv_sumDistance"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+
     <Button
         android:id="@+id/btn_settings"
         android:layout_width="48dp"
@@ -46,11 +66,11 @@
 
     <ImageView
         android:id="@+id/img1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="380dp"
+        android:layout_height="434dp"
         android:layout_below="@id/tv_calories"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/example_appwidget_preview" />
