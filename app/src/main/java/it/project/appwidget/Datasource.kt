@@ -7,8 +7,8 @@ import java.util.Calendar
 
 //Crea e restituisce l'array contentente le varie sessioni visualizzabili dall'utente
 class Datasource(private val context: Context) {
-    //TODO: Crea e ritorna array contenente il risultato della query
 
+    // Crea e ritorna array contenente il risultato della query getSessionIdsAndStartTimes
     fun getSessionList(): Array<Pair<Int, String>> {
         val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
         val pairArray = mutableListOf<Pair<Int, String>>()
@@ -29,6 +29,19 @@ class Datasource(private val context: Context) {
         return pairArray.toTypedArray()
     }
 
+    //  TODO: funzione come intent a bottone di GraphActivity che fornisce attraverso Query getTrackSessionsBetweenDates le sessioni in un arco temporale
+    fun getSessionListFromTo(from: Long, to: Long): Array<Pair<Int, String>>
+    {
+        val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
+        val pairArray = mutableListOf<Pair<Int, String>>()
+        val sessionIdStartTimes: List<TrackSession> = trackSessionDao.getTrackSessionsBetweenDates(from, to)
+
+
+        //...
+
+        return pairArray.toTypedArray()
+
+    }
 
 }
 

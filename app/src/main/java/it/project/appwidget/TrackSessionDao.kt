@@ -24,7 +24,7 @@ interface TrackSessionDao {
     fun getAllTrackSessionsById(sessionId: Int): List<TrackSession>
 
     @Query("SELECT * FROM track_sessions WHERE startTime >= :startTime AND startTime <= :endTime")
-    fun getTrackSessionsBetweenDates(startTime: Long, endTime: Long): LiveData<List<TrackSession>>
+    fun getTrackSessionsBetweenDates(startTime: Long, endTime: Long): List<TrackSession>
 
     @Query("SELECT id,startTime FROM track_sessions")
     fun getSessionIdsAndStartTimes(): List<SessionIdStartTime>

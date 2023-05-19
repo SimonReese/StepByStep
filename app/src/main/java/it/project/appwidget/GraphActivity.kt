@@ -14,9 +14,12 @@ class GraphActivity : AppCompatActivity() {
         setContentView(R.layout.activity_graph)
 
         // Retrieves data from datasource
+        // quando apri activity stampa a schermo tutte le query
         val sessionList = Datasource(this).getSessionList()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter = QueryAdapter(sessionList)
+
+        //TODO: aggiungere bottone che mostra a schermo soltanto le query dell'ultima settimana attraverso Datasource.getSessionListFromTo(from, to)
 
         val generateButton: Button = findViewById(R.id.generateButton)
         val barChart: BarChart = findViewById(R.id.barChart)
