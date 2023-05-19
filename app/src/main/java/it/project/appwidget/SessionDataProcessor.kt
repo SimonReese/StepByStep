@@ -5,6 +5,8 @@ import android.location.Location
 import java.util.Date
 
 // Classe per elaborare i dati della sessione
+
+// TODO: Spostare l'analisi in workermanager
 class SessionDataProcessor {
     companion object {
         fun calculateActivityType(distance: Float, duration: Long): String {
