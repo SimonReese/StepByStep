@@ -7,6 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+/* TODO: Rinominare classe con nome coerente all'oggetto che si sta adattando, ad esempio SessionAdapter
+    o nel nostro caso, poichè gli oggetti sono TrackSession -> TrackSessionAdapter
+ */
+
+// TODO: nome variabile costruttore con prima lettera minuscola
 class QueryAdapter(private val SessionList: Array<Pair<Int, String>>) :
     RecyclerView.Adapter<QueryAdapter.QueryViewHolder>() {
 
