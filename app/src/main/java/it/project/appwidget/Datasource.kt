@@ -2,26 +2,43 @@ package it.project.appwidget
 
 import android.annotation.SuppressLint
 import android.content.Context
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
+//Crea e restituisce l'array contentente le varie sessioni visualizzabili dall'utente
 class Datasource(private val context: Context) {
     //TODO: Crea e ritorna array contenente il risultato della query
-    @SuppressLint("SimpleDateFormat")
-    fun getSessionList(): Array<String> {
 
+    fun getSessionList(): Array<Pair<Int, String>> {
         val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
-        val stringArray = mutableListOf<String>()
+        val pairArray = mutableListOf<Pair<Int, String>>()
+
         val sessionIdStartTimes: List<TrackSessionDao.SessionIdStartTime> = trackSessionDao.getSessionIdsAndStartTimes()
-        for (sessionIdStartTime in sessionIdStartTimes)
-        {
+        for (sessionIdStartTime in sessionIdStartTimes) {
             val sessionId: Int = sessionIdStartTime.id
-            val startTime: Long = sessionIdStartTime.startTime/1000
-            val date = java.time.format.DateTimeFormatter.ISO_INSTANT
-                .format(java.time.Instant.ofEpochSecond(startTime))
-            stringArray.add(sessionId.toString() + " " + date)
-            // Puoi fare qualcosa con i valori sessionId e startTime qui
+            val startTime: Long = sessionIdStartTime.startTime
+            val format = "yyyy-dd-MM HH:mm:ss"
+            val date = getDate(startTime, format)
+
+            val pair = Pair(sessionId, date)
+            pairArray.add(pair)
+
             println("sessionId: $sessionId, startTime: $startTime")
         }
 
-        return stringArray.toTypedArray()
+        return pairArray.toTypedArray()
     }
+
+
+}
+
+//Ritorna data nel formato indicato
+fun getDate(milliSeconds: Long, dateFormat: String?): String {
+    // Create a DateFormatter object for displaying date in specified format.
+    val formatter = SimpleDateFormat(dateFormat)
+
+    // Create a calendar object that will convert the date and time value in milliseconds to date.
+    val calendar: Calendar = Calendar.getInstance()
+    calendar.timeInMillis = milliSeconds
+    return formatter.format(calendar.getTime())
 }

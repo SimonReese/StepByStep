@@ -18,12 +18,47 @@ class DetailActivity : AppCompatActivity()
         // Display the layout
         setContentView(R.layout.activity_session_detail)
 
-        // Get the reference to the TextView
-        val tv : TextView = findViewById(R.id.textView)
+        // ottiene Id della sessione cliccata
+        val sessionId = intent.getStringExtra(ARG_SESSION_ID)
+        // dall'Id ottiene tutte le informazioni della sessione
+        val trackSessionDao = AppDatabase.getInstance(this).trackSessionDao()
 
-        // Set the message in the TextView
-        val flowerName = intent.getStringExtra(ARG_SESSION_ID)
-        tv.text = flowerName
+        println(sessionId)
+
+        val session = trackSessionDao.getAllTrackSessionsById(sessionId!!.toInt())[0]
+
+        val format = "yyyy-dd-MM HH:mm:ss"
+
+        val startTime = session.startTime
+        val endTime = session.endTime
+        val type = session.activityType
+        val distance = session.distance
+        val time = session.duration
+        val avrSpeed = session.averageSpeed
+
+
+
+        val startDate = getDate(startTime, format)
+        val endDate = getDate(endTime, format)
+
+
+        val tv_startData: TextView = findViewById(R.id.tv_startData)
+        tv_startData.text = startDate
+
+        val tv_endData: TextView = findViewById(R.id.tv_endData)
+        tv_endData.text = endDate
+
+        val tv_typeData: TextView = findViewById(R.id.tv_typeData)
+        tv_typeData.text = type
+
+        val tv_distanceData: TextView = findViewById(R.id.tv_distanceData)
+        tv_distanceData.text = distance.toString()
+
+        val tv_timeData: TextView = findViewById(R.id.tv_timeData)
+        tv_timeData.text = time.toString()
+
+        val tv_avrSpeedData: TextView = findViewById(R.id.tv_avrSpeedData)
+        tv_avrSpeedData.text = avrSpeed.toString()
     }
 
     override fun onDestroy()

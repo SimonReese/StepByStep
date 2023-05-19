@@ -7,23 +7,25 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class QueryAdapter(private val SessionList: Array<String>) :
+class QueryAdapter(private val SessionList: Array<Pair<Int, String>>) :
     RecyclerView.Adapter<QueryAdapter.QueryViewHolder>() {
 
     private val onClickListener = View.OnClickListener { v ->
-        val flowerName = v.findViewById<TextView>(R.id.session_text).text
-
+        //Passa id alla nuova activity
+        val sessionId = v.findViewById<TextView>(R.id.session_id).text
         val intent = Intent(v.context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.ARG_SESSION_ID, flowerName)
+        intent.putExtra(DetailActivity.ARG_SESSION_ID, sessionId)
         v.context.startActivity(intent)
     }
 
     // Describes an item view and its place within the RecyclerView
     class QueryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val flowerTextView: TextView = itemView.findViewById(R.id.session_text)
+        private val sessionTextView: TextView = itemView.findViewById(R.id.session_text)
+        private val sessionId: TextView = itemView.findViewById(R.id.session_id)
 
-        fun bind(word: String) {
-            flowerTextView.text = word
+        fun bind(pair: Pair<Int, String>) {
+            sessionTextView.text = pair.second
+            sessionId.text = pair.first.toString()
         }
     }
 
