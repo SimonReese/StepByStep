@@ -95,6 +95,14 @@ class LocationService : Service() {
             Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - lastRelevantLocation.time}\"")
 
 
+            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // +++++++++++++++++++++++++++++++++++++ SPOSTARE IN UN WORKERMANAGER ASINCRONO ALLA CHIUSURA DEL SERVICE ++++++++++++++++++++
+            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // Spostare il carico in un workermanager alla chiusura del servizio. Memorizzare tutta la sessione in un vettore e alla fine calcolare tutto da workermanager
+            // passando il vettore
+            // TODO: creare il vettore
+
+
             //TODO: rivedere i valori degli if e else if che definiscono reset e salvataggio attività
             //Controllo se non ho iniziato una sessione ovvero se non ho camminato per almeno 100 metri negli ultimi 10 minuti
             if(sumDistance <= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 600000)
@@ -139,6 +147,13 @@ class LocationService : Service() {
                 lastRelevantLocation = location
                 firstRelevantLocation = location
             }
+
+
+            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 
         }
     }
