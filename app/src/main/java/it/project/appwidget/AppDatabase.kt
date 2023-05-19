@@ -1,6 +1,7 @@
 package it.project.appwidget
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -19,6 +20,8 @@ Infine, l'istanza viene restituita.
  */
 
 //TODO: Verificare che Singleton funzioni correttamente
+
+
 @Database(entities = [TrackSession::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun trackSessionDao(): TrackSessionDao
@@ -27,10 +30,16 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        /**
+         * Restituisce un'istanza di AppDatabase thread safe.
+         */
         fun getInstance(context: Context): AppDatabase {
+            Log.d("AppDatabase", "Tentativo accesso istanza database tramite getInstance().")
             return INSTANCE ?: synchronized(this) {
+                // TODO: Perchè permettere operazioni dal main thread?? Le query dovrebbero essere asincrone.
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "app_database").allowMainThreadQueries().build()
                 INSTANCE = instance
+                Log.d("AppDatabase", "Creato nuovo oggetto database ${instance.toString()}")
                 instance
             }
         }
