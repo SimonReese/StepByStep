@@ -82,8 +82,7 @@ class LocationService : Service() {
             }
 
             // Aggiorno il testo del widget
-            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude, sumDistance,
-                location.time/1000)
+            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude, sumDistance)
 
             // Invio broadcast
             val intent = Intent("location-update")

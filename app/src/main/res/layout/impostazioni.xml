@@ -32,12 +32,6 @@
             android:layout_height="wrap_content"
             android:text="Show session distance"/>
 
-        <CheckBox
-            android:id="@+id/cb_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show time"/>
-
         <Spinner
             android:id="@+id/units"
             android:layout_width="match_parent"

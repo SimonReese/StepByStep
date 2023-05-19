@@ -25,7 +25,6 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var cbDistance: CheckBox
     private lateinit var cbCalories: CheckBox
     private lateinit var cbSessionDistance: CheckBox
-    private lateinit var cbTime: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +37,6 @@ class SettingsActivity : AppCompatActivity() {
         cbDistance = findViewById(R.id.cb_distance)
         cbCalories = findViewById(R.id.cb_calories)
         cbSessionDistance = findViewById(R.id.cb_session_distance)
-        cbTime = findViewById(R.id.cb_time)
 
         val saveButton: Button = findViewById(R.id.btn_save)
         //setOnClickListener del saveButton
@@ -48,7 +46,6 @@ class SettingsActivity : AppCompatActivity() {
             sharedPrefsHelper.setDistanceChecked(cbDistance.isChecked)
             sharedPrefsHelper.setCaloriesChecked(cbCalories.isChecked)
             sharedPrefsHelper.setSessionDistanceChecked(cbSessionDistance.isChecked)
-            sharedPrefsHelper.setTimeChecked(cbTime.isChecked)
             //Lancio intent
             val intent = Intent(this, NewAppWidget::class.java)
             intent.action = NewAppWidget.ACTION_BTN_SAVE
@@ -63,14 +60,12 @@ class SettingsActivity : AppCompatActivity() {
             sharedPrefsHelper.setDistanceChecked(true)
             sharedPrefsHelper.setCaloriesChecked(true)
             sharedPrefsHelper.setSessionDistanceChecked(true)
-            sharedPrefsHelper.setTimeChecked(true)
             sharedPrefsHelper.setFirstLaunch(false)
         } else {
             cbSpeed.isChecked = sharedPrefsHelper.isSpeedChecked()
             cbDistance.isChecked = sharedPrefsHelper.isDistanceChecked()
             cbCalories.isChecked = sharedPrefsHelper.isCaloriesChecked()
             cbSessionDistance.isChecked = sharedPrefsHelper.isSessionDistanceChecked()
-            cbTime.isChecked = sharedPrefsHelper.isTimeChecked()
         }
 
         //Documentazione: https://developer.android.com/develop/ui/views/components/spinner

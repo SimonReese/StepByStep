@@ -58,14 +58,5 @@ class SharedPrefsHelper(context: Context) {
         editor.apply()
     }
 
-    fun isTimeChecked(): Boolean {
-        return sharedPreferences.getBoolean("time", true)
-    }
-
-    fun setTimeChecked(isChecked: Boolean) {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("time", isChecked)
-        editor.apply()
-    }
 }
 

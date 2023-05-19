@@ -23,8 +23,5 @@ class Datasource(private val context: Context) {
         }
 
         return stringArray.toTypedArray()
-
-        // Return flower list from string resources
-        return context.resources.getStringArray(R.array.prova_array)
     }
 }

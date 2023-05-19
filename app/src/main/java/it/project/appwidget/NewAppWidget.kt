@@ -10,11 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import androidx.core.content.ContextCompat.startForegroundService
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import java.util.concurrent.TimeUnit
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -25,22 +20,8 @@ class NewAppWidget : AppWidgetProvider() {
         const val REQUEST_CODE_BTN_SETTINGS = 1
     }
 
+    private val SHARED_PREFS_NAME = "NewAppWidget"
     private lateinit var sharedPrefsHelper: SharedPrefsHelper
-
-
-    //Salva il testo di "tv_distance"
-    private fun saveTvDistanceText(context: Context, appWidgetId: Int, text: String) {
-        val sharedPreferences = context.getSharedPreferences("NewAppWidget", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("tv_distance_text_$appWidgetId", text).apply()
-    }
-
-    //carica  il testo di "tv_distance"
-    private fun loadTvDistanceText(context: Context, appWidgetId: Int): String {
-        val sharedPreferences = context.getSharedPreferences("NewAppWidget", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("tv_distance_text_$appWidgetId", "Latitudine: 0.0, Longitudine: 0.0") ?: "Latitudine: 0.0, Longitudine: 0.0"
-    }
-
-
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         Log.d("onUpdate", "Widget posizionato")
@@ -60,9 +41,6 @@ class NewAppWidget : AppWidgetProvider() {
         }
 
     }
-
-
-
 
 
     override fun onEnabled(context: Context) {
@@ -109,7 +87,8 @@ class NewAppWidget : AppWidgetProvider() {
         // Carica il testo salvato e impostalo sul TextView
         val savedDistance = loadTvDistanceText(context, appWidgetId)
         views.setTextViewText(R.id.tv_distance, savedDistance)
-        //TODO: fare la stessa cosa con tv_sumDistance e tv_tempo_trascorso
+        val savedSumDistance = loadTvSumDistanceText(context, appWidgetId)
+        views.setTextViewText(R.id.tv_sumDistance, savedSumDistance)
 
         //Aggiorno impostazioni
         setNewViewVisibility(context,views)
@@ -123,21 +102,26 @@ class NewAppWidget : AppWidgetProvider() {
     }
 
 
-    fun updateLocationText(context: Context, latitude: Double, longitude: Double, sumDistance: Float, StartSessionTime: Long) {
+    fun updateLocationText(context: Context, latitude: Double, longitude: Double, sumDistance: Float) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val thisAppWidgetComponentName = ComponentName(context.packageName, javaClass.name)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName)
 
         for (appWidgetId in appWidgetIds) {
             val views = getWidgetSize(context, appWidgetId)
-            val updatedText = "Latitudine: $latitude, Longitudine: $longitude"
-            views.setTextViewText(R.id.tv_distance, updatedText)
-            views.setTextViewText(R.id.tv_sumDistance, "Session distance: $sumDistance")
-            views.setTextViewText(R.id.tv_tempo_trascorso, "Time: $StartSessionTime")
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+            val updatedDistance = "Latitudine: $latitude, Longitudine: $longitude"
+            val updatedSumDistance = "Session distance: $sumDistance"
+
+            views.setTextViewText(R.id.tv_distance, updatedDistance)
+            views.setTextViewText(R.id.tv_sumDistance, updatedSumDistance)
 
             // Salva il testo aggiornato
-            saveTvDistanceText(context, appWidgetId, updatedText)
+            saveTvDistanceText(context, appWidgetId, updatedDistance)
+            saveTvSumDistanceText(context, appWidgetId, updatedSumDistance)
+
+
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+
         }
     }
 
@@ -149,17 +133,39 @@ class NewAppWidget : AppWidgetProvider() {
         val isDistanceChecked = sharedPrefsHelper.isDistanceChecked()
         val isCaloriesChecked = sharedPrefsHelper.isCaloriesChecked()
         val isSessionDistanceChecked = sharedPrefsHelper.isSessionDistanceChecked()
-        val isTimeChecked = sharedPrefsHelper.isTimeChecked()
+
 
         // Aggiorna la visibilità dei campi nel layout del widget in base allo stato dei checkbox
         views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_distance, if (isDistanceChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_tempo_trascorso, if (isTimeChecked) View.VISIBLE else View.GONE)
+
         // Imposto Listener sul bottone
         views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
     }
+
+    private fun saveTvDistanceText(context: Context, appWidgetId: Int, text: String) {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("tv_distance_text_$appWidgetId", text).apply()
+    }
+
+    private fun loadTvDistanceText(context: Context, appWidgetId: Int): String {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString("tv_distance_text_$appWidgetId", "Latitudine: 0.0, Longitudine: 0.0") ?: "Latitudine: 0.0, Longitudine: 0.0"
+    }
+
+    private fun saveTvSumDistanceText(context: Context, appWidgetId: Int, text: String) {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("tv_sum_distance_text_$appWidgetId", text).apply()
+    }
+
+    private fun loadTvSumDistanceText(context: Context, appWidgetId: Int): String {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString("tv_sum_distance_text_$appWidgetId", "Session distance: 0.0") ?: "Session distance: 0.0"
+    }
+
+
 
 
 
