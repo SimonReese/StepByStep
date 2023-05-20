@@ -99,7 +99,6 @@ class SettingsActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         finish()
-        //TODO: togliere codice seguente in modo che dati vengano salvati solo con Save? Oppure togliere bottone Save?
     }
 
 }

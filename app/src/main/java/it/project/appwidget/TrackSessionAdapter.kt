@@ -7,13 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-/* TODO: Rinominare classe con nome coerente all'oggetto che si sta adattando, ad esempio SessionAdapter
-    o nel nostro caso, poichè gli oggetti sono TrackSession -> TrackSessionAdapter
- */
 
-// TODO: nome variabile costruttore con prima lettera minuscola
-class QueryAdapter(private val SessionList: Array<Pair<Int, String>>) :
-    RecyclerView.Adapter<QueryAdapter.QueryViewHolder>() {
+class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
+    RecyclerView.Adapter<TrackSessionAdapter.SessionViewHolder>() {
 
     private val onClickListener = View.OnClickListener { v ->
         //Passa id alla nuova activity
@@ -24,7 +20,7 @@ class QueryAdapter(private val SessionList: Array<Pair<Int, String>>) :
     }
 
     // Describes an item view and its place within the RecyclerView
-    class QueryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val sessionTextView: TextView = itemView.findViewById(R.id.session_text)
         private val sessionId: TextView = itemView.findViewById(R.id.session_id)
 
@@ -35,22 +31,22 @@ class QueryAdapter(private val SessionList: Array<Pair<Int, String>>) :
     }
 
     // Returns a new ViewHolder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.session_item, parent, false)
 
         view.setOnClickListener(onClickListener)
 
-        return QueryViewHolder(view)
+        return SessionViewHolder(view)
     }
 
     // Returns size of data list
     override fun getItemCount(): Int {
-        return SessionList.size
+        return sessionList.size
     }
 
     // Displays data at a certain position
-    override fun onBindViewHolder(holder: QueryViewHolder, position: Int) {
-        holder.bind(SessionList[position])
+    override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
+        holder.bind(sessionList[position])
     }
 }

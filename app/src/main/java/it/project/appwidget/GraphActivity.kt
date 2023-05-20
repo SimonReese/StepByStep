@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.random.Random
 
@@ -17,7 +16,7 @@ class GraphActivity : AppCompatActivity() {
         // quando apri activity stampa a schermo tutte le query
         val sessionList = Datasource(this).getSessionList()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.adapter = QueryAdapter(sessionList)
+        recyclerView.adapter = TrackSessionAdapter(sessionList)
 
         //TODO: aggiungere bottone che mostra a schermo soltanto le query dell'ultima settimana attraverso Datasource.getSessionListFromTo(from, to)
 

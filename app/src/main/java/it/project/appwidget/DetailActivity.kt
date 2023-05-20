@@ -25,7 +25,7 @@ class DetailActivity : AppCompatActivity()
 
         println(sessionId)
 
-        val session = trackSessionDao.getAllTrackSessionsById(sessionId!!.toInt())[0]
+        val session = trackSessionDao.getTrackSessionById(sessionId!!.toInt())[0]
 
         val format = "yyyy-dd-MM HH:mm:ss"
 
