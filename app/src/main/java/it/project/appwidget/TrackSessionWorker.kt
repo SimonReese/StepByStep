@@ -16,7 +16,34 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             val location = LocationParser.toLocation(stringLocation)
             locationList.add(location)
         }
-        Log.d("TrackSessionWorker", locationList.toString())
+
+        // TODO: usare la classe utility apposita
+        // Calcolo media delle velocità e cerco velocità più alta
+        var maxSpeed: Float = 0f
+        var avgSpeed: Float = 0f
+        for (location in locationList){
+            if (location.speed > maxSpeed)
+                maxSpeed = location.speed
+            avgSpeed += location.speed
+        }
+        avgSpeed = avgSpeed / locationList.size
+
+
+        // Calcolo valori
+        val trackSession = TrackSession(
+            startTime = locationList.get(0).time,
+            endTime = locationList.last().time,
+            duration = locationList.last().time - locationList.last().time, // TODO: passare parametro
+            distance = 0.0, //TODO: passare parametro
+            averageSpeed = avgSpeed.toDouble(),
+            maxSpeed = maxSpeed.toDouble(),
+            activityType = "Walking" // TODO: Usare la classe utility apposita
+        )
+
+        val db = AppDatabase.getInstance(applicationContext)
+        db.trackSessionDao().insertSession(trackSession)
+        Log.d("TrackSessionWorker", "Salvataggio sessione ${trackSession}")
+
         Log.d("TrackSessionWorker", "Fine worker.")
         return Result.success()
     }
