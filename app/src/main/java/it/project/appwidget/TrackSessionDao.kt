@@ -36,9 +36,8 @@ interface TrackSessionDao {
     /**
      * Restituisce tutti gli oggetti TrackSession nel database tramite id
      */
-    // TODO: refactor del nome - se cerco per id dovrò avere 1 solo risultato - getTracksession by id
     @Query("SELECT * FROM track_sessions WHERE id = :sessionId")
-    fun getAllTrackSessionsById(sessionId: Int): List<TrackSession>
+    fun getTrackSessionById(sessionId: Int): List<TrackSession>
 
     /**
      * Restituisce tutti gli oggetti TrackSession nel database tra due date
