@@ -13,6 +13,9 @@ import android.location.LocationRequest
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 
 /**
  * Servizio foreground per localizzazione.
@@ -211,6 +214,7 @@ class LocationService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
+        // TODO: restituire null se bind non supportata.
         TODO("Return the communication channel to the service.")
         Log.d("LocationService", "Servizio collegato (onBind)")
     }
@@ -219,6 +223,10 @@ class LocationService : Service() {
         super.onDestroy()
         // Fermo aggiornamenti
         locationManager.removeUpdates(locationListener)
+        // TODO: rivedeve bene come fermare un servizio
+        // Avvio work per elaborazione dati
+        val sessionWorkerRequest: WorkRequest = OneTimeWorkRequestBuilder<TrackSessionWorker>().build()
+        WorkManager.getInstance(applicationContext).enqueue(sessionWorkerRequest)
         // Rimuovo notifica
         stopForeground(STOP_FOREGROUND_REMOVE)
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
