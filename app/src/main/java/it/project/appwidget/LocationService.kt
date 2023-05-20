@@ -57,15 +57,13 @@ class LocationService : Service() {
 
             //TODO: Revisionare strategie localizzazione https://stuff.mit.edu/afs/sipb/project/android/docs/guide/topics/location/strategies.html
 
-            // Controllo che la notifica sia già impostata
+Aggiutn            // Controllo che la notifica sia già impostata, e la aggiorno con le nuove coordinate
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
                 // Aggiorno valori sulla notifica
                 notificationBuilder.setContentText("Latitudine: ${location.latitude}, Longitudine: ${location.longitude}")
                 // Visualizzo aggiornamenti notifica
                 notificationManager.notify(SERVICE_NOTIFICATION_ID, notificationBuilder.build())
             }
-
-
 
             // Filtro locations inaccurate
             if (location.accuracy >= minAccuracy){
@@ -74,8 +72,8 @@ class LocationService : Service() {
 
             // Salvo posizione rilevante, se non è mai stata salvata
             if (!this@LocationService::lastRelevantLocation.isInitialized){
-                lastRelevantLocation = location
-                firstRelevantLocation = location // TODO: non serve più, basta prendere il primo elemento
+                lastRelevantLocation = location // TODO: non serve più, basta prendere l'ultimo elemento del vettore
+                firstRelevantLocation = location // TODO: non serve più, basta prendere il primo elemento del vettore
                 locationList.add(location)
             }
             // Altrimenti, se la distanza di questa rispetto all'ultima rilevante è maggiore di <minSum> metri, aggiorniamo la distanza e aggiorniamo la somma
@@ -84,7 +82,7 @@ class LocationService : Service() {
                 lastRelevantLocation = location
                 locationList.add(location)
             }
-
+            // TODO: forse sarebbe meglio ricevere un broadcast piuttosto che creare un nuovo oggetto
             // Aggiorno il testo del widget
             NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude, sumDistance)
 
@@ -104,8 +102,6 @@ class LocationService : Service() {
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // Spostare il carico in un workermanager alla chiusura del servizio. Memorizzare tutta la sessione in un vettore e alla fine calcolare tutto da workermanager
             // passando il vettore
-            // TODO: creare il vettore
-
 
             //TODO: rivedere i valori degli if e else if che definiscono reset e salvataggio attività
             //Controllo se non ho iniziato una sessione ovvero se non ho camminato per almeno 100 metri negli ultimi 10 minuti
@@ -155,9 +151,6 @@ class LocationService : Service() {
 
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
 
         }
     }
