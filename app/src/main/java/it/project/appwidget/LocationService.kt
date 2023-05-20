@@ -13,9 +13,11 @@ import android.location.LocationRequest
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import it.project.appwidget.util.LocationParser
 
 /**
  * Servizio foreground per localizzazione.
@@ -224,8 +226,21 @@ class LocationService : Service() {
         // Fermo aggiornamenti
         locationManager.removeUpdates(locationListener)
         // TODO: rivedeve bene come fermare un servizio
-        // Avvio work per elaborazione dati
-        val sessionWorkerRequest: WorkRequest = OneTimeWorkRequestBuilder<TrackSessionWorker>().build()
+
+        // Converto locations in stringhe
+        val locationListString = Array<String>(locationList.size) { "" }
+        for ((position, location) in locationList.withIndex()){
+            // Effettuo parsing della location
+            val stringLocation = LocationParser.toString(location)
+            // Aggiungo stringa alla lista stringhe
+            locationListString.set(position, stringLocation)
+        }
+
+        // Creo oggetto Data da inviare al worker
+        val data = Data.Builder().putStringArray("locationListString", locationListString).build()
+
+        // Avvio work per elaborazione passando dati in input
+        val sessionWorkerRequest: WorkRequest = OneTimeWorkRequestBuilder<TrackSessionWorker>().setInputData(data).build()
         WorkManager.getInstance(applicationContext).enqueue(sessionWorkerRequest)
         // Rimuovo notifica
         stopForeground(STOP_FOREGROUND_REMOVE)
