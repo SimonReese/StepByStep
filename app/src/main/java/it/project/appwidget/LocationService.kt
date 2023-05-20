@@ -45,6 +45,8 @@ class LocationService : Service() {
     private var sumDistance: Float = 0F
     //Calcola tempo totale sessione
     private lateinit var firstRelevantLocation: Location
+    // Vettore per il salvataggio delle location
+    private var locationList: ArrayList<Location> = ArrayList()
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
@@ -73,12 +75,14 @@ class LocationService : Service() {
             // Salvo posizione rilevante, se non è mai stata salvata
             if (!this@LocationService::lastRelevantLocation.isInitialized){
                 lastRelevantLocation = location
-                firstRelevantLocation = location
+                firstRelevantLocation = location // TODO: non serve più, basta prendere il primo elemento
+                locationList.add(location)
             }
-            // Altrimenti, se la distanza di questa rispetto all'ultima rilevante è maggiore di 100m, aggiorniamo la distanza e aggionrniamo la somma
+            // Altrimenti, se la distanza di questa rispetto all'ultima rilevante è maggiore di <minSum> metri, aggiorniamo la distanza e aggiorniamo la somma
             else if (lastRelevantLocation.distanceTo(location) >= minSum){
                 sumDistance += lastRelevantLocation.distanceTo(location)
                 lastRelevantLocation = location
+                locationList.add(location)
             }
 
             // Aggiorno il testo del widget
