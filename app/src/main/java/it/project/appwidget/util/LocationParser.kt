@@ -77,7 +77,3 @@ class LocationParser {
 
     }
 }
-
-fun main(){
-    println("Hello world")
-}
