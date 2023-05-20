@@ -57,7 +57,7 @@ class LocationService : Service() {
 
             //TODO: Revisionare strategie localizzazione https://stuff.mit.edu/afs/sipb/project/android/docs/guide/topics/location/strategies.html
 
-Aggiutn            // Controllo che la notifica sia già impostata, e la aggiorno con le nuove coordinate
+           // Controllo che la notifica sia già impostata, e la aggiorno con le nuove coordinate
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
                 // Aggiorno valori sulla notifica
                 notificationBuilder.setContentText("Latitudine: ${location.latitude}, Longitudine: ${location.longitude}")
