@@ -41,7 +41,7 @@ class WeekHelpers {
     }
 
     //  Ritorna il giorno della settimana (0 = lunedì, 1 = martedì, etc)
-    //  TODO: lo possiamo utilizzare per il graph in un ciclo per cui for per ogni elemento di un array di session della settimana x
+    //  TODO: lo possiamo utilizzare per il graph in un ciclo for per cui per ogni elemento di un array di session della settimana x
     //  viene calcolato il giorno e poi la distanza percorsa viene sommata al contenuto dell'array<Int> di quel determinato giorno.
     //  Questo array viene poi utilizzato per creare il grafico
 
