@@ -16,25 +16,36 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             val location = LocationParser.toLocation(stringLocation)
             locationList.add(location)
         }
-
-        // TODO: usare la classe utility apposita
+        // TODO: usare la classe utility SessionDataProcessor apposita
         // Calcolo media delle velocità e cerco velocità più alta
         var maxSpeed: Float = 0f
         var avgSpeed: Float = 0f
         for (location in locationList){
+            // Cerco distanza
             if (location.speed > maxSpeed)
                 maxSpeed = location.speed
+            // Aggiorno somma velocità
             avgSpeed += location.speed
         }
         avgSpeed = avgSpeed / locationList.size
 
+        // Calcolo la durata totale della sessione
+        var duration = locationList.last().time - locationList.first().time
+
+        // TODO: Ricalcolare o leggere dal servizio? Da decidere, nel caso di lettura dal servizio servirà un dato extra
+        var distance: Float = 0f
+        var index = 0
+        while (index < locationList.size -1){
+            distance += locationList.get(index).distanceTo(locationList.get(index+1))
+            index++
+        }
 
         // Calcolo valori
         val trackSession = TrackSession(
             startTime = locationList.get(0).time,
             endTime = locationList.last().time,
-            duration = locationList.last().time - locationList.last().time, // TODO: passare parametro
-            distance = 0.0, //TODO: passare parametro
+            duration = duration,
+            distance = distance.toDouble(),
             averageSpeed = avgSpeed.toDouble(),
             maxSpeed = maxSpeed.toDouble(),
             activityType = "Walking" // TODO: Usare la classe utility apposita

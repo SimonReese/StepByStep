@@ -19,6 +19,8 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import it.project.appwidget.util.LocationParser
 
+// TODO: Valutare se spostare tutto il lavoro del Service in un thread separato (non service in background - service sempre in Foreground ma non su mainThread)
+
 /**
  * Servizio foreground per localizzazione.
  *
@@ -55,52 +57,55 @@ class LocationService : Service() {
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
-        override fun onLocationChanged(location: Location) {
-            Log.d("LocationService", "latitudine: ${location.latitude}, longitudine: ${location.longitude}, " +
-                    "velocità: ${location.speed}(+- ${location.speedAccuracyMetersPerSecond}), " +
-                    "accuratezza: ${location.accuracy}")
+        override fun onLocationChanged(currentLocation: Location) {
+            Log.d("LocationService", "latitudine: ${currentLocation.latitude}, longitudine: ${currentLocation.longitude}, " +
+                    "velocità: ${currentLocation.speed}(+- ${currentLocation.speedAccuracyMetersPerSecond}), " +
+                    "accuratezza: ${currentLocation.accuracy}")
 
             //TODO: Revisionare strategie localizzazione https://stuff.mit.edu/afs/sipb/project/android/docs/guide/topics/location/strategies.html
 
            // Controllo che la notifica sia già impostata, e la aggiorno con le nuove coordinate
             if (this@LocationService::notificationBuilder.isInitialized && this@LocationService::notificationManager.isInitialized){
                 // Aggiorno valori sulla notifica
-                notificationBuilder.setContentText("Latitudine: ${location.latitude}, Longitudine: ${location.longitude}")
+                notificationBuilder.setContentText("Latitudine: ${currentLocation.latitude}, Longitudine: ${currentLocation.longitude}")
                 // Visualizzo aggiornamenti notifica
                 notificationManager.notify(SERVICE_NOTIFICATION_ID, notificationBuilder.build())
             }
 
             // Filtro locations inaccurate
-            if (location.accuracy >= minAccuracy){
+            if (currentLocation.accuracy >= minAccuracy){
                 return
             }
 
-            // Salvo posizione rilevante, se non è mai stata salvata
-            if (!this@LocationService::lastRelevantLocation.isInitialized){
-                lastRelevantLocation = location // TODO: non serve più, basta prendere l'ultimo elemento del vettore
-                firstRelevantLocation = location // TODO: non serve più, basta prendere il primo elemento del vettore
-                locationList.add(location)
+            // Salvo posizione se non è mai stata salvata
+            if (locationList.size == 0){
+                locationList.add(currentLocation)
             }
-            // Altrimenti, se la distanza di questa rispetto all'ultima rilevante è maggiore di <minSum> metri, aggiorniamo la distanza e aggiorniamo la somma
-            else if (lastRelevantLocation.distanceTo(location) >= minSum){
-                sumDistance += lastRelevantLocation.distanceTo(location)
-                lastRelevantLocation = location
-                locationList.add(location)
+            // Altrimenti, se la distanza di questa rispetto all'ultima posizione salvata è maggiore di <minSum> metri, aggiorniamo la distanza e aggiorniamo la somma
+            else if (currentLocation.distanceTo(locationList.last()) >= minSum){
+                sumDistance += currentLocation.distanceTo(locationList.last())
+                locationList.add(currentLocation)
             }
+
             // TODO: forse sarebbe meglio ricevere un broadcast piuttosto che creare un nuovo oggetto
             // Aggiorno il testo del widget
-            NewAppWidget().updateLocationText(this@LocationService, location.latitude, location.longitude, sumDistance)
+            NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
 
             // Invio broadcast
             val intent = Intent("location-update")
-            intent.putExtra("speed", location.speed)
-            intent.putExtra("accuracy", location.accuracy)
+            intent.putExtra("speed", currentLocation.speed)
+            intent.putExtra("accuracy", currentLocation.accuracy)
             intent.putExtra("distanza", sumDistance)
             sendBroadcast(intent)
 
             Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")
-            Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - lastRelevantLocation.time}\"")
+            Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
+            /*
+             * TODO: Se vogliamo implementare il reset/stop del servizio in automatico rivediamo
+             *  le condizioni. Se vogliamo fermarlo, basta chiamare Service.stopSelf(), mentre se vogliamo resettarlo
+             *  bisogna rivedere bene quali variabili reimpostare e come notificare l'utente.
+             */
 
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // +++++++++++++++++++++++++++++++++++++ SPOSTARE IN UN WORKERMANAGER ASINCRONO ALLA CHIUSURA DEL SERVICE ++++++++++++++++++++
@@ -110,17 +115,17 @@ class LocationService : Service() {
 
             //TODO: rivedere i valori degli if e else if che definiscono reset e salvataggio attività
             //Controllo se non ho iniziato una sessione ovvero se non ho camminato per almeno 100 metri negli ultimi 10 minuti
-            if(sumDistance <= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 600000)
+            /*if(sumDistance <= 100 && (System.currentTimeMillis() - locationList.last().time) >= 600000)
             {
                 // Resetto i valori per creare una nuova sessione
                 Log.d("onLocationChanged","Sessione resettata")
 
                 sumDistance = 0F
-                lastRelevantLocation = location
-            }
+                lastRelevantLocation = currentLocation
+            }*/
             // Controllo se la sessione deve essere salvata: devo aver fatto più di 100 metri e l'ultima location
             // rilevante è stata aggiornata l'ultima volta più di xxxx fa (in questo caso 12 secondi per il testing)
-            else if (sumDistance >= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 12000) {
+            /*else if (sumDistance >= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 12000) {
                 val endTime = System.currentTimeMillis()
                 var duration = endTime - firstRelevantLocation.time
 
@@ -128,7 +133,7 @@ class LocationService : Service() {
                 // Calcolo i valori mancanti utilizzando SessionDataProcessor
                 val activityType = SessionDataProcessor.calculateActivityType(sumDistance, duration)
                 val averageSpeed = SessionDataProcessor.calculateAverageSpeed(sumDistance, duration)
-                val maxSpeed = SessionDataProcessor.calculateMaxSpeed(location.speed)
+                val maxSpeed = SessionDataProcessor.calculateMaxSpeed(currentLocation.speed)
 
                 Log.d("onLocationChanged","Salvataggio sessione nel database")
                 // Creo una nuova sessione con i dati calcolati
@@ -149,9 +154,9 @@ class LocationService : Service() {
 
                 // Resetto i valori per creare una nuova sessione
                 sumDistance = 0F
-                lastRelevantLocation = location
-                firstRelevantLocation = location
-            }
+                lastRelevantLocation = currentLocation
+                firstRelevantLocation = currentLocation
+            }*/
 
 
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
