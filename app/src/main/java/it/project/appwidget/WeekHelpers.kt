@@ -7,10 +7,11 @@ class WeekHelpers {
 
     //  Dato un time in millisecondi fornisce intervallo settimanale in cui esso si trova, ovvero da Lunedì 00:00 a Domenica 23:59 di quella settimana
     fun getWeekRange(timestamp: Long): Pair<Long, Long> {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = timestamp
+        val calendar = Calendar.getInstance().apply {
+            firstDayOfWeek = Calendar.MONDAY
+            timeInMillis = timestamp
+        }
 
-        // Imposta il calendario al Lunedì della settimana corrente
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
@@ -19,8 +20,7 @@ class WeekHelpers {
 
         val startOfWeek = calendar.timeInMillis
 
-        // Imposta il calendario alla Domenica della settimana corrente
-        calendar.add(Calendar.DATE, 6)
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
         calendar.set(Calendar.HOUR_OF_DAY, 23)
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 59)
@@ -29,6 +29,8 @@ class WeekHelpers {
 
         return Pair(startOfWeek, endOfWeek)
     }
+
+
 
     //  Dato un pair in millisecondi mi ritorna l'intervallo della settimana precedente
     fun getPreviousWeekRange(weekRange: Pair<Long, Long>): Pair<Long, Long> {
@@ -40,10 +42,15 @@ class WeekHelpers {
         return Pair(startOfPreviousWeek, endOfPreviousWeek)
     }
 
-    //  Ritorna il giorno della settimana (0 = lunedì, 1 = martedì, etc)
-    //  TODO: lo possiamo utilizzare per il graph in un ciclo for per cui per ogni elemento di un array di session della settimana x
-    //  viene calcolato il giorno e poi la distanza percorsa viene sommata al contenuto dell'array<Int> di quel determinato giorno.
-    //  Questo array viene poi utilizzato per creare il grafico
+    //  Dato un pair in millisecondi mi ritorna l'intervallo della settimana successiva
+    fun getNextWeekRange(weekRange: Pair<Long, Long>): Pair<Long, Long> {
+        val (startOfWeek, endOfWeek) = weekRange
+
+        val startOfPreviousWeek = startOfWeek + 7 * 24 * 60 * 60 * 1000 // Sottrai una settimana in millisecondi
+        val endOfPreviousWeek = endOfWeek + 7 * 24 * 60 * 60 * 1000 // Sottrai una settimana in millisecondi
+
+        return Pair(startOfPreviousWeek, endOfPreviousWeek)
+    }
 
     fun getDayOfWeek(timestamp: Long): Int {
         val calendar = Calendar.getInstance()
@@ -59,3 +66,5 @@ class WeekHelpers {
 
 
 }
+
+

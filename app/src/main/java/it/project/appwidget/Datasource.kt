@@ -1,6 +1,5 @@
 package it.project.appwidget
 
-import android.annotation.SuppressLint
 import android.content.Context
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -9,11 +8,11 @@ import java.util.Calendar
 class Datasource(private val context: Context) {
 
     // Crea e ritorna array contenente il risultato della query getSessionIdsAndStartTimes
-    fun getSessionList(): Array<Pair<Int, String>> {
+    fun getSessionListIdString(from: Long, to: Long): Array<Pair<Int, String>> {
         val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
         val pairArray = mutableListOf<Pair<Int, String>>()
+        val sessionIdStartTimes: List<TrackSession> = trackSessionDao.getTrackSessionsBetweenDates(from, to)
 
-        val sessionIdStartTimes: List<TrackSessionDao.SessionIdStartTime> = trackSessionDao.getSessionIdsAndStartTimes()
         for (sessionIdStartTime in sessionIdStartTimes) {
             val sessionId: Int = sessionIdStartTime.id
             val startTime: Long = sessionIdStartTime.startTime
@@ -29,19 +28,11 @@ class Datasource(private val context: Context) {
         return pairArray.toTypedArray()
     }
 
-    //  TODO: funzione come intent a bottone di GraphActivity che fornisce attraverso Query getTrackSessionsBetweenDates le sessioni in un arco temporale
-    fun getSessionListFromTo(from: Long, to: Long): Array<Pair<Int, String>>
-    {
+    fun getSessionList(from: Long, to: Long): List<TrackSession> {
         val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
-        val pairArray = mutableListOf<Pair<Int, String>>()
-        val sessionIdStartTimes: List<TrackSession> = trackSessionDao.getTrackSessionsBetweenDates(from, to)
-
-
-        //...
-
-        return pairArray.toTypedArray()
-
+        return trackSessionDao.getTrackSessionsBetweenDates(from, to)
     }
+
 
 }
 
