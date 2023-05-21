@@ -176,11 +176,13 @@ class ServiceMonitorActivity : AppCompatActivity() {
             serviceIntent.putExtra("minDistance", minDistance)
             serviceIntent.putExtra("minAccuracy", minAccuracy)
             serviceIntent.putExtra("minSum", minSum)
+            // Avvio service con promessa che chiamerà startForeground entro 5s
             startForegroundService(serviceIntent)
         }
 
         // Listener per fermare il servizio
         stopServiceButton.setOnClickListener{
+            // Interrompo service. Questo chiamerà Service.onDestroy()
             stopService(serviceIntent)
         }
 

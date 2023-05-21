@@ -222,7 +222,8 @@ class LocationService : Service() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        // Viene chiamato da Context.stopService() o Service.stopSelf()
+
         // Fermo aggiornamenti
         locationManager.removeUpdates(locationListener)
         // TODO: rivedeve bene come fermare un servizio
@@ -242,10 +243,15 @@ class LocationService : Service() {
         // Avvio work per elaborazione passando dati in input
         val sessionWorkerRequest: WorkRequest = OneTimeWorkRequestBuilder<TrackSessionWorker>().setInputData(data).build()
         WorkManager.getInstance(applicationContext).enqueue(sessionWorkerRequest)
-        // Rimuovo notifica
-        stopForeground(STOP_FOREGROUND_REMOVE)
+
+        /* Rimuovo notifica - secondo la documentazione ufficiale di Android, se il servizio viene fermato
+         * mentre è in esecuzione in foreground, la sua notifica viene rimossa automaticamente.
+         * https://developer.android.com/guide/components/foreground-services#remove-from-foreground.
+         */
+        // stopForeground(STOP_FOREGROUND_REMOVE)
+
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
-        stopSelf()
+        super.onDestroy()
     }
 
 }
