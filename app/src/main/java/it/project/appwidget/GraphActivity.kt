@@ -2,21 +2,28 @@ package it.project.appwidget
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class GraphActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
 
-        // Retrieves data from datasource
-        // quando apri activity stampa a schermo tutte le query
-        val sessionList = Datasource(this).getSessionList()
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.adapter = TrackSessionAdapter(sessionList)
+        // Imposto RecyclerView
+        recyclerView = findViewById(R.id.recyclerView)
+
+        // Carico dati in background
+        loadRecyclerView()
 
         //TODO: aggiungere bottone che mostra a schermo soltanto le query dell'ultima settimana attraverso Datasource.getSessionListFromTo(from, to)
 
@@ -30,5 +37,19 @@ class GraphActivity : AppCompatActivity() {
             }
             barChart.valueArray = values
         }
+    }
+
+    private fun loadRecyclerView(){
+        // Carico dati nel recyclerview in modo asincrono
+        Log.d("GraphActivity", "Imposto coroutine cariacamento dati")
+
+        // Dall' acttivity scope avvio una nuova coroutine per caricare e impostare i dati
+        lifecycleScope.launch {
+            val sessionList = Datasource(this@GraphActivity).getSessionList()
+            recyclerView.adapter = TrackSessionAdapter(sessionList)
+            Log.d("AsyncGraphActivty", "Dati caricati.")
+        }
+
+        Log.d("GraphActivity", "Fine impostazione routine caricamento dati.")
     }
 }
