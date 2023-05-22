@@ -97,7 +97,7 @@ class LocationService : Service() {
             intent.putExtra("accuracy", currentLocation.accuracy)
             intent.putExtra("distanza", sumDistance)
             sendBroadcast(intent)
-
+            // TODO: Broadcast o LiveData?
             Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")
             Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
