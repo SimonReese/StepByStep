@@ -11,6 +11,8 @@ import android.view.View
 
 class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
+    var days: Array<String> = arrayOf("LUN", "MAR", "MER", "GIOV", "VEN", "SAB", "DOM")
+
     var mShowText: Boolean
         get() = mShowText
 
@@ -112,8 +114,12 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             Log.d("Canvas", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
             canvas?.drawRect(left.toFloat(), top, right.toFloat(), bottom, barPaint)
-            canvas?.drawText(value.toString(), left.toFloat(), top, textPaint)
-            canvas?.drawText(position.toString(), left.toFloat(), bottom + 50, textPaint)
+            if (value != 0)
+            {
+                canvas?.drawText(value.toString(), left.toFloat(), top, textPaint)
+
+            }
+            canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
         }
 
     }
