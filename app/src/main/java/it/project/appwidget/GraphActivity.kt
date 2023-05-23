@@ -40,8 +40,10 @@ class GraphActivity : AppCompatActivity() {
         currentDate.text = getDate(selectedWeek.first, format) + " - " + getDate(selectedWeek.second, format)
 
 
-
         val barChart: BarChart = findViewById(R.id.barChart)
+        loadGraph(currentDate, barChart)
+
+
         generateButton.setOnClickListener{generateButton: View ->
             generateButton as Button
 
