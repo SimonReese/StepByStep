@@ -5,12 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import kotlin.system.exitProcess
 
-class MainActivity : AppCompatActivity() {
+class DevelMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_devel)
 
         // Bottoni per aprire le activity graph e service monitor
         val graphButton: Button = findViewById(R.id.graphButton)
