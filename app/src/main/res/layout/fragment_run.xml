@@ -33,7 +33,7 @@
         android:background="@android:color/darker_gray"/>
 
     <TextView
-        android:id="@+id/distanza"
+        android:id="@+id/distanceTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -49,7 +49,7 @@
         android:textAlignment="center"
         android:textSize="20dp"
         android:layout_marginTop="-15dp"
-        app:layout_constraintTop_toBottomOf="@id/distanza"
+        app:layout_constraintTop_toBottomOf="@id/distanceTextView"
         />
 
     <View
@@ -61,7 +61,7 @@
         android:background="@android:color/darker_gray"/>
 
     <TextView
-        android:id="@+id/passo"
+        android:id="@+id/accuracyTextView"
         android:layout_width="wrap_content"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,12 +88,12 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="45dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/passo"
+        app:layout_constraintTop_toBottomOf="@id/accuracyTextView"
         android:text="Tempo al km"
         android:textSize="20dp"/>
 
     <TextView
-        android:id="@+id/calorie"
+        android:id="@+id/speedTextView"
         android:layout_width="wrap_content"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="@id/mezza"
@@ -110,12 +110,12 @@
         app:layout_constraintStart_toStartOf="@id/mezza"
         android:layout_marginStart="20dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/calorie"
+        app:layout_constraintTop_toBottomOf="@id/speedTextView"
         android:text="Calorie bruciate"
         android:textSize="20dp"/>
 
     <Button
-        android:id="@+id/start_chrono"
+        android:id="@+id/startServiceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/mezza"
@@ -131,7 +131,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/mezza"
-        app:layout_constraintStart_toEndOf="@id/start_chrono"
+        app:layout_constraintStart_toEndOf="@id/startServiceButton"
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
         android:text="Pausa corsa"
@@ -139,7 +139,7 @@
         />
 
     <Button
-        android:id="@+id/reset_chrono"
+        android:id="@+id/stopServiceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/mezza"
