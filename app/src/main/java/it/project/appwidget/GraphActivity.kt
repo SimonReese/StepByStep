@@ -14,7 +14,7 @@ import kotlin.random.Random
 
 class GraphActivity : AppCompatActivity() {
 
-    private val FIRST_JANUARY_2022: Long = 1640995200000L
+
     private lateinit var recyclerView: RecyclerView
     private val weekHelper = WeekHelpers()
     val format = "yyyy-dd-MM"
@@ -28,7 +28,7 @@ class GraphActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
 
         // Carico dati in background
-        loadRecyclerView(FIRST_JANUARY_2022, System.currentTimeMillis())
+        loadRecyclerView(0, System.currentTimeMillis())
 
         //TODO: aggiungere bottone che mostra a schermo soltanto le query dell'ultima settimana attraverso Datasource.getSessionListFromTo(from, to)
 
@@ -39,11 +39,13 @@ class GraphActivity : AppCompatActivity() {
 
         currentDate.text = getDate(selectedWeek.first, format) + " - " + getDate(selectedWeek.second, format)
 
-
         val barChart: BarChart = findViewById(R.id.barChart)
+
+        //Carica dati settimana corrente
         loadGraph(currentDate, barChart)
 
 
+        //Bottone settimana corrente
         generateButton.setOnClickListener{generateButton: View ->
             generateButton as Button
 
@@ -71,10 +73,12 @@ class GraphActivity : AppCompatActivity() {
 
     private fun loadGraph(currentDate: TextView, barChart: BarChart)
     {
-        currentDate.text = selectedWeek.first.toString()
+        //Carica del recyclerview dati settimana selezionata
         loadRecyclerView(selectedWeek.first, selectedWeek.second)
         currentDate.text = getDate(selectedWeek.first, format) + " - " + getDate(selectedWeek.second, format)
+        //Ottieni lista di TrackSession della settimana selezionata
         val sessions = getSessionsList(selectedWeek.first, selectedWeek.second)
+        //Ottieni array in cui in ogni cella è presente somma distance di quel giorno
         val values: Array<Int> = convertTrackSessionInDistanceArray(sessions)
         barChart.valueArray = values.toIntArray()
     }
@@ -109,7 +113,7 @@ class GraphActivity : AppCompatActivity() {
     }
 
 
-
+    //Converte List di TrackSession in Array di distance
     private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): Array<Int>
     {
         //Lista di dimensione 7
@@ -117,7 +121,6 @@ class GraphActivity : AppCompatActivity() {
         if (!weekSession.isNullOrEmpty())
         {
             for (session in weekSession) {
-
                 graphList[weekHelper.getDayOfWeek(session.startTime)] += session.distance.toInt()
             }
 

@@ -27,11 +27,11 @@ class NewAppWidget : AppWidgetProvider() {
         Log.d("onUpdate", "Widget posizionato")
         //Ciclo tutti i widget
         for (appWidgetId in appWidgetIds) {
-            //Ottengo le views
+            //Ottengo la view in base alla dimensione
             val views = getWidgetSize(context, appWidgetId)
-            //Imposto intent al click
+            //Imposto intent al bottone impostazioni
             views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
-            // Carica il testo salvato e impostalo sul TextView
+            // Carica il testo precedentemente salvato e impostalo sul TextView
             val savedText = loadTvDistanceText(context, appWidgetId)
             views.setTextViewText(R.id.tv_distance, savedText)
             //Imposto elementi layout in base a quanto indicato nelle preferences
@@ -50,7 +50,7 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        // Controllo se il bottone apri impostazioni è stato premuto
+        // Controllo se il bottone impostazioni è stato premuto
         if (intent.action == ACTION_BTN_SETTINGS) {
             Log.d("OnReceive", "Bottone impostazioni premuto")
             // Creo intent per lanciare SettingsActivity
@@ -61,13 +61,14 @@ class NewAppWidget : AppWidgetProvider() {
             context.startActivity(settingsIntent)
         }
 
-        // Controllo se il bottone save nelle impostazioni è stato premuto (oppure premuto back da SettingsActivity)
+        // Controllo se è stato mandato l'intent dal bottone save nell'activity impostazioni
         if (intent.action == ACTION_BTN_SAVE) {
             Log.d("onReceive", ACTION_BTN_SAVE)
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
+                //chiamo metodo setNewViewVisibility
                 setNewViewVisibility(context, views)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
@@ -82,9 +83,10 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
+        //Ottengo nuova view in base alle nuove dimensioni
         val views = getWidgetSize(context, appWidgetId)
 
-        // Carica il testo salvato e impostalo sul TextView
+        // Carica il testo salvato esistente precedentemente al resize e impostalo sul TextView
         val savedDistance = loadTvDistanceText(context, appWidgetId)
         views.setTextViewText(R.id.tv_distance, savedDistance)
         val savedSumDistance = loadTvSumDistanceText(context, appWidgetId)
@@ -94,16 +96,18 @@ class NewAppWidget : AppWidgetProvider() {
         setNewViewVisibility(context,views)
 
         // Imposto Listener sul bottone
-        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
+        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
 
 
         // Aggiorno widget
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-
+    // Metodo chimato de LocationService ogni volta che riceve un nuovo dato
+    //
     fun updateLocationText(context: Context, latitude: Double, longitude: Double, sumDistance: Float) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
+        // Ottiene id widget
         val thisAppWidgetComponentName = ComponentName(context.packageName, javaClass.name)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName)
 
@@ -112,6 +116,7 @@ class NewAppWidget : AppWidgetProvider() {
             val updatedDistance = "Latitudine: $latitude, Longitudine: $longitude"
             val updatedSumDistance = "Session distance: $sumDistance"
 
+            //Imposta testo widget
             views.setTextViewText(R.id.tv_distance, updatedDistance)
             views.setTextViewText(R.id.tv_sumDistance, updatedSumDistance)
 
@@ -119,16 +124,17 @@ class NewAppWidget : AppWidgetProvider() {
             saveTvDistanceText(context, appWidgetId, updatedDistance)
             saveTvSumDistanceText(context, appWidgetId, updatedSumDistance)
 
-
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
         }
     }
 
+    // Determina cosa mostrare sull'UI del widget in base a qanto salvato in sharedPrefsHelper
     private fun setNewViewVisibility(context: Context, views: RemoteViews)
     {
 
         sharedPrefsHelper = SharedPrefsHelper(context)
+        //Ottiene stati sharedPrefsHelper
         val isSpeedChecked = sharedPrefsHelper.isSpeedChecked()
         val isDistanceChecked = sharedPrefsHelper.isDistanceChecked()
         val isCaloriesChecked = sharedPrefsHelper.isCaloriesChecked()
@@ -141,8 +147,8 @@ class NewAppWidget : AppWidgetProvider() {
         views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
 
-        // Imposto Listener sul bottone
-        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, NewAppWidget.ACTION_BTN_SETTINGS))
+        // Reimposto Listener sul bottone settings
+        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
     }
 
     private fun saveTvDistanceText(context: Context, appWidgetId: Int, text: String) {
@@ -178,15 +184,18 @@ private fun getPendingSelfIntent(context: Context, action: String): PendingInten
         NewAppWidget.REQUEST_CODE_BTN_SETTINGS, intent, PendingIntent.FLAG_IMMUTABLE)
 }
 
+//ritorna layout in base alle dimensioni del widget
 fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
 {
     val appWidgetManager = AppWidgetManager.getInstance(context)
+    //Ottieni oggetto Bundle che contiene informazioni aggiuntive sul widget di ID widgetId
     val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
 
+    //Ottiene dimensione attuale widget
     val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
     val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
 
-
+    //Determina view in base a dimensione
     val views = when {
         minWidth <= 255 && minHeight < 130 -> {RemoteViews(context.packageName, R.layout.small_view_layout)}
 

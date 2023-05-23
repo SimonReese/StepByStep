@@ -52,6 +52,7 @@ class WeekHelpers {
         return Pair(startOfPreviousWeek, endOfPreviousWeek)
     }
 
+    //Ritorna int corrispondente al giorno della settimana (es: 0 = lunedì, 1 = martedì)
     fun getDayOfWeek(timestamp: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timestamp
