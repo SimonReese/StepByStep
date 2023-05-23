@@ -5,6 +5,8 @@ import android.location.Location
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import it.project.appwidget.database.AppDatabase
+import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.LocationParser
 
 class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {

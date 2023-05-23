@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.database
 
 import android.content.Context
 import android.util.Log

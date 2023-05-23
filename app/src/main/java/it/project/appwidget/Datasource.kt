@@ -1,6 +1,8 @@
 package it.project.appwidget
 
 import android.content.Context
+import it.project.appwidget.database.AppDatabase
+import it.project.appwidget.database.TrackSession
 import java.text.SimpleDateFormat
 import java.util.Calendar
 

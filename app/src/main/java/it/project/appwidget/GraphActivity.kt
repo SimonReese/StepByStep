@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import it.project.appwidget.database.TrackSession
+import it.project.appwidget.database.TrackSessionAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random

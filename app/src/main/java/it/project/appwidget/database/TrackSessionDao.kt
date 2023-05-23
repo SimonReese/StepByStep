@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

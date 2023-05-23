@@ -1,9 +1,12 @@
-package it.project.appwidget
+package it.project.appwidget.activities
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import it.project.appwidget.R
+import it.project.appwidget.database.AppDatabase
+import it.project.appwidget.getDate
 
 class DetailActivity : AppCompatActivity()
 {
