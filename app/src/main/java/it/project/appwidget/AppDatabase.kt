@@ -22,7 +22,7 @@ Infine, l'istanza viene restituita.
 //TODO: Verificare che Singleton funzioni correttamente
 
 
-@Database(entities = [TrackSession::class, T], version = 1)
+@Database(entities = [TrackSession::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun trackSessionDao(): TrackSessionDao
 
