@@ -17,22 +17,27 @@ class MainActivity : AppCompatActivity() {
 
     private var currentFragmentId: Int = -1
 
-    val home = Home()
-    val run = Run()
-    val stats = Stats()
-    val config = Config()
-    val setup = Setup()
+    private val home: Fragment = Home()
+    private val run: Fragment = Run()
+    private val stats: Fragment = Stats()
+    private val config: Fragment = Config()
+    private val setup: Fragment = Setup()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "Chiamato onCreate")
         setContentView(R.layout.activity_main)
+
         // TODO: CHIEDERE PERMESSI!!!
+
+
         val bottom_nav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        replaceFragment(R.id.home)
+        // Imposto il fragment sul fragment manager solo se il l'activity non è stata ricreata da un altra
+        if (savedInstanceState == null){
+            replaceFragment(R.id.home)
+        }
         currentFragmentId = 1
-        restoreState(savedInstanceState)
 
         bottom_nav.setOnItemSelectedListener {menuItem: MenuItem ->
             replaceFragment(menuItem.itemId)
@@ -62,8 +67,12 @@ class MainActivity : AppCompatActivity() {
         if (inState == null)
             return
         val previous = inState.getInt("currentFragmentId")
-        // TODO: Pulire reimpostazione inutile
         replaceFragment(previous)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MainActivity", "Chiamato onDestroy")
     }
 
 
