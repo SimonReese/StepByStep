@@ -22,7 +22,7 @@ interface TrackSessionDao {
     fun delete(trackSession: TrackSession)
 
     @Query("DELETE FROM track_sessions")
-    fun deleteAll()
+    fun deleteAllTracks()
 
     /**
      * Aggiorna oggetto TrackSession nel database
