@@ -66,10 +66,7 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(previous)
     }
 
-    override fun onBackPressed() {
-        moveTaskToBack(true)
-        finish()
-    }
+
 
 
 }

@@ -89,11 +89,10 @@ class LocationService : Service() {
 
             // TODO: forse sarebbe meglio ricevere un broadcast piuttosto che creare un nuovo oggetto
             // Aggiorno il testo del widget
-            //NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
+            NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
 
             // Invio broadcast
             val intent = Intent("location-update")
-            intent.action = "UPDATE_LOCATION"
             intent.putExtra("speed", currentLocation.speed)
             intent.putExtra("accuracy", currentLocation.accuracy)
             intent.putExtra("distanza", sumDistance)
@@ -105,12 +104,20 @@ class LocationService : Service() {
             Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
 
+            if(sumDistance <= 100 && (System.currentTimeMillis() - locationList.last().time) >= 600000) {
+                // Resetto i valori per creare una nuova sessione
+                Log.d("onLocationChanged", "Sessione resettata")
 
-            /*
-             * TODO: Se vogliamo implementare il reset/stop del servizio in automatico rivediamo
-             *  le condizioni. Se vogliamo fermarlo, basta chiamare Service.stopSelf(), mentre se vogliamo resettarlo
-             *  bisogna rivedere bene quali variabili reimpostare e come notificare l'utente.
-             */
+                sumDistance = 0F
+                lastRelevantLocation = currentLocation
+
+            }
+
+                /*
+                 * TODO: Se vogliamo implementare il reset/stop del servizio in automatico rivediamo
+                 *  le condizioni. Se vogliamo fermarlo, basta chiamare Service.stopSelf(), mentre se vogliamo resettarlo
+                 *  bisogna rivedere bene quali variabili reimpostare e come notificare l'utente.
+                 */
 
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // +++++++++++++++++++++++++++++++++++++ SPOSTARE IN UN WORKERMANAGER ASINCRONO ALLA CHIUSURA DEL SERVICE ++++++++++++++++++++

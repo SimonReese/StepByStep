@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import it.project.appwidget.activities.DetailActivity
+import it.project.appwidget.activities.SettingsActivity
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -18,14 +18,16 @@ class NewAppWidget : AppWidgetProvider() {
     companion object {
         const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS"
         const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE"
-        const val REQUEST_CODE_BTN_SETTINGS = 1
+        const val EXTRA_APPWIDGET_ID = 1
     }
 
     private val SHARED_PREFS_NAME = "NewAppWidget"
     private lateinit var sharedPrefsHelper: SharedPrefsHelper
 
+
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         Log.d("onUpdate", "Widget posizionato")
+
         //Ciclo tutti i widget
         for (appWidgetId in appWidgetIds) {
             //Ottengo la view in base alla dimensione
@@ -51,13 +53,15 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
+        Log.d("onReceive", "Intent " + intent.action + " ricevuto")
+
         // Controllo se il bottone impostazioni è stato premuto
         if (intent.action == ACTION_BTN_SETTINGS) {
             Log.d("OnReceive", "Bottone impostazioni premuto")
             // Creo intent per lanciare SettingsActivity
             val settingsIntent = Intent(context, SettingsActivity::class.java)
             // Imposto flag per creare l'activity in una nuova task
-            settingsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
             // Lancio intent
             context.startActivity(settingsIntent)
         }
@@ -75,12 +79,12 @@ class NewAppWidget : AppWidgetProvider() {
             }
         }
 
-        if (intent.action == "UPDATE_LOCATION") {
+        if (intent.action.equals("location-update")) {
             Log.d("onReceive", "location-update")
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
-                updateLocationText(context,intent.getDoubleExtra("longitude", 0.0),
+                updateLocationText(context,intent.getDoubleExtra("longitude", 7.0),
                     intent.getDoubleExtra("latitude", 0.0)
                     , intent.getFloatExtra("distanza", 0F))
             }
@@ -193,7 +197,7 @@ private fun getPendingSelfIntent(context: Context, action: String): PendingInten
     val intent = Intent(context, NewAppWidget::class.java)
     intent.action = action
     return PendingIntent.getBroadcast(context,
-        NewAppWidget.REQUEST_CODE_BTN_SETTINGS, intent, PendingIntent.FLAG_IMMUTABLE)
+        NewAppWidget.EXTRA_APPWIDGET_ID, intent, PendingIntent.FLAG_IMMUTABLE)
 }
 
 //ritorna layout in base alle dimensioni del widget

@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +12,9 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import it.project.appwidget.NewAppWidget
+import it.project.appwidget.R
+import it.project.appwidget.SharedPrefsHelper
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -89,7 +92,8 @@ class SettingsActivity : AppCompatActivity() {
             // Richiesta dei permessi all'utente
             ActivityCompat.requestPermissions(this as Activity, arrayOf
                 (android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                , MY_PERMISSIONS_REQUEST_LOCATION)
+                , MY_PERMISSIONS_REQUEST_LOCATION
+            )
         }
 
     }
