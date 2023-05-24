@@ -99,6 +99,7 @@ class Run : Fragment() {
          * @return A new instance of fragment Run.
          */
         // TODO: DEVE ESSERE SINGLETON UN FRAGMENT?!?! - Verificare assolutamente
+        // https://stackoverflow.com/questions/14839152/fragment-as-a-singleton-in-android
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             Run().apply {
