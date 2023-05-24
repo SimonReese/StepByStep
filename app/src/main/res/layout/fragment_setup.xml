@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Setup">
 
+    <!--TODO: Perchè questo fragment non ha come padre una scrollview come fragment_home o fragment_config?-->
+
     <TextView
         android:id="@+id/titolo_app"
         android:layout_width="wrap_content"

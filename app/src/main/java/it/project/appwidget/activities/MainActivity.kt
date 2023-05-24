@@ -37,17 +37,16 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-
     }
 
     private fun replaceFragment(menuId: Int){
         val transaction = supportFragmentManager.beginTransaction()
         when (menuId){
-            R.id.home -> transaction.replace(R.id.frame_layout, home)
-            R.id.run -> transaction.replace(R.id.frame_layout, run)
-            R.id.stats -> transaction.replace(R.id.frame_layout, stats)
-            R.id.settings -> transaction.replace(R.id.frame_layout, config)
-            //R.id.setup -> transaction.replace(R.id.frame_layout, setup)
+            R.id.home -> transaction.replace(R.id.fragmentContainerView, home)
+            R.id.run -> transaction.replace(R.id.fragmentContainerView, run)
+            R.id.stats -> transaction.replace(R.id.fragmentContainerView, stats)
+            R.id.settings -> transaction.replace(R.id.fragmentContainerView, config)
+            //R.id.setup -> transaction.replace(R.id.fragmentContainerView, setup)
         }
         transaction.commit()
         currentFragmentId = menuId
