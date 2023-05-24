@@ -21,8 +21,7 @@ class Datasource(private val context: Context) {
         for (sessionIdStartTime in sessionIdStartTimes) {
             val sessionId: Int = sessionIdStartTime.id
             val startTime: Long = sessionIdStartTime.startTime
-            val dayNum = weekHelper.getNumberDayOfWeek(startTime)
-            val dayStr = weekHelper.getStringDayOfWeek(dayNum)
+            val dayStr = weekHelper.getStringDayOfWeek(startTime)
             val format = "HH:mm"
             val date = getDate(startTime, format)
 

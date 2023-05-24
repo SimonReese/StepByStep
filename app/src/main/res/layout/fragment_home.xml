@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
     tools:context=".fragments.Home">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,7 +79,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:id="@+id/passiCard"
-                app:cardBackgroundColor="#fff"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 app:cardElevation="20dp"
@@ -96,7 +94,6 @@
                         android:id="@+id/passiName"
                         android:text="Passi"
                         android:textSize="20sp"
-                        android:textColor="@color/lavender"
                         android:fontFamily="@font/poppins_semibold"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="95dp"
@@ -113,7 +110,6 @@
                         android:layout_marginTop="-40dp"
                         android:fontFamily="@font/poppins_semibold"
                         android:text="1152"
-                        android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <ImageView
@@ -136,7 +132,6 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 app:cardElevation="20dp"
-                app:cardBackgroundColor="#fff"
                 app:cardCornerRadius="20dp">
 
                 <RelativeLayout
@@ -149,7 +144,6 @@
                         android:id="@+id/distanceName"
                         android:text="Distanza"
                         android:textSize="20sp"
-                        android:textColor="@color/lavender"
                         android:fontFamily="@font/poppins_semibold"
                         android:layout_marginTop="10dp"
                         android:layout_centerHorizontal="true"
@@ -163,7 +157,6 @@
                         android:id="@+id/counterDistance"
                         android:text="1.5 km"
                         android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/poppins_semibold"
                         android:layout_marginTop="-40dp"
                         android:layout_marginLeft="90dp"
@@ -202,7 +195,6 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 app:cardElevation="20dp"
-                app:cardBackgroundColor="#fff"
                 app:cardCornerRadius="20dp">
 
                 <RelativeLayout
@@ -215,7 +207,6 @@
                         android:id="@+id/caloriesName"
                         android:text="Calorie bruciate"
                         android:textSize="20sp"
-                        android:textColor="@color/lavender"
                         android:fontFamily="@font/poppins_semibold"
                         android:layout_marginTop="10dp"
                         android:layout_alignParentLeft="true"
@@ -252,7 +243,6 @@
                         android:id="@+id/counterCalories"
                         android:text="50/1280 Kcal"
                         android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/poppins_semibold"
                         android:layout_marginTop="-40dp"
                         android:layout_marginLeft="100dp"

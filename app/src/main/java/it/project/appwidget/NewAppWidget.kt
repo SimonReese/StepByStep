@@ -84,7 +84,8 @@ class NewAppWidget : AppWidgetProvider() {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
-                updateLocationText(context,intent.getDoubleExtra("longitude", 7.0),
+                // Aggiorno il testo del widget
+                updateLocationText(context,intent.getDoubleExtra("longitude", 0.0),
                     intent.getDoubleExtra("latitude", 0.0)
                     , intent.getFloatExtra("distanza", 0F))
             }

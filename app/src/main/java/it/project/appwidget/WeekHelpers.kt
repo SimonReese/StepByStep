@@ -65,8 +65,8 @@ class WeekHelpers {
         return dayOfWeek
     }
 
-    fun getStringDayOfWeek(num: Int): String {
-        return when (num) {
+    fun getStringDayOfWeek(time: Long): String {
+        return when (getNumberDayOfWeek(time)) {
             0 -> "Lunedì"
             1 -> "Martedì"
             2 -> "Mercoledì"
