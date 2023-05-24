@@ -149,7 +149,7 @@ class Stats : Fragment() {
         if (!weekSession.isNullOrEmpty())
         {
             for (session in weekSession) {
-                graphList[weekHelper.getDayOfWeek(session.startTime)] += session.distance.toInt()
+                graphList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance.toInt()
             }
 
         }

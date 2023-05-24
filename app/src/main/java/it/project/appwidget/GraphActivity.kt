@@ -10,9 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.database.TrackSessionAdapter
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class GraphActivity : AppCompatActivity() {
 
@@ -123,7 +121,7 @@ class GraphActivity : AppCompatActivity() {
         if (!weekSession.isNullOrEmpty())
         {
             for (session in weekSession) {
-                graphList[weekHelper.getDayOfWeek(session.startTime)] += session.distance.toInt()
+                graphList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance.toInt()
             }
 
         }

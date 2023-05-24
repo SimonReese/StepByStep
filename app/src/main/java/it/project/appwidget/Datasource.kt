@@ -9,6 +9,9 @@ import java.util.Calendar
 //Crea e restituisce l'array contentente le varie sessioni visualizzabili dall'utente
 class Datasource(private val context: Context) {
 
+    private val weekHelper = WeekHelpers()
+
+
     // Crea e ritorna array contenente il risultato della query getSessionIdsAndStartTimes
     fun getSessionListIdString(from: Long, to: Long): Array<Pair<Int, String>> {
         val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
@@ -18,10 +21,12 @@ class Datasource(private val context: Context) {
         for (sessionIdStartTime in sessionIdStartTimes) {
             val sessionId: Int = sessionIdStartTime.id
             val startTime: Long = sessionIdStartTime.startTime
-            val format = "yyyy-dd-MM HH:mm:ss"
+            val dayNum = weekHelper.getNumberDayOfWeek(startTime)
+            val dayStr = weekHelper.getStringDayOfWeek(dayNum)
+            val format = "HH:mm"
             val date = getDate(startTime, format)
 
-            val pair = Pair(sessionId, date)
+            val pair = Pair(sessionId, dayStr + ": " + date)
             pairArray.add(pair)
 
             println("sessionId: $sessionId, startTime: $startTime")
