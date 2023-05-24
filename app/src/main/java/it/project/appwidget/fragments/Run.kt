@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -70,10 +71,13 @@ class Run : Fragment() {
 
         startServiceButton.setOnClickListener {
             requireActivity().startForegroundService(serviceIntent)
+            sessionChronometer.base = SystemClock.elapsedRealtime()
+            sessionChronometer.start()
         }
 
         stopServiceButton.setOnClickListener {
             requireActivity().stopService(serviceIntent)
+            sessionChronometer.stop()
         }
 
         return view
