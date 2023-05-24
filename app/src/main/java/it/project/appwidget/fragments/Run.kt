@@ -10,9 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Chronometer
 import android.widget.TextView
-import androidx.core.content.ContextCompat.registerReceiver
-import androidx.core.content.ContextCompat.startForegroundService
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import java.text.DecimalFormat
@@ -22,7 +21,7 @@ class Run : Fragment() {
     private lateinit var distanceTextView: TextView
     private lateinit var accuracyTextView: TextView
     private lateinit var speedTextView:TextView
-    private lateinit var timerTextView: TextView
+    private lateinit var sessionChronometer: Chronometer
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // TODO: Come rendo il timer consistente anche a seguito della chiusura del fragemnts?
@@ -56,7 +55,7 @@ class Run : Fragment() {
         distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
         accuracyTextView = view.findViewById(R.id.accuracyTextView)
         speedTextView = view.findViewById<TextView>(R.id.speedTextView)
-        timerTextView = view.findViewById(R.id.timerTextView)
+        sessionChronometer = view.findViewById(R.id.sessionChronometer)
         val startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         val stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
 
