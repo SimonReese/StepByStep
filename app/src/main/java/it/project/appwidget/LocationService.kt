@@ -89,10 +89,11 @@ class LocationService : Service() {
 
             // TODO: forse sarebbe meglio ricevere un broadcast piuttosto che creare un nuovo oggetto
             // Aggiorno il testo del widget
-            NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
+            //NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
 
             // Invio broadcast
-            val intent = Intent("location-update")
+            val intent = Intent(this@LocationService, NewAppWidget::class.java)
+            intent.action = "location-update"
             intent.putExtra("speed", currentLocation.speed)
             intent.putExtra("accuracy", currentLocation.accuracy)
             intent.putExtra("distanza", sumDistance)
