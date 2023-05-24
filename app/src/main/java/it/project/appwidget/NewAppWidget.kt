@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import it.project.appwidget.activities.DetailActivity
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -71,6 +72,17 @@ class NewAppWidget : AppWidgetProvider() {
                 //chiamo metodo setNewViewVisibility
                 setNewViewVisibility(context, views)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+        }
+
+        if (intent.action == "UPDATE_LOCATION") {
+            Log.d("onReceive", "location-update")
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            for (appWidgetId in appWidgetIds) {
+                updateLocationText(context,intent.getDoubleExtra("longitude", 0.0),
+                    intent.getDoubleExtra("latitude", 0.0)
+                    , intent.getFloatExtra("distanza", 0F))
             }
         }
     }

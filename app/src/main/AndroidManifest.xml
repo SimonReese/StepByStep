@@ -29,6 +29,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
+
         <activity
             android:name=".ServiceMonitorActivity"
             android:exported="false" /> <!-- TODO: è necessario impostare il targetAPI? -->
@@ -58,6 +59,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_SIZE_CHANGED" />
+                <action android:name="it.project.appwidget.location-update" />
             </intent-filter>
 
             <meta-data

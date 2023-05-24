@@ -26,7 +26,7 @@ class Datasource(private val context: Context) {
             val format = "HH:mm"
             val date = getDate(startTime, format)
 
-            val pair = Pair(sessionId, dayStr + ": " + date)
+            val pair = Pair(sessionId, "$dayStr: $date")
             pairArray.add(pair)
 
             println("sessionId: $sessionId, startTime: $startTime")

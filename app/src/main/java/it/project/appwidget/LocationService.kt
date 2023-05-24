@@ -89,17 +89,22 @@ class LocationService : Service() {
 
             // TODO: forse sarebbe meglio ricevere un broadcast piuttosto che creare un nuovo oggetto
             // Aggiorno il testo del widget
-            NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
+            //NewAppWidget().updateLocationText(this@LocationService, currentLocation.latitude, currentLocation.longitude, sumDistance)
 
             // Invio broadcast
             val intent = Intent("location-update")
+            intent.action = "UPDATE_LOCATION"
             intent.putExtra("speed", currentLocation.speed)
             intent.putExtra("accuracy", currentLocation.accuracy)
             intent.putExtra("distanza", sumDistance)
+            intent.putExtra("longitude", currentLocation.longitude)
+            intent.putExtra("latitude", currentLocation.latitude)
             sendBroadcast(intent)
             // TODO: Broadcast o LiveData?
             Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")
             Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
+
+
 
             /*
              * TODO: Se vogliamo implementare il reset/stop del servizio in automatico rivediamo
