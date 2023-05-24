@@ -61,6 +61,7 @@ class Run : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_run, container, false)
 
+        //TODO: chiedere permessi
 
         distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
         accuracyTextView = view.findViewById(R.id.accuracyTextView)

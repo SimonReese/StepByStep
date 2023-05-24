@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        // TODO: CHIEDERE PERMESSI!!!
         val bottom_nav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         replaceFragment(R.id.home)
