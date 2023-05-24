@@ -15,8 +15,6 @@ import it.project.appwidget.fragments.Stats
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentFragmentId: Int = -1
-
     private val home: Fragment = Home()
     private val run: Fragment = Run()
     private val stats: Fragment = Stats()
@@ -30,14 +28,12 @@ class MainActivity : AppCompatActivity() {
 
         // TODO: CHIEDERE PERMESSI!!!
 
-
         val bottom_nav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         // Imposto il fragment sul fragment manager solo se il l'activity non è stata ricreata da un altra
         if (savedInstanceState == null){
             replaceFragment(R.id.home)
         }
-        currentFragmentId = 1
 
         bottom_nav.setOnItemSelectedListener {menuItem: MenuItem ->
             replaceFragment(menuItem.itemId)
@@ -55,19 +51,11 @@ class MainActivity : AppCompatActivity() {
             //R.id.setup -> transaction.replace(R.id.fragmentContainerView, setup)
         }
         transaction.commit()
-        currentFragmentId = menuId
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("currentFragmentId", currentFragmentId)
         super.onSaveInstanceState(outState)
-    }
-
-    private fun restoreState(inState: Bundle?){
-        if (inState == null)
-            return
-        val previous = inState.getInt("currentFragmentId")
-        replaceFragment(previous)
+        Log.d("MainActivity", "Chiamato onSaveInstanceState")
     }
 
     override fun onDestroy() {

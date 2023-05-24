@@ -42,6 +42,7 @@ class Run : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("RunFragment", "Chiamato onCreate")
     }
 
     override fun onCreateView(
@@ -60,7 +61,7 @@ class Run : Fragment() {
         val startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         val stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
 
-        // Recupero stato del fragment
+        // Recupero stato del fragment - ma solo se activity ha salvato con onSaveInstanceState
         restoreState(savedInstanceState)
 
         // Registro receiver
@@ -85,13 +86,15 @@ class Run : Fragment() {
         return view
     }
 
-    // Salvataggio dello stato del fragment
+    // Viene chiamato solo quando activity chiama lo stesso!! Non va bene per il salvataggio in navigazione
     override fun onSaveInstanceState(outState: Bundle) {
-        // Salvo il valore di riferimento del cronometro
-        outState.putLong("sessionChronometer_base", sessionChronometer.base)
-        outState.putBoolean("sessionChronometer_isActivated", sessionChronometer.isActivated)
         Log.d("RunFragment", "Chiamato onSaveInstanceState")
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("RunFragment", "Chiamato onDestroy")
     }
 
     // Recupero stato del fragment
@@ -101,9 +104,5 @@ class Run : Fragment() {
             return
         }
         Log.d("RunFragment", "Bundle valido")
-        sessionChronometer.base = inState.getLong("sessionChronometer_base")
-        sessionChronometer.isActivated = inState.getBoolean("sessionChronometer_isActivated")
-        if (sessionChronometer.isActivated)
-            sessionChronometer.start()
     }
 }
