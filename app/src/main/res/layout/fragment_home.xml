@@ -117,14 +117,15 @@
                         android:textSize="20sp" />
 
                     <ImageView
+                        android:id="@+id/passiImage"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
-                        android:id="@+id/passiImage"
-                        android:src="@drawable/icons8_boot_print_64"
-                        android:layout_marginTop="45dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginLeft="20dp"
-                        android:layout_centerHorizontal="true"/>
+                        android:layout_marginTop="45dp"
+                        android:background="@drawable/circle_background"
+                        android:src="@drawable/icons8_boot_print_64" />
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
@@ -263,6 +264,8 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
