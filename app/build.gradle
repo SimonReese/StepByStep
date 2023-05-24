@@ -40,8 +40,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.work:work-runtime:2.8.1'
-    // TODO: Verificare se i google play services vengono effetivamente usati
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation("androidx.room:room-runtime:2.5.1")
     implementation 'androidx.lifecycle:lifecycle-runtime:2.6.1'
     annotationProcessor("androidx.room:room-compiler:2.5.1")
