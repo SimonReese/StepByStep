@@ -2,6 +2,7 @@ package it.project.appwidget.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "Chiamato onCreate")
         setContentView(R.layout.activity_main)
         // TODO: CHIEDERE PERMESSI!!!
         val bottom_nav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -36,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(menuItem.itemId)
             true
         }
-
     }
 
     private fun replaceFragment(menuId: Int){
