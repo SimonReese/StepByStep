@@ -49,7 +49,7 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".DetailActivity"
+            android:name=".activities.DetailActivity"
             android:exported="false" />
 
         <receiver

@@ -199,7 +199,7 @@ class LocationService : Service() {
 
         // RICEVO PARAMETRI DI DEBUG
         minLocationUpdateDistanceM = intent?.getFloatExtra("minDistance", 0F)!!
-        minAccuracy = intent?.getFloatExtra("minAccuracy", 20F)!!
+        minAccuracy = intent?.getFloatExtra("minAccuracy", 30F)!!
         minSum = intent?.getFloatExtra("minSum", 100F)!!
 
         // Imposto listener

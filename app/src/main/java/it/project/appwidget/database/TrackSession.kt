@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

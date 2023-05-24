@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.database
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import it.project.appwidget.activities.DetailActivity
+import it.project.appwidget.R
 
 
 class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :

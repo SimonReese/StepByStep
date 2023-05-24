@@ -52,7 +52,8 @@ class WeekHelpers {
         return Pair(startOfPreviousWeek, endOfPreviousWeek)
     }
 
-    fun getDayOfWeek(timestamp: Long): Int {
+    //Ritorna int corrispondente al giorno della settimana (es: 0 = lunedì, 1 = martedì)
+    fun getNumberDayOfWeek(timestamp: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timestamp
 
@@ -62,6 +63,19 @@ class WeekHelpers {
         }
 
         return dayOfWeek
+    }
+
+    fun getStringDayOfWeek(num: Int): String {
+        return when (num) {
+            0 -> "Lunedì"
+            1 -> "Martedì"
+            2 -> "Mercoledì"
+            3 -> "Giovedì"
+            4 -> "Venerdì"
+            5 -> "Sabato"
+            6 -> "Domenica"
+            else -> throw IllegalArgumentException("Numero non valido. Deve essere compreso tra 0 e 6.")
+        }
     }
 
 

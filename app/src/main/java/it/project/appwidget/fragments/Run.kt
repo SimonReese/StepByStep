@@ -28,14 +28,14 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Run : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     private lateinit var distanceTextView: TextView
     private lateinit var accuracyTextView: TextView
     private lateinit var speedTextView:TextView
+    private lateinit var timerTextView: TextView
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
+    // TODO: Come rendo il timer consistente anche a seguito della chiusura del fragemnts?
 
     // Classe per ricezione broadcast messages
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
@@ -47,15 +47,11 @@ class Run : Fragment() {
             accuracyTextView.text = accloc.toString() + "m"
             distanceTextView.text = distloc.toString() + "m"
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -69,6 +65,7 @@ class Run : Fragment() {
         distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
         accuracyTextView = view.findViewById(R.id.accuracyTextView)
         speedTextView = view.findViewById<TextView>(R.id.speedTextView)
+        timerTextView = view.findViewById(R.id.timerTextView)
         val startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         val stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
 
@@ -89,9 +86,6 @@ class Run : Fragment() {
             requireActivity().stopService(serviceIntent)
         }
 
-
-
-
         return view
     }
 
@@ -104,7 +98,8 @@ class Run : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment Run.
          */
-        // TODO: Rename and change types and number of parameters
+        // TODO: DEVE ESSERE SINGLETON UN FRAGMENT?!?! - Verificare assolutamente
+        // https://stackoverflow.com/questions/14839152/fragment-as-a-singleton-in-android
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             Run().apply {
