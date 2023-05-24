@@ -48,6 +48,8 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:2.5.1")
 
+    implementation("androidx.cardview:cardview:1.0.0")
+
 
 
     testImplementation 'junit:junit:4.13.2'
