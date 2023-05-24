@@ -120,7 +120,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="45dp"
-                        android:background="@drawable/circle_background"
+                        android:background="@drawable/circle"
                         android:src="@drawable/icons8_boot_print_64" />
 
                 </RelativeLayout>
