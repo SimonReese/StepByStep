@@ -101,10 +101,10 @@ class LocationService : Service() {
             Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
 
-            if(sumDistance <= 100 && (System.currentTimeMillis() - locationList.last().time) >= 600000) {
+            //TODO: Stoppare servizio
+            if(System.currentTimeMillis() - locationList.last().time >= 600000) {
                 // Resetto i valori per creare una nuova sessione
                 Log.d("onLocationChanged", "Sessione resettata")
-
                 sumDistance = 0F
                 lastRelevantLocation = currentLocation
 
@@ -115,61 +115,6 @@ class LocationService : Service() {
                  *  le condizioni. Se vogliamo fermarlo, basta chiamare Service.stopSelf(), mentre se vogliamo resettarlo
                  *  bisogna rivedere bene quali variabili reimpostare e come notificare l'utente.
                  */
-
-            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // +++++++++++++++++++++++++++++++++++++ SPOSTARE IN UN WORKERMANAGER ASINCRONO ALLA CHIUSURA DEL SERVICE ++++++++++++++++++++
-            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Spostare il carico in un workermanager alla chiusura del servizio. Memorizzare tutta la sessione in un vettore e alla fine calcolare tutto da workermanager
-            // passando il vettore
-
-            //TODO: rivedere i valori degli if e else if che definiscono reset e salvataggio attività
-            //Controllo se non ho iniziato una sessione ovvero se non ho camminato per almeno 100 metri negli ultimi 10 minuti
-            /*if(sumDistance <= 100 && (System.currentTimeMillis() - locationList.last().time) >= 600000)
-            {
-                // Resetto i valori per creare una nuova sessione
-                Log.d("onLocationChanged","Sessione resettata")
-
-                sumDistance = 0F
-                lastRelevantLocation = currentLocation
-            }*/
-            // Controllo se la sessione deve essere salvata: devo aver fatto più di 100 metri e l'ultima location
-            // rilevante è stata aggiornata l'ultima volta più di xxxx fa (in questo caso 12 secondi per il testing)
-            /*else if (sumDistance >= 100 && (System.currentTimeMillis() - lastRelevantLocation.time) >= 12000) {
-                val endTime = System.currentTimeMillis()
-                var duration = endTime - firstRelevantLocation.time
-
-
-                // Calcolo i valori mancanti utilizzando SessionDataProcessor
-                val activityType = SessionDataProcessor.calculateActivityType(sumDistance, duration)
-                val averageSpeed = SessionDataProcessor.calculateAverageSpeed(sumDistance, duration)
-                val maxSpeed = SessionDataProcessor.calculateMaxSpeed(currentLocation.speed)
-
-                Log.d("onLocationChanged","Salvataggio sessione nel database")
-                // Creo una nuova sessione con i dati calcolati
-                val trackSession = TrackSession(
-                    startTime = firstRelevantLocation.time,
-                    endTime = endTime,
-                    duration = duration,
-                    distance = sumDistance.toDouble(),
-                    averageSpeed = averageSpeed,
-                    maxSpeed = maxSpeed,
-                    activityType = activityType
-                )
-
-                // Salvo la sessione nel database utilizzando trackSessionDao
-                val trackSessionDao = AppDatabase.getInstance(this@LocationService).trackSessionDao()
-                trackSessionDao.insertSession(trackSession)
-                Log.d("onLocationChanged","Sessione salvata nel database")
-
-                // Resetto i valori per creare una nuova sessione
-                sumDistance = 0F
-                lastRelevantLocation = currentLocation
-                firstRelevantLocation = currentLocation
-            }*/
-
-
-            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         }
     }
