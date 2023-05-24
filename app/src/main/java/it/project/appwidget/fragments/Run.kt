@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,7 +42,6 @@ class Run : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -52,7 +52,7 @@ class Run : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_run, container, false)
 
         //TODO: chiedere permessi
-
+        Log.d("RunFragment", "Chiamato onCreateView")
         distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
         accuracyTextView = view.findViewById(R.id.accuracyTextView)
         speedTextView = view.findViewById<TextView>(R.id.speedTextView)
@@ -60,6 +60,8 @@ class Run : Fragment() {
         val startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         val stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
 
+        // Recupero stato del fragment
+        restoreState(savedInstanceState)
 
         // Registro receiver
         locationBroadcastReceiver = LocationBroadcastReceiver()
@@ -81,5 +83,27 @@ class Run : Fragment() {
         }
 
         return view
+    }
+
+    // Salvataggio dello stato del fragment
+    override fun onSaveInstanceState(outState: Bundle) {
+        // Salvo il valore di riferimento del cronometro
+        outState.putLong("sessionChronometer_base", sessionChronometer.base)
+        outState.putBoolean("sessionChronometer_isActivated", sessionChronometer.isActivated)
+        Log.d("RunFragment", "Chiamato onSaveInstanceState")
+        super.onSaveInstanceState(outState)
+    }
+
+    // Recupero stato del fragment
+    private fun restoreState(inState: Bundle?) {
+        Log.d("RunFragment", "Chiamato restoreState")
+        if (inState == null){
+            return
+        }
+        Log.d("RunFragment", "Bundle valido")
+        sessionChronometer.base = inState.getLong("sessionChronometer_base")
+        sessionChronometer.isActivated = inState.getBoolean("sessionChronometer_isActivated")
+        if (sessionChronometer.isActivated)
+            sessionChronometer.start()
     }
 }
