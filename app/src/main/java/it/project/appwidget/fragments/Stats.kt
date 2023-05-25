@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.project.appwidget.BarChart
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
-import it.project.appwidget.WeekHelpers
+import it.project.appwidget.util.WeekHelpers
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.database.TrackSessionAdapter
 import it.project.appwidget.getDate

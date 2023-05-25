@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
 
 
+
+
         android:layout_below="@id/tv_sessionDate"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
@@ -76,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/tv_speed"
             android:layout_alignBaseline="@id/tv_calories"
-            android:text="0"
+            android:text=""
             android:textSize="15sp" />
 
 

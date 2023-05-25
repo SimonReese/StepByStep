@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.database.TrackSessionAdapter
+import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.launch
 
 class GraphActivity : AppCompatActivity() {

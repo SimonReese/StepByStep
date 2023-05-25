@@ -28,40 +28,47 @@ class DetailActivity : AppCompatActivity()
 
         println(sessionId)
 
-        val session = trackSessionDao.getTrackSessionById(sessionId!!.toInt())[0]
+        try {
+            val session = trackSessionDao.getTrackSessionById(sessionId!!.toInt())[0]
 
-        val format = "yyyy-dd-MM HH:mm:ss"
+            val format = "yyyy-dd-MM HH:mm:ss"
 
-        val startTime = session.startTime
-        val endTime = session.endTime
-        val type = session.activityType
-        val distance = session.distance
-        val time = session.duration
-        val avrSpeed = session.averageSpeed
-
-
-
-        val startDate = getDate(startTime, format)
-        val endDate = getDate(endTime, format)
+            val startTime = session.startTime
+            val endTime = session.endTime
+            val type = session.activityType
+            val distance = session.distance
+            val time = session.duration
+            val avrSpeed = session.averageSpeed
 
 
-        val tv_startData: TextView = findViewById(R.id.tv_startData)
-        tv_startData.text = startDate
 
-        val tv_endData: TextView = findViewById(R.id.tv_endData)
-        tv_endData.text = endDate
+            val startDate = getDate(startTime, format)
+            val endDate = getDate(endTime, format)
 
-        val tv_typeData: TextView = findViewById(R.id.tv_typeData)
-        tv_typeData.text = type
 
-        val tv_distanceData: TextView = findViewById(R.id.tv_distanceData)
-        tv_distanceData.text = distance.toString()
+            val tv_startData: TextView = findViewById(R.id.tv_startData)
+            tv_startData.text = startDate
 
-        val tv_timeData: TextView = findViewById(R.id.tv_timeData)
-        tv_timeData.text = time.toString()
+            val tv_endData: TextView = findViewById(R.id.tv_endData)
+            tv_endData.text = endDate
 
-        val tv_avrSpeedData: TextView = findViewById(R.id.tv_avrSpeedData)
-        tv_avrSpeedData.text = avrSpeed.toString()
+            val tv_typeData: TextView = findViewById(R.id.tv_typeData)
+            tv_typeData.text = type
+
+            val tv_distanceData: TextView = findViewById(R.id.tv_distanceData)
+            tv_distanceData.text = distance.toString()
+
+            val tv_timeData: TextView = findViewById(R.id.tv_timeData)
+            tv_timeData.text = time.toString()
+
+            val tv_avrSpeedData: TextView = findViewById(R.id.tv_avrSpeedData)
+            tv_avrSpeedData.text = avrSpeed.toString()
+
+        }catch (e: NullPointerException)
+        {
+            Log.d("NullPointerException", "ERRORE")
+        }
+
     }
 
     override fun onDestroy()

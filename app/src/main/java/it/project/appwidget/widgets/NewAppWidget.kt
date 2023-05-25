@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.widgets
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -10,8 +10,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import com.google.android.material.color.MaterialColors
+import it.project.appwidget.R
+import it.project.appwidget.SharedPrefsHelper
+import it.project.appwidget.util.WeekHelpers
 import it.project.appwidget.activities.SettingsActivity
+import it.project.appwidget.getDate
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -44,9 +47,13 @@ class NewAppWidget : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
             // Carica il testo precedentemente salvato e impostalo sul TextView
             val savedText = loadText(context, appWidgetId, "position")
-            val arr = savedText.split(",").toTypedArray()
-            views.setTextViewText(R.id.tv_value_latitude, arr[0])
-            views.setTextViewText(R.id.tv_value_longitude, arr[1])
+            var locationArray = savedText.split(",").toTypedArray()
+            if (locationArray.size != 2)
+            {
+                locationArray = arrayOf("","")
+            }
+            views.setTextViewText(R.id.tv_value_latitude, locationArray[0])
+            views.setTextViewText(R.id.tv_value_longitude, locationArray[1])
 
             val savedSpeed = loadText(context, appWidgetId, "speed")
             views.setTextViewText(R.id.tv_value_speed, savedSpeed)
@@ -121,7 +128,11 @@ class NewAppWidget : AppWidgetProvider() {
 
         // Carica il testo salvato esistente precedentemente al resize e impostalo sul TextView
         val savedPosition = loadText(context, appWidgetId, "position")
-        val locationArray = savedPosition.split(",").toTypedArray()
+        var locationArray = savedPosition.split(",").toTypedArray()
+        if (locationArray.size != 2)
+        {
+            locationArray = arrayOf("","")
+        }
         views.setTextViewText(R.id.tv_value_latitude, locationArray[0])
         views.setTextViewText(R.id.tv_value_longitude, locationArray[1])
         val savedSumDistance = loadText(context, appWidgetId, "sumDistance")
@@ -163,15 +174,19 @@ class NewAppWidget : AppWidgetProvider() {
         for (appWidgetId in appWidgetIds) {
             val views = getWidgetSize(context, appWidgetId)
             val updatedDistance = "$latitude,$longitude"
-            val arr = updatedDistance.split(",").toTypedArray()
+            var locationArray = updatedDistance.split(",").toTypedArray()
+            if (locationArray.size != 2)
+            {
+                locationArray = arrayOf("","")
+            }
             val updatedSumDistance = (sumDistance/1000).toInt().toString()
             val updatedSpeed = speed.toString()
             val sessionDate = getDate(startTime, format)
 
 
             // Imposta testo widget
-            views.setTextViewText(R.id.tv_value_latitude, arr[0])
-            views.setTextViewText(R.id.tv_value_longitude, arr[1])
+            views.setTextViewText(R.id.tv_value_latitude, locationArray[0])
+            views.setTextViewText(R.id.tv_value_longitude, locationArray[1])
             views.setTextViewText(R.id.tv_value_sumDistance, updatedSumDistance)
             views.setTextViewText(R.id.tv_value_speed, updatedSpeed)
             views.setTextViewText(R.id.tv_sessionDate, sessionDate)
@@ -229,9 +244,13 @@ class NewAppWidget : AppWidgetProvider() {
 
         //Determina view in base a dimensione
         val views = when {
-            minWidth <= 255 && minHeight < 190 -> {RemoteViews(context.packageName, R.layout.small_view_layout)}
+            minWidth <= 255 && minHeight < 190 -> {RemoteViews(context.packageName,
+                R.layout.small_view_layout
+            )}
 
-            (minWidth > 255 && minHeight > 121) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName, R.layout.large_view_layout)}
+            (minWidth > 255 && minHeight > 121) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName,
+                R.layout.large_view_layout
+            )}
 
             else -> {RemoteViews(context.packageName, R.layout.medium_view_layout)}
         }
@@ -244,7 +263,7 @@ class NewAppWidget : AppWidgetProvider() {
         val intent = Intent(context, NewAppWidget::class.java)
         intent.action = action
         return PendingIntent.getBroadcast(context,
-            NewAppWidget.EXTRA_APPWIDGET_ID, intent, PendingIntent.FLAG_IMMUTABLE)
+            EXTRA_APPWIDGET_ID, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
     // Salva il testo del TextView distanza nel file delle preferenze condivise
@@ -259,6 +278,11 @@ class NewAppWidget : AppWidgetProvider() {
 
     private fun loadText(context: Context, appWidgetId: Int, fieldName: String): String {
         val prefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        if (fieldName == "startTime")
+        {
+            return prefs.getString("$appWidgetId-$fieldName", "Data") ?: "Data"
+
+        }
         return prefs.getString("$appWidgetId-$fieldName", "") ?: ""
     }
 

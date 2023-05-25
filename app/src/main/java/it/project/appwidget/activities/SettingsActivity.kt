@@ -12,7 +12,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import it.project.appwidget.NewAppWidget
+import it.project.appwidget.widgets.NewAppWidget
 import it.project.appwidget.R
 import it.project.appwidget.SharedPrefsHelper
 

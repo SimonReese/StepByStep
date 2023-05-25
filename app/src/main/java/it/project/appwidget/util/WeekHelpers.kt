@@ -1,4 +1,4 @@
-package it.project.appwidget
+package it.project.appwidget.util
 
 
 import java.util.*

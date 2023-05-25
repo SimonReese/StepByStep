@@ -18,6 +18,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import it.project.appwidget.util.LocationParser
+import it.project.appwidget.widgets.NewAppWidget
 
 // TODO: Valutare se spostare tutto il lavoro del Service in un thread separato (non service in background - service sempre in Foreground ma non su mainThread)
 
