@@ -92,9 +92,10 @@ class LocationService : Service() {
             intent.action = "location-update"
             intent.putExtra("speed", currentLocation.speed)
             intent.putExtra("accuracy", currentLocation.accuracy)
-            intent.putExtra("distanza", sumDistance)
+            intent.putExtra("distance", sumDistance)
             intent.putExtra("longitude", currentLocation.longitude)
             intent.putExtra("latitude", currentLocation.latitude)
+            intent.putExtra("startTime", locationList[0].time)
             sendBroadcast(intent)
             // TODO: Broadcast o LiveData?
             Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")

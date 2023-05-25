@@ -41,7 +41,7 @@ class Datasource(private val context: Context) {
 
 
 }
-
+//TODO: spostare all'interno di un file
 //Ritorna data nel formato indicato
 fun getDate(milliSeconds: Long, dateFormat: String?): String {
     // Create a DateFormatter object for displaying date in specified format.

@@ -10,46 +10,58 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import com.google.android.material.color.MaterialColors
 import it.project.appwidget.activities.SettingsActivity
 
 
 class NewAppWidget : AppWidgetProvider() {
 
     companion object {
-        const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS"
-        const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE"
+        const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS" // Azione per il pulsante delle impostazioni
+        const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE" // Azione per il pulsante di salvataggio
         const val EXTRA_APPWIDGET_ID = 1
     }
 
     private val SHARED_PREFS_NAME = "NewAppWidget"
-    private lateinit var sharedPrefsHelper: SharedPrefsHelper
+    private lateinit var sharedPrefsHelper: SharedPrefsHelper // Oggetto helper per le preferenze condivise
+    private val weekHelper = WeekHelpers()
+    private val format = "hh:mm"
 
 
+
+    // Override del metodo onUpdate per aggiornare il widget
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         Log.d("onUpdate", "Widget posizionato")
 
-        //Ciclo tutti i widget
+
+        // Ciclo tutti i widget
         for (appWidgetId in appWidgetIds) {
-            //Ottengo la view in base alla dimensione
+            // Ottengo la view in base alla dimensione
             val views = getWidgetSize(context, appWidgetId)
-            //Imposto intent al bottone impostazioni
+
+
+            // Imposto intent al bottone impostazioni
             views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
             // Carica il testo precedentemente salvato e impostalo sul TextView
-            val savedText = loadTvDistanceText(context, appWidgetId)
-            views.setTextViewText(R.id.tv_distance, savedText)
-            //Imposto elementi layout in base a quanto indicato nelle preferences
-            setNewViewVisibility(context,views)
+            val savedText = loadText(context, appWidgetId, "position")
+            val arr = savedText.split(",").toTypedArray()
+            views.setTextViewText(R.id.tv_value_latitude, arr[0])
+            views.setTextViewText(R.id.tv_value_longitude, arr[1])
+
+            val savedSpeed = loadText(context, appWidgetId, "speed")
+            views.setTextViewText(R.id.tv_value_speed, savedSpeed)
+
+            val savedDate = loadText(context, appWidgetId, "startTime")
+            views.setTextViewText(R.id.tv_timeData, savedDate)
+            // Imposto elementi layout in base a quanto indicato nelle preferences
+            setNewViewVisibility(context, views)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
 
     }
 
-
-    override fun onEnabled(context: Context) {
-        super.onEnabled(context)
-    }
-
+    // Override del metodo onReceive per gestire gli intent ricevuti
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
@@ -73,7 +85,7 @@ class NewAppWidget : AppWidgetProvider() {
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
-                //chiamo metodo setNewViewVisibility
+                // Chiamo il metodo setNewViewVisibility
                 setNewViewVisibility(context, views)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
@@ -86,43 +98,63 @@ class NewAppWidget : AppWidgetProvider() {
             for (appWidgetId in appWidgetIds) {
                 // Aggiorno il testo del widget
                 updateLocationText(context,intent.getDoubleExtra("longitude", 0.0),
-                    intent.getDoubleExtra("latitude", 0.0)
-                    , intent.getFloatExtra("distanza", 0F))
+                    intent.getDoubleExtra("latitude", 0.0),
+                    intent.getFloatExtra("distance", 0F),
+                    intent.getFloatExtra("speed", 0F),
+                    intent.getLongExtra("startTime", 0))
             }
         }
     }
 
+    // Override del metodo onDeleted per gestire l'eliminazione del widget
     override fun onDeleted(context: Context, appWidgetIds: IntArray?) {
         super.onDeleted(context, appWidgetIds)
         Log.d("onDeleted", "Widget eliminato")
     }
 
+    // Override del metodo onAppWidgetOptionsChanged per gestire il ridimensionamento del widget
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
-        //Ottengo nuova view in base alle nuove dimensioni
+        // Ottengo nuova view in base alle nuove dimensioni
         val views = getWidgetSize(context, appWidgetId)
 
         // Carica il testo salvato esistente precedentemente al resize e impostalo sul TextView
-        val savedDistance = loadTvDistanceText(context, appWidgetId)
-        views.setTextViewText(R.id.tv_distance, savedDistance)
-        val savedSumDistance = loadTvSumDistanceText(context, appWidgetId)
-        views.setTextViewText(R.id.tv_sumDistance, savedSumDistance)
+        val savedPosition = loadText(context, appWidgetId, "position")
+        val locationArray = savedPosition.split(",").toTypedArray()
+        views.setTextViewText(R.id.tv_value_latitude, locationArray[0])
+        views.setTextViewText(R.id.tv_value_longitude, locationArray[1])
+        val savedSumDistance = loadText(context, appWidgetId, "sumDistance")
+        views.setTextViewText(R.id.tv_value_sumDistance, savedSumDistance)
+        val savedSpeed = loadText(context, appWidgetId, "speed")
+        views.setTextViewText(R.id.tv_value_speed, savedSpeed)
+        val savedDate = loadText(context, appWidgetId, "startTime")
+        views.setTextViewText(R.id.tv_sessionDate, savedDate)
 
-        //Aggiorno impostazioni
-        setNewViewVisibility(context,views)
+
+
+
+
+
+        // Aggiorno impostazioni
+        setNewViewVisibility(context, views)
 
         // Imposto Listener sul bottone
         views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
-
 
         // Aggiorno widget
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    // Metodo chimato de LocationService ogni volta che riceve un nuovo dato
-    //
-    fun updateLocationText(context: Context, latitude: Double, longitude: Double, sumDistance: Float) {
+    // Metodo chiamato da LocationService ogni volta che riceve un nuovo dato
+    private fun updateLocationText(
+        context: Context,
+        latitude: Double,
+        longitude: Double,
+        sumDistance: Float,
+        speed: Float,
+        startTime: Long
+    ) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         // Ottiene id widget
         val thisAppWidgetComponentName = ComponentName(context.packageName, javaClass.name)
@@ -130,96 +162,105 @@ class NewAppWidget : AppWidgetProvider() {
 
         for (appWidgetId in appWidgetIds) {
             val views = getWidgetSize(context, appWidgetId)
-            val updatedDistance = "Latitudine: $latitude, Longitudine: $longitude"
-            val updatedSumDistance = "Session distance: $sumDistance"
+            val updatedDistance = "$latitude,$longitude"
+            val arr = updatedDistance.split(",").toTypedArray()
+            val updatedSumDistance = (sumDistance/1000).toInt().toString()
+            val updatedSpeed = speed.toString()
+            val sessionDate = getDate(startTime, format)
 
-            //Imposta testo widget
-            views.setTextViewText(R.id.tv_distance, updatedDistance)
-            views.setTextViewText(R.id.tv_sumDistance, updatedSumDistance)
+
+            // Imposta testo widget
+            views.setTextViewText(R.id.tv_value_latitude, arr[0])
+            views.setTextViewText(R.id.tv_value_longitude, arr[1])
+            views.setTextViewText(R.id.tv_value_sumDistance, updatedSumDistance)
+            views.setTextViewText(R.id.tv_value_speed, updatedSpeed)
+            views.setTextViewText(R.id.tv_sessionDate, sessionDate)
+
+
 
             // Salva il testo aggiornato
-            saveTvDistanceText(context, appWidgetId, updatedDistance)
-            saveTvSumDistanceText(context, appWidgetId, updatedSumDistance)
+            saveText(context, appWidgetId, "position", updatedDistance)
+            saveText(context, appWidgetId, "sumDistance", updatedSumDistance)
+            saveText(context, appWidgetId, "speed" ,updatedSpeed)
+            saveText(context, appWidgetId, "startTime" ,sessionDate)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
-
         }
     }
 
-    // Determina cosa mostrare sull'UI del widget in base a qanto salvato in sharedPrefsHelper
-    private fun setNewViewVisibility(context: Context, views: RemoteViews)
-    {
-
+    // Determina cosa mostrare sull'UI del widget in base a quanto salvato in sharedPrefsHelper
+    private fun setNewViewVisibility(context: Context, views: RemoteViews) {
         sharedPrefsHelper = SharedPrefsHelper(context)
-        //Ottiene stati sharedPrefsHelper
+        // Ottiene stati sharedPrefsHelper
         val isSpeedChecked = sharedPrefsHelper.isSpeedChecked()
-        val isDistanceChecked = sharedPrefsHelper.isDistanceChecked()
+        val isPositionChecked = sharedPrefsHelper.isDistanceChecked()
         val isCaloriesChecked = sharedPrefsHelper.isCaloriesChecked()
         val isSessionDistanceChecked = sharedPrefsHelper.isSessionDistanceChecked()
 
-
         // Aggiorna la visibilità dei campi nel layout del widget in base allo stato dei checkbox
         views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_distance, if (isDistanceChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_value_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_latitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_value_latitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_value_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_value_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tv_value_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
 
-        // Reimposto Listener sul bottone settings
-        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
+        //TODO: fare stessa cosa per tv_sessionDate
+        views.setViewVisibility(R.id.tv_sessionDate, View.VISIBLE)
     }
 
-    private fun saveTvDistanceText(context: Context, appWidgetId: Int, text: String) {
-        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("tv_distance_text_$appWidgetId", text).apply()
+    // Restituisce una RemoteViews in base alle dimensioni del widget
+    //ritorna layout in base alle dimensioni del widget
+    private fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
+    {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        //Ottieni oggetto Bundle che contiene informazioni aggiuntive sul widget di ID widgetId
+        val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
+
+        //Ottiene dimensione attuale widget
+        val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+        val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+        println("minWidth" + minWidth)
+        println("minHeight" + minHeight)
+
+        //Determina view in base a dimensione
+        val views = when {
+            minWidth <= 255 && minHeight < 190 -> {RemoteViews(context.packageName, R.layout.small_view_layout)}
+
+            (minWidth > 255 && minHeight > 121) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName, R.layout.large_view_layout)}
+
+            else -> {RemoteViews(context.packageName, R.layout.medium_view_layout)}
+        }
+
+        return views
     }
 
-    private fun loadTvDistanceText(context: Context, appWidgetId: Int): String {
-        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getString("tv_distance_text_$appWidgetId", "Latitudine: 0.0, Longitudine: 0.0") ?: "Latitudine: 0.0, Longitudine: 0.0"
+    // Restituisce un PendingIntent per l'intent specificato
+    private fun getPendingSelfIntent(context: Context, action: String): PendingIntent{
+        val intent = Intent(context, NewAppWidget::class.java)
+        intent.action = action
+        return PendingIntent.getBroadcast(context,
+            NewAppWidget.EXTRA_APPWIDGET_ID, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
-    private fun saveTvSumDistanceText(context: Context, appWidgetId: Int, text: String) {
-        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("tv_sum_distance_text_$appWidgetId", text).apply()
+    // Salva il testo del TextView distanza nel file delle preferenze condivise
+    private fun saveText(context: Context, appWidgetId: Int, fieldName: String, text: String) {
+        val prefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putString("$appWidgetId-$fieldName", text)
+        editor.apply()
     }
 
-    private fun loadTvSumDistanceText(context: Context, appWidgetId: Int): String {
-        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getString("tv_sum_distance_text_$appWidgetId", "Session distance: 0.0") ?: "Session distance: 0.0"
+    // Carica il testo del TextView distanza dal file delle preferenze condivise
+
+    private fun loadText(context: Context, appWidgetId: Int, fieldName: String): String {
+        val prefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString("$appWidgetId-$fieldName", "") ?: ""
     }
 
 
-
-
-
-}
-
-private fun getPendingSelfIntent(context: Context, action: String): PendingIntent{
-    val intent = Intent(context, NewAppWidget::class.java)
-    intent.action = action
-    return PendingIntent.getBroadcast(context,
-        NewAppWidget.EXTRA_APPWIDGET_ID, intent, PendingIntent.FLAG_IMMUTABLE)
-}
-
-//ritorna layout in base alle dimensioni del widget
-fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
-{
-    val appWidgetManager = AppWidgetManager.getInstance(context)
-    //Ottieni oggetto Bundle che contiene informazioni aggiuntive sul widget di ID widgetId
-    val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
-
-    //Ottiene dimensione attuale widget
-    val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-    val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-
-    //Determina view in base a dimensione
-    val views = when {
-        minWidth <= 255 && minHeight < 130 -> {RemoteViews(context.packageName, R.layout.small_view_layout)}
-
-        (minWidth > 250 && minHeight > 130) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName, R.layout.large_view_layout)}
-
-        else -> {RemoteViews(context.packageName, R.layout.medium_view_layout)}
-    }
-
-    return views
 }

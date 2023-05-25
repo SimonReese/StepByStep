@@ -17,7 +17,7 @@ class GraphActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private val weekHelper = WeekHelpers()
-    val format = "yyyy-dd-MM"
+    private val format = "yyyy-dd-MM"
     private var selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
 
     override fun onCreate(savedInstanceState: Bundle?) {
