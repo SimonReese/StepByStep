@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.Run">
 
-    <!--TODO: Perchè questo fragment non ha come padre una scrollview come fragment_home o fragment_config?-->
+       <!--TODO: Perchè questo fragment non ha come padre una scrollview come fragment_home o fragment_config?-->
+
 
     <Chronometer
         android:id="@+id/sessionChronometer"
