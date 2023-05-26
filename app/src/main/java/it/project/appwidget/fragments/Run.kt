@@ -130,5 +130,17 @@ class Run : Fragment() {
     private fun restoreState(inState: Bundle) {
         Log.d("RunFragment", "Chiamato restoreState")
 
+        // Ottengo stato cronometro e lo faccio ripartire, ma solo se era attivo
+        runningChronometer = inState.getBoolean("runningChronometer", false)
+        if (runningChronometer){
+            sessionChronometer.base = inState.getLong("sessionChronometer_base")
+            sessionChronometer.start()
+        }
+
+        // Ripristino stato delle textviews
+        distanceTextView.text = inState.getCharSequence("distanceTextView_text")
+        accuracyTextView.text = inState.getCharSequence("accuracyTextView_text")
+        speedTextView.text = inState.getCharSequence("speedTextView_text")
+
     }
 }
