@@ -22,8 +22,8 @@ class Run : Fragment() {
 
     // Views
     private lateinit var distanceTextView: TextView
-    private lateinit var accuracyTextView: TextView
-    private lateinit var speedTextView:TextView
+    private lateinit var rateTextView: TextView
+    private lateinit var kcalTextView: TextView
     private lateinit var sessionChronometer: Chronometer
     private lateinit var startServiceButton: Button
     private lateinit var stopServiceButton: Button
@@ -40,8 +40,8 @@ class Run : Fragment() {
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
             val distloc = intent?.getFloatExtra("distanza", 0f)
-            speedTextView.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
-            accuracyTextView.text = accloc.toString() + "m"
+            kcalTextView.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
+            rateTextView.text = accloc.toString() + "m"
             distanceTextView.text = distloc.toString() + "m"
         }
     }
@@ -70,8 +70,8 @@ class Run : Fragment() {
 
         // Inizializzazione Views
         distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
-        accuracyTextView = view.findViewById<TextView>(R.id.rateTextView)
-        speedTextView = view.findViewById<TextView>(R.id.kcalTextView)
+        rateTextView = view.findViewById<TextView>(R.id.rateTextView)
+        kcalTextView = view.findViewById<TextView>(R.id.kcalTextView)
         sessionChronometer = view.findViewById<Chronometer>(R.id.sessionChronometer)
         startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
@@ -115,8 +115,8 @@ class Run : Fragment() {
 
         // Salvo lo stato di tutte le Views
         outState.putCharSequence("distanceTextView_text", distanceTextView.text)
-        outState.putCharSequence("accuracyTextView_text", accuracyTextView.text)
-        outState.putCharSequence("speedTextView_text", speedTextView.text)
+        outState.putCharSequence("rateTextView_text", rateTextView.text)
+        outState.putCharSequence("kcalTextView_text", kcalTextView.text)
 
         super.onSaveInstanceState(outState)
     }
@@ -139,8 +139,8 @@ class Run : Fragment() {
 
         // Ripristino stato delle textviews
         distanceTextView.text = inState.getCharSequence("distanceTextView_text")
-        accuracyTextView.text = inState.getCharSequence("accuracyTextView_text")
-        speedTextView.text = inState.getCharSequence("speedTextView_text")
+        rateTextView.text = inState.getCharSequence("rateTextView_text")
+        kcalTextView.text = inState.getCharSequence("kcalTextView_text")
 
     }
 }
