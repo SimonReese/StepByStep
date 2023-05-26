@@ -28,6 +28,11 @@ class Run : Fragment() {
     private lateinit var startServiceButton: Button
     private lateinit var stopServiceButton: Button
 
+    // Debug
+    private lateinit var accuracy_debug_textview: TextView
+    private lateinit var speed_debug_textview: TextView
+    private lateinit var distance_debug_textview: TextView
+
     // Stato
     private var runningChronometer = false
 
@@ -40,9 +45,9 @@ class Run : Fragment() {
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
             val distloc = intent?.getFloatExtra("distanza", 0f)
-            kcalTextView.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
-            rateTextView.text = accloc.toString() + "m"
-            distanceTextView.text = distloc.toString() + "m"
+            speed_debug_textview.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
+            accuracy_debug_textview.text = accloc.toString() + "m"
+            distance_debug_textview.text = distloc.toString() + "m"
         }
     }
 
@@ -75,6 +80,10 @@ class Run : Fragment() {
         sessionChronometer = view.findViewById<Chronometer>(R.id.sessionChronometer)
         startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
+        // Views di DEBUG
+        accuracy_debug_textview = view.findViewById(R.id.debug_accuracy_textview)
+        speed_debug_textview = view.findViewById(R.id.debug_speed_textview)
+        distance_debug_textview = view.findViewById(R.id.debug_distance_textview)
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
         if (savedInstanceState != null) {
