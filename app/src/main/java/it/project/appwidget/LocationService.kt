@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -88,17 +89,28 @@ class LocationService : Service() {
                 locationList.add(currentLocation)
             }
 
-            // Invio broadcast
-            val intent = Intent(this@LocationService, NewAppWidget::class.java)
-            intent.action = "location-update"
-            intent.putExtra("speed", currentLocation.speed)
-            intent.putExtra("accuracy", currentLocation.accuracy)
-            intent.putExtra("distance", sumDistance)
-            intent.putExtra("longitude", currentLocation.longitude)
-            intent.putExtra("latitude", currentLocation.latitude)
-            intent.putExtra("startTime", locationList[0].time)
-            sendBroadcast(intent)
+
+            /* Invio broadcasts.
+            Affinchè il widget riceva il broadcast, è necessario inviare un intent ESPLICITO. Tuttavia
+            per è necessario inviare il broadcast anche al fragment. Creiamo quindi due intent.*/
+
+            // Creo intent implicito generico
+            val implicitIntent = Intent("location-update")
+            implicitIntent.putExtra("speed", currentLocation.speed)
+            implicitIntent.putExtra("accuracy", currentLocation.accuracy)
+            implicitIntent.putExtra("distance", sumDistance)
+            implicitIntent.putExtra("longitude", currentLocation.longitude)
+            implicitIntent.putExtra("latitude", currentLocation.latitude)
+            implicitIntent.putExtra("startTime", locationList[0].time)
+
+            // Copio intent generico e creo intent esplicito
+            val explicitIntent = Intent(implicitIntent)
+            explicitIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
+            // Invio intents
+            sendBroadcast(implicitIntent)
+            sendBroadcast(explicitIntent)
             // TODO: Broadcast o LiveData?
+
             Log.d("CustomLocationListener","Inviato messaggio broadcast con: " +
                     "[long: ${currentLocation.longitude}, lat: ${currentLocation.latitude}, acc: ${currentLocation.accuracy}, " +
                     "speed: ${currentLocation.speed}, dist: ${sumDistance},]")
