@@ -35,14 +35,16 @@ class Run : Fragment() {
     // TODO: Come rendo il timer consistente anche a seguito della chiusura del fragemnts?
 
     // Classe per ricezione broadcast messages
-    private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
+    private inner class LocationBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("Run", "onReceive chiamato")
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
-            val distloc = intent?.getFloatExtra("distanza", 0f)
+            val distloc = intent?.getFloatExtra("distance", 0f)
             speedTextView.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
             accuracyTextView.text = accloc.toString() + "m"
             distanceTextView.text = distloc.toString() + "m"
+            distanceTextView.text = (DecimalFormat("#.##").format(distloc!!/1000)).toString() + "km"
         }
     }
 
@@ -94,12 +96,19 @@ class Run : Fragment() {
             sessionChronometer.base = SystemClock.elapsedRealtime()
             sessionChronometer.start()
             runningChronometer = true
+
+            // Disattiva il bottone startServiceButton e attiva il bottone stopServiceButton
+            startServiceButton.isEnabled = false
+            stopServiceButton.isEnabled = true
         }
 
         stopServiceButton.setOnClickListener {
             requireActivity().stopService(serviceIntent)
             sessionChronometer.stop()
             runningChronometer = false
+            // Disattiva il bottone stopServiceButton e attiva il bottone startServiceButton
+            stopServiceButton.isEnabled = false
+            startServiceButton.isEnabled = true
         }
     }
 
