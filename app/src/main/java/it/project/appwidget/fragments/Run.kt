@@ -70,8 +70,8 @@ class Run : Fragment() {
 
         // Inizializzazione Views
         distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
-        accuracyTextView = view.findViewById<TextView>(R.id.accuracyTextView)
-        speedTextView = view.findViewById<TextView>(R.id.speedTextView)
+        accuracyTextView = view.findViewById<TextView>(R.id.rateTextView)
+        speedTextView = view.findViewById<TextView>(R.id.kcalTextView)
         sessionChronometer = view.findViewById<Chronometer>(R.id.sessionChronometer)
         startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
         stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
