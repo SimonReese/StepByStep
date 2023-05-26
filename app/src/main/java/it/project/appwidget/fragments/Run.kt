@@ -20,10 +20,13 @@ import java.text.DecimalFormat
 
 class Run : Fragment() {
 
+    // Views
     private lateinit var distanceTextView: TextView
     private lateinit var accuracyTextView: TextView
     private lateinit var speedTextView:TextView
     private lateinit var sessionChronometer: Chronometer
+    private lateinit var startServiceButton: Button
+    private lateinit var stopServiceButton: Button
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // TODO: Come rendo il timer consistente anche a seguito della chiusura del fragemnts?
@@ -45,24 +48,35 @@ class Run : Fragment() {
         Log.d("RunFragment", "Chiamato onCreate")
     }
 
+    // La documentazione di Android dice di usare questo metodo solo per caricare il layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_run, container, false)
+        Log.d("RunFragment", "Chiamato onCreateView")
+        // Inflate del layout
+        return inflater.inflate(R.layout.fragment_run, container, false)
+    }
+
+    // E' consigliato implementare la logica del fragment qua
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //TODO: chiedere permessi
-        Log.d("RunFragment", "Chiamato onCreateView")
-        distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
-        accuracyTextView = view.findViewById(R.id.accuracyTextView)
-        speedTextView = view.findViewById<TextView>(R.id.speedTextView)
-        sessionChronometer = view.findViewById(R.id.sessionChronometer)
-        val startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
-        val stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
+        Log.d("RunFragment", "Chiamato onViewCreated")
 
-        // Recupero stato del fragment - ma solo se activity ha salvato con onSaveInstanceState
-        restoreState(savedInstanceState)
+        // Inizializzazione Views
+        distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
+        accuracyTextView = view.findViewById<TextView>(R.id.accuracyTextView)
+        speedTextView = view.findViewById<TextView>(R.id.speedTextView)
+        sessionChronometer = view.findViewById<Chronometer>(R.id.sessionChronometer)
+        startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
+        stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
+
+        // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState)
+        }
 
         // Registro receiver
         locationBroadcastReceiver = LocationBroadcastReceiver()
@@ -82,8 +96,6 @@ class Run : Fragment() {
             requireActivity().stopService(serviceIntent)
             sessionChronometer.stop()
         }
-
-        return view
     }
 
     // Viene chiamato solo quando activity chiama lo stesso!! Non va bene per il salvataggio in navigazione
