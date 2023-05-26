@@ -28,6 +28,9 @@ class Run : Fragment() {
     private lateinit var startServiceButton: Button
     private lateinit var stopServiceButton: Button
 
+    // Stato
+    private var runningChronometer = false
+
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // TODO: Come rendo il timer consistente anche a seguito della chiusura del fragemnts?
 
@@ -90,31 +93,42 @@ class Run : Fragment() {
             requireActivity().startForegroundService(serviceIntent)
             sessionChronometer.base = SystemClock.elapsedRealtime()
             sessionChronometer.start()
+            runningChronometer = true
         }
 
         stopServiceButton.setOnClickListener {
             requireActivity().stopService(serviceIntent)
             sessionChronometer.stop()
+            runningChronometer = false
         }
     }
 
     // Viene chiamato solo quando activity chiama lo stesso!! Non va bene per il salvataggio in navigazione
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("RunFragment", "Chiamato onSaveInstanceState")
+
+        // Salvo cronometro, ma solo se attivo
+        if (runningChronometer){
+            outState.putBoolean("runningChronometer", runningChronometer)
+            outState.putLong("sessionChronometer_base", sessionChronometer.base)
+        }
+
+        // Salvo lo stato di tutte le Views
+        outState.putCharSequence("distanceTextView_text", distanceTextView.text)
+        outState.putCharSequence("accuracyTextView_text", accuracyTextView.text)
+        outState.putCharSequence("speedTextView_text", speedTextView.text)
+
         super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         Log.d("RunFragment", "Chiamato onDestroy")
+        super.onDestroy()
     }
 
     // Recupero stato del fragment
-    private fun restoreState(inState: Bundle?) {
+    private fun restoreState(inState: Bundle) {
         Log.d("RunFragment", "Chiamato restoreState")
-        if (inState == null){
-            return
-        }
-        Log.d("RunFragment", "Bundle valido")
+
     }
 }
