@@ -43,16 +43,18 @@
                 app:layout_constraintTop_toBottomOf="@id/datiText">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:orientation="vertical">
+
+                <LinearLayout
                     android:id="@+id/linear1"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_gravity="center_horizontal"
                         android:id="@+id/nome_utente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,29 +73,21 @@
                         android:textAlignment="viewEnd"
                         android:textSize="18sp" />
 
-
                 </LinearLayout>
-
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="40dp">
-
+                    android:background="@color/black">
                 </View>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="45dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
 
                     <TextView
                         android:id="@+id/peso"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -117,23 +111,18 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="80dp">
+                    android:background="@color/black">
 
                 </View>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="90dp"
-                    android:layout_marginEnd="15dp"
                     android:orientation="horizontal">
 
 
                     <TextView
                         android:id="@+id/eta"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -157,41 +146,73 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="120dp">
+                    android:background="@color/black">
 
                 </View>
 
 
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="160dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                </View>
+                    <TextView
+                        android:id="@+id/sesso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sesso: "
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/valore_sesso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="M"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black">
 
-                <View
+                    </View>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="200dp">
-
-                </View>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="240dp">
+                    <TextView
+                        android:id="@+id/tipologia_attivita"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tipologia attività: "
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                </View>
+                    <TextView
+                        android:id="@+id/valore_tipologia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Corsa"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="280dp">
-
-                </View>
+                </LinearLayout>
 
 
 
@@ -199,6 +220,13 @@
 
 
 
+
+
+
+
+
+
+                </LinearLayout>
 
 
 
