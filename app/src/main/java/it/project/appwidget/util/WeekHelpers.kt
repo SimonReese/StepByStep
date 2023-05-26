@@ -47,8 +47,8 @@ class WeekHelpers {
     fun getNextWeekRange(weekRange: Pair<Long, Long>): Pair<Long, Long> {
         val (startOfWeek, endOfWeek) = weekRange
 
-        val startOfPreviousWeek = startOfWeek + 7 * 24 * 60 * 60 * 1000 // Sottrai una settimana in millisecondi
-        val endOfPreviousWeek = endOfWeek + 7 * 24 * 60 * 60 * 1000 // Sottrai una settimana in millisecondi
+        val startOfPreviousWeek = startOfWeek + 7 * 24 * 60 * 60 * 1000 // Somma una settimana in millisecondi
+        val endOfPreviousWeek = endOfWeek + 7 * 24 * 60 * 60 * 1000 // Somma una settimana in millisecondi
 
         return Pair(startOfPreviousWeek, endOfPreviousWeek)
     }
