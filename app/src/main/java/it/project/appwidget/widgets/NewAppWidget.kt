@@ -14,7 +14,6 @@ import it.project.appwidget.R
 import it.project.appwidget.SharedPrefsHelper
 import it.project.appwidget.util.WeekHelpers
 import it.project.appwidget.activities.SettingsActivity
-import it.project.appwidget.getDate
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -181,7 +180,7 @@ class NewAppWidget : AppWidgetProvider() {
             }
             val updatedSumDistance = (sumDistance/1000).toInt().toString()
             val updatedSpeed = speed.toString()
-            val sessionDate = getDate(startTime, format)
+            val sessionDate = weekHelper.getDate(startTime, format)
 
 
             // Imposta testo widget

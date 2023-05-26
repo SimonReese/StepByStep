@@ -38,7 +38,7 @@ class GraphActivity : AppCompatActivity() {
         val nextWeekButton: Button = findViewById(R.id.nextWeekButton)
         val currentDate: TextView = findViewById(R.id.tv_date)
 
-        currentDate.text = getDate(selectedWeek.first, format) + " - " + getDate(selectedWeek.second, format)
+        currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
 
         val barChart: BarChart = findViewById(R.id.barChart)
 
@@ -76,7 +76,7 @@ class GraphActivity : AppCompatActivity() {
     {
         //Carica del recyclerview dati settimana selezionata
         loadRecyclerView(selectedWeek.first, selectedWeek.second)
-        currentDate.text = getDate(selectedWeek.first, format) + " - " + getDate(selectedWeek.second, format)
+        currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
         //Ottieni lista di TrackSession della settimana selezionata
         val sessions = getSessionsList(selectedWeek.first, selectedWeek.second)
         //Ottieni array in cui in ogni cella è presente somma distance di quel giorno

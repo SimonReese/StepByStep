@@ -54,12 +54,10 @@ class ListWidget : AppWidgetProvider() {
         // Gestione del clic sugli elementi della ListView
         if (intent.action == "ITEM_CLICK_ACTION") {
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-            val position = intent.getIntExtra("position", -1)
-            println(appWidgetId.toString() + " " + position)
+
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                 val detailIntent = Intent(context, DetailActivity::class.java)
                 detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                detailIntent.putExtra("position", position)
                 context.startActivity(detailIntent)
             }
         }

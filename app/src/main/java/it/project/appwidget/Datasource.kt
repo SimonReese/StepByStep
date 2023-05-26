@@ -24,7 +24,7 @@ class Datasource(private val context: Context) {
             val startTime: Long = sessionIdStartTime.startTime
             val dayStr = weekHelper.getStringDayOfWeek(startTime)
             val format = "HH:mm"
-            val date = getDate(startTime, format)
+            val date = weekHelper.getDate(startTime, format)
 
             val pair = Pair(sessionId, "$dayStr: $date")
             pairArray.add(pair)
@@ -41,15 +41,4 @@ class Datasource(private val context: Context) {
     }
 
 
-}
-//TODO: spostare all'interno di un file
-//Ritorna data nel formato indicato
-fun getDate(milliSeconds: Long, dateFormat: String?): String {
-    // Create a DateFormatter object for displaying date in specified format.
-    val formatter = SimpleDateFormat(dateFormat)
-
-    // Create a calendar object that will convert the date and time value in milliseconds to date.
-    val calendar: Calendar = Calendar.getInstance()
-    calendar.timeInMillis = milliSeconds
-    return formatter.format(calendar.getTime())
 }

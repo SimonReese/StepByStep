@@ -1,6 +1,7 @@
 package it.project.appwidget.util
 
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 class WeekHelpers {
@@ -76,6 +77,17 @@ class WeekHelpers {
             6 -> "Domenica"
             else -> throw IllegalArgumentException("Numero non valido. Deve essere compreso tra 0 e 6.")
         }
+    }
+
+    //Ritorna data nel formato indicato
+    fun getDate(milliSeconds: Long, dateFormat: String?): String {
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat(dateFormat)
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return formatter.format(calendar.getTime())
     }
 
 
