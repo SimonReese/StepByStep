@@ -42,6 +42,7 @@ class Run : Fragment() {
     // Classe per ricezione broadcast messages
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive")
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
             val distloc = intent?.getFloatExtra("distanza", 0f)
