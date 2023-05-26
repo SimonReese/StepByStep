@@ -7,6 +7,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import it.project.appwidget.activities.DetailActivity.Companion.ARG_SESSION_ID
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
 import it.project.appwidget.widgets.ListWidget
@@ -95,7 +96,9 @@ class ListWidgetService : RemoteViewsService() {
             val clickIntent = Intent(context, ListWidget::class.java)
             clickIntent.action = "ITEM_CLICK_ACTION"
             clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            //TODO: put extra id database
+            // Inserisco Id nell'intent (putExtra FUNZIONA)
+            clickIntent.putExtra(ARG_SESSION_ID, "100")
+            println("ARG_SESSION_ID: " + ARG_SESSION_ID)
             remoteViews.setOnClickFillInIntent(R.id.list_item_widget, clickIntent)
 
             return remoteViews

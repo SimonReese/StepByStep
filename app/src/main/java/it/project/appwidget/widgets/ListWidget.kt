@@ -12,6 +12,7 @@ import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.ListWidgetService
 import it.project.appwidget.activities.DetailActivity
+import it.project.appwidget.activities.DetailActivity.Companion.ARG_SESSION_ID
 import it.project.appwidget.database.TrackSession
 import kotlinx.coroutines.launch
 
@@ -53,9 +54,13 @@ class ListWidget : AppWidgetProvider() {
 
         // Gestione del clic sugli elementi della ListView
         if (intent.action == "ITEM_CLICK_ACTION") {
-            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
+            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                //TODO: FIXARE E CAPIRE PERCHE' getStringExtra RITORNA SEMPRE NULL (putExtra è in ListWidgetService)
+                val sessionId = intent.getStringExtra(ARG_SESSION_ID)
+                println(sessionId)
+
                 val detailIntent = Intent(context, DetailActivity::class.java)
                 detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 context.startActivity(detailIntent)
