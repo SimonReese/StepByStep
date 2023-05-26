@@ -55,6 +55,10 @@ class Run : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("RunFragment", "Chiamato onCreate")
+
+        // Registro receiver
+        locationBroadcastReceiver = LocationBroadcastReceiver()
+        requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
     }
 
     // La documentazione di Android dice di usare questo metodo solo per caricare il layout
@@ -90,10 +94,6 @@ class Run : Fragment() {
         if (savedInstanceState != null) {
             restoreState(savedInstanceState)
         }
-
-        // Registro receiver
-        locationBroadcastReceiver = LocationBroadcastReceiver()
-        requireContext().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
 
         // Creo intent per il LocationService
         val serviceIntent = Intent(requireActivity(), LocationService::class.java)
@@ -133,6 +133,10 @@ class Run : Fragment() {
 
     override fun onDestroy() {
         Log.d("RunFragment", "Chiamato onDestroy")
+
+        // Tolgo registrazione receiver
+        requireActivity().unregisterReceiver(locationBroadcastReceiver)
+
         super.onDestroy()
     }
 
