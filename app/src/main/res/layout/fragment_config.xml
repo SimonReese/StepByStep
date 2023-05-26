@@ -31,7 +31,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/infoCard"
                 android:layout_width="0dp"
-                android:layout_height="400dp"
+                android:layout_height="300dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="20dp"
                 android:layout_marginTop="50dp"
@@ -61,7 +61,7 @@
                         android:layout_weight="1"
                         android:text="Nome: "
                         android:fontFamily="@font/poppins_semibold"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -71,12 +71,13 @@
                         android:text="Giovanni"
                         android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
-                        android:textSize="18sp" />
+                        android:textSize="25sp" />
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
                     android:layout_height="1dp"
                     android:background="@color/black">
                 </View>
@@ -93,7 +94,7 @@
                         android:layout_weight="1"
                         android:text="Peso: "
                         android:fontFamily="@font/poppins_semibold"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -104,13 +105,14 @@
                         android:text="100 "
                         android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/black">
 
                 </View>
@@ -128,7 +130,7 @@
                         android:layout_weight="1"
                         android:text="Eta': "
                         android:fontFamily="@font/poppins_semibold"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -139,13 +141,14 @@
                         android:text="20 "
                         android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/black">
 
                 </View>
@@ -163,7 +166,7 @@
                         android:layout_weight="1"
                         android:text="Sesso: "
                         android:fontFamily="@font/poppins_semibold"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -174,12 +177,13 @@
                         android:text="M"
                         android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
                 </LinearLayout>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginTop="5dp"
                         android:background="@color/black">
 
                     </View>
@@ -197,7 +201,7 @@
                         android:layout_weight="1"
                         android:text="Tipologia attività: "
                         android:fontFamily="@font/poppins_semibold"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -208,7 +212,7 @@
                         android:text="Corsa"
                         android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
 
@@ -233,7 +237,7 @@
             </androidx.cardview.widget.CardView>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/modified_data_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"

@@ -9,6 +9,10 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 
+/**
+ * classe che disegna il grafico a barre
+ */
+
 class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
     var days: Array<String> = arrayOf("LUN", "MAR", "MER", "GIOV", "VEN", "SAB", "DOM")
