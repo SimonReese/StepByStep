@@ -5,6 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.project.appwidget.R
 import it.project.appwidget.fragments.Config
@@ -15,43 +21,34 @@ import it.project.appwidget.fragments.Stats
 
 class MainActivity : AppCompatActivity() {
 
-    private val home: Fragment = Home()
-    private val run: Fragment = Run()
-    private val stats: Fragment = Stats()
-    private val config: Fragment = Config()
-    private val setup: Fragment = Setup()
+    // Il riferimento alla view che ospiterà i vari fragment
+    private lateinit var navigationHostFragment: NavHostFragment
+
+    // Il riferiemento al controllore che si occupa della navigazione in questa activity
+    private lateinit var navigationController: NavController
+
+    // Il riferimento alla bottomNavigationBar
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "Chiamato onCreate")
         setContentView(R.layout.activity_main)
 
-        // TODO: CHIEDERE PERMESSI!!!
+        // Ottengo riferimento al navigationHostFragment tramite il supportFragmentManager
+        navigationHostFragment = supportFragmentManager.findFragmentById(R.id.navigationHostFragment) as NavHostFragment
+        // Dal navigationHostFragment ottengo il controllore della navigation
+        navigationController = navigationHostFragment.navController
 
-        val bottom_nav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        // Ottengo riferimento alla bottomNavigationView
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        // Imposto il fragment sul fragment manager solo se il l'activity non è stata ricreata da un altra
-        if (savedInstanceState == null){
-            replaceFragment(R.id.home)
-        }
-
-        bottom_nav.setOnItemSelectedListener {menuItem: MenuItem ->
-            replaceFragment(menuItem.itemId)
-            true
-        }
+        /* Aggangio le action della bottom navigation view al controller che si occupa della navigation.
+         Poichè gli id del menù sono gli stessi id dei vari fragments nel grafo di navigazione, il controller
+         collega autmaticamente i click sugli elementi della barra (definiti nel menù) al fragment corrispondente*/
+        bottomNavigationView.setupWithNavController(navigationController)
     }
 
-    private fun replaceFragment(menuId: Int){
-        val transaction = supportFragmentManager.beginTransaction()
-        when (menuId){
-            R.id.home -> transaction.replace(R.id.fragmentContainerView, home)
-            R.id.run -> transaction.replace(R.id.fragmentContainerView, run)
-            R.id.stats -> transaction.replace(R.id.fragmentContainerView, stats)
-            R.id.settings -> transaction.replace(R.id.fragmentContainerView, config)
-            //R.id.setup -> transaction.replace(R.id.fragmentContainerView, setup)
-        }
-        transaction.commit()
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
