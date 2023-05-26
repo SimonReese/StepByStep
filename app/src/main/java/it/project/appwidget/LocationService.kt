@@ -88,16 +88,30 @@ class LocationService : Service() {
                 locationList.add(currentLocation)
             }
 
-            // Invio broadcast
-            val intent = Intent(this@LocationService, NewAppWidget::class.java)
-            intent.action = "location-update"
-            intent.putExtra("speed", currentLocation.speed)
-            intent.putExtra("accuracy", currentLocation.accuracy)
-            intent.putExtra("distance", sumDistance)
-            intent.putExtra("longitude", currentLocation.longitude)
-            intent.putExtra("latitude", currentLocation.latitude)
-            intent.putExtra("startTime", locationList[0].time)
-            sendBroadcast(intent)
+            //TODO: Evitare di ripetere il codice
+            // Invio broadcast NewAppWidget
+            val newAppWidgetIntent = Intent(this@LocationService, NewAppWidget::class.java)
+            newAppWidgetIntent.action = "location-update"
+            newAppWidgetIntent.putExtra("speed", currentLocation.speed)
+            newAppWidgetIntent.putExtra("accuracy", currentLocation.accuracy)
+            newAppWidgetIntent.putExtra("distance", sumDistance)
+            newAppWidgetIntent.putExtra("longitude", currentLocation.longitude)
+            newAppWidgetIntent.putExtra("latitude", currentLocation.latitude)
+            newAppWidgetIntent.putExtra("startTime", locationList[0].time)
+            sendBroadcast(newAppWidgetIntent)
+            // Invio broadcast MainActivityIntent
+            val mainActivityIntent = Intent()
+            mainActivityIntent.action = "location-update"
+            mainActivityIntent.putExtra("speed", currentLocation.speed)
+            mainActivityIntent.putExtra("accuracy", currentLocation.accuracy)
+            mainActivityIntent.putExtra("distance", sumDistance)
+            mainActivityIntent.putExtra("longitude", currentLocation.longitude)
+            mainActivityIntent.putExtra("latitude", currentLocation.latitude)
+            mainActivityIntent.putExtra("startTime", locationList[0].time)
+            sendBroadcast(mainActivityIntent)
+
+
+
             // TODO: Broadcast o LiveData?
             Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")
             Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
