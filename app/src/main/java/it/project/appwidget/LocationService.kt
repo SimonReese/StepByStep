@@ -59,7 +59,7 @@ class LocationService : Service() {
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
         override fun onLocationChanged(currentLocation: Location) {
-            Log.d("LocationService", "latitudine: ${currentLocation.latitude}, longitudine: ${currentLocation.longitude}, " +
+            Log.d("CustomLocationListener", "latitudine: ${currentLocation.latitude}, longitudine: ${currentLocation.longitude}, " +
                     "velocità: ${currentLocation.speed}(+- ${currentLocation.speedAccuracyMetersPerSecond}), " +
                     "accuratezza: ${currentLocation.accuracy}")
 
@@ -99,14 +99,16 @@ class LocationService : Service() {
             intent.putExtra("startTime", locationList[0].time)
             sendBroadcast(intent)
             // TODO: Broadcast o LiveData?
-            Log.d("onLocationChanged","sumDistance: ${sumDistance}\"")
-            Log.d("onLocationChanged","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
+            Log.d("CustomLocationListener","Inviato messaggio broadcast con: " +
+                    "[long: ${currentLocation.longitude}, lat: ${currentLocation.latitude}, acc: ${currentLocation.accuracy}, " +
+                    "speed: ${currentLocation.speed}, dist: ${sumDistance},]")
+            Log.d("CustomLocationListener","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
 
             //TODO: Stoppare servizio
             if(System.currentTimeMillis() - locationList.last().time >= 600000) {
                 // Resetto i valori per creare una nuova sessione
-                Log.d("onLocationChanged", "Sessione resettata")
+                Log.d("CustomLocationListener", "Sessione resettata")
                 sumDistance = 0F
                 lastRelevantLocation = currentLocation
 
