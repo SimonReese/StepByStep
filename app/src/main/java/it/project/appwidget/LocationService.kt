@@ -89,14 +89,21 @@ class LocationService : Service() {
                 locationList.add(currentLocation)
             }
 
+            // Calcolo il rate: tempo (in minuti) necessario a percorrere 1 km
+            var rate: Float = 0.00f
+            // Considero solo velocità superiori a 0.5 m/s
+            if (currentLocation.speed > 0.5){
+                rate = (1000 / currentLocation.speed) / 60
+            }
 
             /* Invio broadcasts.
             Affinchè il widget riceva il broadcast, è necessario inviare un intent ESPLICITO. Tuttavia
-            per è necessario inviare il broadcast anche al fragment. Creiamo quindi due intent.*/
+            è necessario inviare il broadcast anche al fragment. Creiamo quindi due intent.*/
 
             // Creo intent implicito generico
             val implicitIntent = Intent("location-update")
             implicitIntent.putExtra("speed", currentLocation.speed)
+            implicitIntent.putExtra("rate", rate)
             implicitIntent.putExtra("accuracy", currentLocation.accuracy)
             implicitIntent.putExtra("distance", sumDistance)
             implicitIntent.putExtra("longitude", currentLocation.longitude)
