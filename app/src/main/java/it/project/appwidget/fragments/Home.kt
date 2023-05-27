@@ -18,12 +18,16 @@ import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 class Home : Fragment() {
 
     // Views
     private lateinit var distanceTextView: TextView
     private lateinit var passiTextView: TextView
+
+    private var distance: Float = 0f
+    private var steps: Int = 0
 
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
@@ -33,9 +37,10 @@ class Home : Fragment() {
             Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
             val distloc = intent?.getFloatExtra("distance", 0f)
 
-            distanceTextView.text = (DecimalFormat("#.##").format(distloc)).toString()
-            passiTextView.text = (DecimalFormat("#.##").format(distloc!! *3/2)).toString()
-
+            distance = distloc!!
+            steps = (distloc!! *3/2).roundToInt()
+            distanceTextView.text = (DecimalFormat("#.#").format(distance))
+            passiTextView.text = steps.toString()
         }
     }
 
@@ -63,10 +68,12 @@ class Home : Fragment() {
         //TODO: chiedere permessi
         Log.d("HomeFragment", "Chiamato onViewCreated")
 
-        // Inizializzazione Views
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
         passiTextView = view.findViewById<TextView>(R.id.counterPassi)
 
+        // Imposto valori textviews
+        distanceTextView.text = DecimalFormat("#.#").format(distance)
+        passiTextView.text = steps.toString()
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
         if (savedInstanceState != null) {
@@ -86,11 +93,15 @@ class Home : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onDestroyView() {
+        Log.d("HomeFragment", "Chiamato onDestroyView")
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
         Log.d("HomeFragment", "Chiamato onDestroy")
         // Tolgo registrazione receiver
         requireActivity().unregisterReceiver(locationBroadcastReceiver)
-
         super.onDestroy()
     }
 
@@ -98,12 +109,8 @@ class Home : Fragment() {
     private fun restoreState(inState: Bundle) {
         Log.d("HomeFragment", "Chiamato restoreState")
 
-
         // Ripristino stato delle textviews
         distanceTextView.text = inState.getCharSequence("distanceTextView_text")
         passiTextView.text = inState.getCharSequence("passiTextView_text")
-
-
-
     }
 }
