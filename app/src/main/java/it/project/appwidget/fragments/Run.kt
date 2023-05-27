@@ -17,6 +17,7 @@ import android.widget.TextView
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import java.text.DecimalFormat
+import java.util.concurrent.TimeUnit
 
 class Run : Fragment() {
 
@@ -46,9 +47,17 @@ class Run : Fragment() {
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
             val distloc = intent?.getFloatExtra("distanza", 0f)
-            speed_debug_textview.text = (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
-            accuracy_debug_textview.text = accloc.toString() + "m"
-            distance_debug_textview.text = distloc.toString() + "m"
+            if (!runningChronometer) {
+                var elapsedloc = intent?.getLongExtra("startTime_elapsedRealtimeNanos",0) // Ottengo lo start time della prima location rispetto al boot di sistema
+                // Converto nanosecondi in millisecondi e imposto base cronometro
+                elapsedloc = TimeUnit.NANOSECONDS.toMillis(elapsedloc!!)
+                sessionChronometer.base = elapsedloc
+                sessionChronometer.start()
+                runningChronometer = true
+            }
+            speed_debug_textview.text = "speed: " + (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
+            accuracy_debug_textview.text = "accuracy: " + accloc.toString() + "m"
+            distance_debug_textview.text = "distance: " + distloc.toString() + "m"
         }
     }
 
