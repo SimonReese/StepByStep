@@ -44,9 +44,16 @@ class Run : Fragment() {
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive")
+
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
             val distloc = intent?.getFloatExtra("distance", 0f)
+            val rate = intent?.getFloatExtra("rate", 0f)
+            val calories = intent?.getFloatExtra("calories", 0f)
+
+            val singleDecimal = DecimalFormat("#.#")
+            val doubleDecimal = DecimalFormat("#.##")
+
             if (!runningChronometer) {
                 var elapsedloc = intent?.getLongExtra("startTime_elapsedRealtimeNanos",0) // Ottengo lo start time della prima location rispetto al boot di sistema
                 // Converto nanosecondi in millisecondi e imposto base cronometro
@@ -59,7 +66,12 @@ class Run : Fragment() {
                 startServiceButton.isEnabled = false
                 stopServiceButton.isEnabled = true
             }
-            speed_debug_textview.text = "speed: " + (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
+            rateTextView.text = singleDecimal.format(rate)
+            distanceTextView.text = doubleDecimal.format(distloc!! / 1000)
+            kcalTextView.text = singleDecimal.format(calories)
+
+            // Debug
+            speed_debug_textview.text = "speed: " + (doubleDecimal.format(speedloc!! * 3.6)) + "km/h"
             accuracy_debug_textview.text = "accuracy: " + accloc.toString() + "m"
             distance_debug_textview.text = "distance: " + distloc.toString() + "m"
         }

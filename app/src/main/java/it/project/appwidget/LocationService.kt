@@ -43,19 +43,23 @@ class LocationService : Service() {
         const val NOTIFICATION_CHANNEL_DESCRIPTION: String = "Canale per notifiche servizio localizzazione" //TODO: Spostare in strings.xml
     }
 
-    // Variabili per la localizzazione
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
+
+    // Parametri per la localizzazione
     private val minLocationUpdateIntervalMs: Long = 0
     private var minLocationUpdateDistanceM: Float = 0F
     private var minAccuracy: Float = 20F
-    private var minSum: Float = 100F
+    private var minSum: Float = 10F
+
+    // Parametri sessione
+    private val kcal_to_m_to_kg_factor: Float = 0.001f //kcal consumate per ogni metro per ogni chilo
+    private val weight: Float = 70f // Peso in kg di riferimento
+
+    // Stato della sessione
     private lateinit var lastRelevantLocation: Location
     private var sumDistance: Float = 0F
-    //Calcola tempo totale sessione
-    private lateinit var firstRelevantLocation: Location
-    // Vettore per il salvataggio delle location
-    private var locationList: ArrayList<Location> = ArrayList()
+    private var locationList: ArrayList<Location> = ArrayList() // Vettore per il salvataggio delle location
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
@@ -92,8 +96,14 @@ class LocationService : Service() {
             // Calcolo il rate: tempo (in minuti) necessario a percorrere 1 km
             var rate: Float = 0.00f
             // Considero solo velocità superiori a 0.5 m/s
-            if (currentLocation.speed > 0.5){
+            if (currentLocation.speed > 0){
                 rate = (1000 / currentLocation.speed) / 60
+            }
+
+            // Calcolo calorico
+            var calories: Float = 0f
+            if (sumDistance > 0){
+                calories = kcal_to_m_to_kg_factor * sumDistance * weight
             }
 
             /* Invio broadcasts.
@@ -102,15 +112,18 @@ class LocationService : Service() {
 
             // Creo intent implicito generico
             val implicitIntent = Intent("location-update")
-            implicitIntent.putExtra("speed", currentLocation.speed)
-            implicitIntent.putExtra("rate", rate)
-            implicitIntent.putExtra("accuracy", currentLocation.accuracy)
-            implicitIntent.putExtra("distance", sumDistance)
-            implicitIntent.putExtra("longitude", currentLocation.longitude)
+            // Valori recuperati
             implicitIntent.putExtra("latitude", currentLocation.latitude)
+            implicitIntent.putExtra("longitude", currentLocation.longitude)
+            implicitIntent.putExtra("accuracy", currentLocation.accuracy)
+            implicitIntent.putExtra("speed", currentLocation.speed)
+            // Valori calcolati
+            implicitIntent.putExtra("distance", sumDistance)
+            implicitIntent.putExtra("rate", rate)
+            implicitIntent.putExtra("calories", calories)
+            // Valori costanti
             implicitIntent.putExtra("startTime", locationList[0].time) // E' il tempo rispetto alla Unix Epoch
             implicitIntent.putExtra("startTime_elapsedRealtimeNanos", locationList[0].elapsedRealtimeNanos) // E' il tempo trascorso rispetto al boot di sistema
-
 
             // Copio intent generico e creo intent esplicito
             val explicitIntent = Intent(implicitIntent)
