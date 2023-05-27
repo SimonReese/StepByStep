@@ -71,7 +71,7 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        Log.d("onReceive", "Intent " + intent.action + " ricevuto")
+        Log.d("NewAppWidget", "Intent " + intent.action + " ricevuto")
 
         // Controllo se il bottone impostazioni è stato premuto
         if (intent.action == ACTION_BTN_SETTINGS) {
@@ -98,7 +98,6 @@ class NewAppWidget : AppWidgetProvider() {
         }
 
         if (intent.action.equals("location-update")) {
-            Log.d("onReceive", "location-update")
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
