@@ -3,6 +3,7 @@ package it.project.appwidget
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
@@ -18,6 +19,8 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import it.project.appwidget.activities.MainActivity
+import it.project.appwidget.fragments.Run
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.widgets.NewAppWidget
 
@@ -171,6 +174,11 @@ class LocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val runFragmentIntent = Intent(this, MainActivity::class.java).apply{
+            this.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("fromService", 1)
+        }
+        val pendingIntent = PendingIntent.getActivity(this, 0, runFragmentIntent, PendingIntent.FLAG_IMMUTABLE)
         // Impostazioni notifica
         notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground) //TODO: cambiare icona
@@ -179,6 +187,7 @@ class LocationService : Service() {
             setPriority(NotificationCompat.PRIORITY_DEFAULT)    //Priorità notifica standard
             setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)   //La notifica viene impostata immediatamente
             setOnlyAlertOnce(true) //Se la notifica viene aggiornata, solo la prima volta emette suono
+            setContentIntent(pendingIntent)
         }
 
         // Controllo permessi
