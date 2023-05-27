@@ -46,7 +46,7 @@ class Run : Fragment() {
             Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive")
             val speedloc = intent?.getFloatExtra("speed", 0f)
             val accloc = intent?.getFloatExtra("accuracy", 0f)
-            val distloc = intent?.getFloatExtra("distanza", 0f)
+            val distloc = intent?.getFloatExtra("distance", 0f)
             if (!runningChronometer) {
                 var elapsedloc = intent?.getLongExtra("startTime_elapsedRealtimeNanos",0) // Ottengo lo start time della prima location rispetto al boot di sistema
                 // Converto nanosecondi in millisecondi e imposto base cronometro
@@ -98,6 +98,8 @@ class Run : Fragment() {
         accuracy_debug_textview = view.findViewById(R.id.debug_accuracy_textview)
         speed_debug_textview = view.findViewById(R.id.debug_speed_textview)
         distance_debug_textview = view.findViewById(R.id.debug_distance_textview)
+        stopServiceButton.isEnabled = false
+
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
         if (savedInstanceState != null) {
@@ -113,12 +115,20 @@ class Run : Fragment() {
             sessionChronometer.base = SystemClock.elapsedRealtime()
             sessionChronometer.start()
             runningChronometer = true
+
+            // Disattiva il bottone startServiceButton e attiva il bottone stopServiceButton
+            startServiceButton.isEnabled = false
+            stopServiceButton.isEnabled = true
         }
 
         stopServiceButton.setOnClickListener {
             requireActivity().stopService(serviceIntent)
             sessionChronometer.stop()
             runningChronometer = false
+
+            // Disattiva il bottone stopServiceButton e attiva il bottone startServiceButton
+            stopServiceButton.isEnabled = false
+            startServiceButton.isEnabled = true
         }
     }
 
@@ -136,6 +146,8 @@ class Run : Fragment() {
         outState.putCharSequence("distanceTextView_text", distanceTextView.text)
         outState.putCharSequence("rateTextView_text", rateTextView.text)
         outState.putCharSequence("kcalTextView_text", kcalTextView.text)
+        outState.putBoolean("stopServiceButton", stopServiceButton.isEnabled)
+        outState.putBoolean("startServiceButton", startServiceButton.isEnabled)
 
         super.onSaveInstanceState(outState)
     }
@@ -164,6 +176,8 @@ class Run : Fragment() {
         distanceTextView.text = inState.getCharSequence("distanceTextView_text")
         rateTextView.text = inState.getCharSequence("rateTextView_text")
         kcalTextView.text = inState.getCharSequence("kcalTextView_text")
+        stopServiceButton.isEnabled =  inState.getBoolean("stopServiceButton" )
+        startServiceButton.isEnabled =  inState.getBoolean("startServiceButton" )
 
     }
 }
