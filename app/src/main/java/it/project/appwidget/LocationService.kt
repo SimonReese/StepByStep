@@ -96,7 +96,7 @@ class LocationService : Service() {
             // Calcolo il rate: tempo (in minuti) necessario a percorrere 1 km
             var rate: Float = 0.00f
             // Considero solo velocità superiori a 0.5 m/s
-            if (currentLocation.speed > 0){
+            if (currentLocation.speed > 0.5){
                 rate = (1000 / currentLocation.speed) / 60
             }
 
