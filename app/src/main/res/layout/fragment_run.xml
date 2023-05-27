@@ -114,7 +114,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/run_fragment_rate_default_value"
                     android:textAlignment="center"
-                    android:textSize="80sp" />
+                    android:textSize="80sp"
+                    tools:text="7:42" />
 
                 <TextView
                     android:id="@+id/passo_text"
@@ -144,7 +145,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/run_fragment_kcal_default_value"
                     android:textAlignment="center"
-                    android:textSize="80sp" />
+                    android:textSize="80sp"
+                    tools:text="123" />
 
                 <TextView
                     android:id="@+id/calorietxt"
