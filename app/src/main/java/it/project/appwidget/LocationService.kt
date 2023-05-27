@@ -176,7 +176,7 @@ class LocationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val runFragmentIntent = Intent(this, MainActivity::class.java).apply{
             this.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("fromService", 1)
+            putExtra("fromService", true)
         }
         val pendingIntent = PendingIntent.getActivity(this, 0, runFragmentIntent, PendingIntent.FLAG_IMMUTABLE)
         // Impostazioni notifica
