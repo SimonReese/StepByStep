@@ -54,6 +54,10 @@ class Run : Fragment() {
                 sessionChronometer.base = elapsedloc
                 sessionChronometer.start()
                 runningChronometer = true
+
+                // Inoltre devo anche scambiare lo stato dei bottoni
+                startServiceButton.isEnabled = false
+                stopServiceButton.isEnabled = true
             }
             speed_debug_textview.text = "speed: " + (DecimalFormat("#.##").format(speedloc!! * 3.6)).toString() + "km/h"
             accuracy_debug_textview.text = "accuracy: " + accloc.toString() + "m"
