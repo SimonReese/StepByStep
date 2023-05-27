@@ -82,14 +82,10 @@ class Home : Fragment() {
 
         // Creo intent per il LocationService
         val serviceIntent = Intent(requireActivity(), LocationService::class.java)
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("HomeFragment", "Chiamato onSaveInstanceState")
-        // Salvo lo stato di tutte le Views
-        outState.putCharSequence("distanceTextView_text", distanceTextView.text)
-        outState.putCharSequence("passiTextView_text", passiTextView.text)
         super.onSaveInstanceState(outState)
     }
 
@@ -108,9 +104,5 @@ class Home : Fragment() {
     // Recupero stato del fragment
     private fun restoreState(inState: Bundle) {
         Log.d("HomeFragment", "Chiamato restoreState")
-
-        // Ripristino stato delle textviews
-        distanceTextView.text = inState.getCharSequence("distanceTextView_text")
-        passiTextView.text = inState.getCharSequence("passiTextView_text")
     }
 }
