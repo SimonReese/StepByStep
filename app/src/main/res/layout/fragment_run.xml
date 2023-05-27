@@ -62,6 +62,7 @@
                 android:id="@+id/distanceTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/run_fragment_distance_default_value"
                 android:textAlignment="center"
                 android:textSize="100sp"
                 tools:text="1.54" />

@@ -12,6 +12,7 @@
     <string name="run_fragment_kcal_default_value">000</string>
     <string name="run_fragment_start_button_label">Avvia corsa</string>
     <string name="run_fragment_stop_button_label">Termina corsa</string>
+    <string name="run_fragment_distance_default_value">0.00</string>
 
     <string-array name="units">
         <item>km/h</item>
