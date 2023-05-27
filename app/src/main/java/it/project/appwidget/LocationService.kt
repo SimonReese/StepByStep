@@ -101,7 +101,9 @@ class LocationService : Service() {
             implicitIntent.putExtra("distance", sumDistance)
             implicitIntent.putExtra("longitude", currentLocation.longitude)
             implicitIntent.putExtra("latitude", currentLocation.latitude)
-            implicitIntent.putExtra("startTime", locationList[0].time)
+            implicitIntent.putExtra("startTime", locationList[0].time) // E' il tempo rispetto alla Unix Epoch
+            implicitIntent.putExtra("startTime_elapsedRealtimeNanos", locationList[0].elapsedRealtimeNanos) // E' il tempo trascorso rispetto al boot di sistema
+
 
             // Copio intent generico e creo intent esplicito
             val explicitIntent = Intent(implicitIntent)
