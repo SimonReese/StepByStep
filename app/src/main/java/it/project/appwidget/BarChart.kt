@@ -23,7 +23,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
     /**
      * Array di etichette da applicare lungo l'asse x
      */
-    var days: Array<String> = arrayOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
+    var days: ArrayList<String> = arrayListOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
         set(newArray) {
             if (newArray.size != this.valueArray.size)
                 return
@@ -35,7 +35,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
     /**
      * Array di valori da rappresentare
      */
-    var valueArray: IntArray = intArrayOf(10, 20, 70, 30, 60, 40, 50)
+    var valueArray: ArrayList<Double> = arrayListOf(10.0, 20.0, 70.0, 30.0, 60.0, 40.0, 50.0)
         set(newArray) {
             if (newArray.size != this.valueArray.size)
                 return
@@ -123,17 +123,17 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             var right = abs_center + space/4
 
             //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
-            val scale: Float = value / maxValue
+            val scale: Double = value / maxValue
 
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
             var top = bottom - (height - upperMargin)*scale
 
             Log.d("Canvas", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
-            canvas?.drawRect(left.toFloat(), top, right.toFloat(), bottom, barPaint)
-            if (value != 0)
+            canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
+            if (value != 0.0)
             {
-                canvas?.drawText(value.toString(), left.toFloat(), top, textPaint)
+                canvas?.drawText(value.toString(), left.toFloat(), top.toFloat(), textPaint)
 
             }
             canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
