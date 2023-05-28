@@ -31,11 +31,21 @@ class Stats : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("StatsFragment", "Chiamato onCreate")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        Log.d("StatsFragment", "Chiamato onCreateView")
+        // Inflate del layout
+        return inflater.inflate(R.layout.fragment_stats, container, false)
+    }
 
-        val view =  inflater.inflate(R.layout.fragment_stats, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("StatsFragment", "Chiamato onViewCreated")
 
         // Imposto RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -43,14 +53,15 @@ class Stats : Fragment() {
         // Carico dati in background
         loadRecyclerView(0, System.currentTimeMillis())
 
+        // Riferimenti a elementi del layout
+        val barChart: BarChart = view.findViewById(R.id.barChart)
         generateButton= view.findViewById(R.id.generateButton)
         pastWeekButton= view.findViewById(R.id.pastWeekButton)
         nextWeekButton= view.findViewById(R.id.nextWeekButton)
         currentDate= view.findViewById(R.id.tv_date)
 
+        // Mostro etichetta settimana corrente
         currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
-
-        val barChart: BarChart = view.findViewById(R.id.barChart)
 
         //Carica dati settimana corrente
         loadGraph(currentDate, barChart)
@@ -66,7 +77,7 @@ class Stats : Fragment() {
         }
 
         //Bottone past week
-        pastWeekButton.setOnClickListener{pastWeekButton: View ->
+        pastWeekButton.setOnClickListener { pastWeekButton: View ->
             pastWeekButton as Button
 
             selectedWeek = weekHelper.getPreviousWeekRange(selectedWeek)
@@ -74,19 +85,17 @@ class Stats : Fragment() {
         }
 
         //Bottone next week
-        nextWeekButton.setOnClickListener{nextWeekButton: View ->
+        nextWeekButton.setOnClickListener { nextWeekButton: View ->
             nextWeekButton as Button
 
             selectedWeek = weekHelper.getNextWeekRange(selectedWeek)
             loadGraph(currentDate, barChart)
         }
 
-        // Inflate the layout for this fragment
-        return view
     }
 
-    private fun loadGraph(currentDate: TextView, barChart: BarChart)
-    {
+
+    private fun loadGraph(currentDate: TextView, barChart: BarChart) {
         //Carica del recyclerview dati settimana selezionata
         loadRecyclerView(selectedWeek.first, selectedWeek.second)
         currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
@@ -129,12 +138,10 @@ class Stats : Fragment() {
 
 
     //Converte List di TrackSession in Array di distance
-    private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): Array<Int>
-    {
+    private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): Array<Int> {
         //Lista di dimensione 7
         val graphList: MutableList<Int> = MutableList(7) { 0 }
-        if (!weekSession.isNullOrEmpty())
-        {
+        if (!weekSession.isNullOrEmpty()) {
             for (session in weekSession) {
                 graphList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance.toInt()
             }
@@ -142,7 +149,6 @@ class Stats : Fragment() {
         }
         println(graphList.joinToString(" "))
         return graphList.toTypedArray()
-
     }
 
 
