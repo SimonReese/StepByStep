@@ -42,14 +42,14 @@ class Config : Fragment() {
         val peso = preferencesHelper.peso
         val eta = preferencesHelper.eta
         val sesso = preferencesHelper.sesso
-        val tipologiaAttivita = preferencesHelper.tipologiaAttivita
+        val kcalTarget = preferencesHelper.kcalTarget
 
         // Imposta i valori nei TextView corrispondenti
         view.findViewById<TextView>(R.id.valore_nome).text = nomeUtente
-        view.findViewById<TextView>(R.id.valore_peso).text = peso.toString()
-        view.findViewById<TextView>(R.id.valore_eta).text = eta.toString()
+        view.findViewById<TextView>(R.id.valore_peso).text = peso
+        view.findViewById<TextView>(R.id.valore_eta).text = eta
         view.findViewById<TextView>(R.id.valore_sesso).text = sesso
-        view.findViewById<TextView>(R.id.valore_tipologia).text = tipologiaAttivita
+        view.findViewById<TextView>(R.id.valore_kcal).text = kcalTarget
     }
 
 

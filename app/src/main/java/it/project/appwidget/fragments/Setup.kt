@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import it.project.appwidget.R
@@ -27,27 +26,26 @@ class Setup : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_setup, container, false)
 
+        //Bottone salva
         val btnSave = view.findViewById<Button>(R.id.btn_save)
         btnSave.setOnClickListener {
             if (areAllFieldsFilled()) {
-                // Salvataggio dei dati qui
+                // Salvataggio dei dati
                 val nomeUtente: String = (view.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.text ?: "").toString()
                 val peso: String = (view.findViewById<TextInputLayout>(R.id.peso)?.editText?.text ?: "").toString()
                 val eta: String = (view.findViewById<TextInputLayout>(R.id.eta)?.editText?.text ?: "").toString()
                 val sesso: String = (view.findViewById<TextInputLayout>(R.id.sesso)?.editText?.text ?: "").toString()
-                val tipologiaAttivita: String = (view.findViewById<TextInputLayout>(R.id.tipologia_attivita)?.editText?.text ?: "").toString()
+                val kcalTarget: String = (view.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.text ?: "").toString()
 
-                // Salvare i dati utilizzando l'helper delle preferenze condivise
+                // Salva i dati utilizzando l'helper nelle preferenze condivise
                 preferencesHelper.nome = nomeUtente
                 preferencesHelper.peso = peso
                 preferencesHelper.eta = eta
                 preferencesHelper.sesso = sesso
-                preferencesHelper.tipologiaAttivita = tipologiaAttivita
+                preferencesHelper.kcalTarget = kcalTarget
 
                 // Apri il fragment "config"
                 navigateToSetupFragment()
-
-                //TODO: MANDA INTENT
 
             } else {
                 // Mostra un messaggio di errore o un feedback all'utente
@@ -63,14 +61,30 @@ class Setup : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    //Controlla che tutti i campi siano riempiti
     private fun areAllFieldsFilled(): Boolean {
         val nomeUtente: String = (view?.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.text ?: "").toString()
         val peso: String = (view?.findViewById<TextInputLayout>(R.id.peso)?.editText?.text ?: "").toString()
         val eta: String = (view?.findViewById<TextInputLayout>(R.id.eta)?.editText?.text ?: "").toString()
         val sesso: String = (view?.findViewById<TextInputLayout>(R.id.sesso)?.editText?.text ?: "").toString()
-        val tipologiaAttivita: String = (view?.findViewById<TextInputLayout>(R.id.tipologia_attivita)?.editText?.text ?: "").toString()
+        val kcalTarget: String = (view?.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.text ?: "").toString()
 
-        return nomeUtente.isNotEmpty() && peso.isNotEmpty() && eta.isNotEmpty() && sesso.isNotEmpty() && tipologiaAttivita.isNotEmpty()
+        return nomeUtente.isNotEmpty() && peso.isNotEmpty() && eta.isNotEmpty() && sesso.isNotEmpty() && kcalTarget.isNotEmpty()
+    }
+
+    // Riempi TextInputLayout con i dati precedentemente inseriti
+    private fun populateFields() {
+        val nomeUtente = preferencesHelper.nome
+        val peso = preferencesHelper.peso
+        val eta = preferencesHelper.eta
+        val sesso = preferencesHelper.sesso
+        val kcalTarget = preferencesHelper.kcalTarget
+
+        view?.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.setText(nomeUtente)
+        view?.findViewById<TextInputLayout>(R.id.peso)?.editText?.setText(peso)
+        view?.findViewById<TextInputLayout>(R.id.eta)?.editText?.setText(eta)
+        view?.findViewById<TextInputLayout>(R.id.sesso)?.editText?.setText(sesso)
+        view?.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.setText(kcalTarget)
     }
 
     private fun navigateToSetupFragment() {
@@ -82,21 +96,6 @@ class Setup : Fragment() {
         // Effettua la navigazione verso il fragment "config" e aggiungi "Setup" al back stack
         navController?.navigate(R.id.config)
         navController?.popBackStack(R.id.setup, true)
-    }
-
-
-    private fun populateFields() {
-        val nomeUtente = preferencesHelper.nome
-        val peso = preferencesHelper.peso
-        val eta = preferencesHelper.eta
-        val sesso = preferencesHelper.sesso
-        val tipologiaAttivita = preferencesHelper.tipologiaAttivita
-
-        view?.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.setText(nomeUtente)
-        view?.findViewById<TextInputLayout>(R.id.peso)?.editText?.setText(peso)
-        view?.findViewById<TextInputLayout>(R.id.eta)?.editText?.setText(eta)
-        view?.findViewById<TextInputLayout>(R.id.sesso)?.editText?.setText(sesso)
-        view?.findViewById<TextInputLayout>(R.id.tipologia_attivita)?.editText?.setText(tipologiaAttivita)
     }
 
 

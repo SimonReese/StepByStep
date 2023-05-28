@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Chronometer
+import android.widget.ProgressBar
 import android.widget.TextView
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
@@ -27,6 +28,7 @@ class Home : Fragment() {
     private lateinit var distanceTextView: TextView
     private lateinit var passiTextView: TextView
     private lateinit var caloriesTextView: TextView
+    private lateinit var progressBar: ProgressBar
 
 
     private var distance: Float = 0f
@@ -40,7 +42,7 @@ class Home : Fragment() {
     // Classe per ricezione broadcast messages
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            
+
             val preferencesHelper = UserPreferencesHelper(requireActivity())
 
             Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
@@ -52,6 +54,10 @@ class Home : Fragment() {
             steps = (distloc!! *3/2).roundToInt()
             distanceTextView.text = (DecimalFormat("#.#").format(distance))
             caloriesTextView.text = DecimalFormat("#.#").format(kcalloc/1000).toString() + "Kcal"
+
+            //TODO: progress = SommaCalorieOdierne + CalorieSessioneCorrente
+            //progressBar.progress = progress
+
 
             println(preferencesHelper.nome)
 
@@ -78,13 +84,21 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //TODO: chiedere permessi
         Log.d("HomeFragment", "Chiamato onViewCreated")
+
+        // Inizializza preferencesHelper
+        val preferencesHelper = UserPreferencesHelper(requireContext())
+        val nomeUtente = preferencesHelper.nome
+        view.findViewById<TextView>(R.id.nome_utente).text = nomeUtente
+
+        val kcalTarget = preferencesHelper.kcalTarget
+
 
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
         passiTextView = view.findViewById<TextView>(R.id.counterPassi)
         caloriesTextView = view.findViewById<TextView>(R.id.counterCalories)
+        progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
+
 
         // Imposto valori textviews
         distanceTextView.text = DecimalFormat("#.#").format(distance)

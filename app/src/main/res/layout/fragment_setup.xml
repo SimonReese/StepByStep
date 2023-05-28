@@ -181,11 +181,11 @@
 
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tipologia_attivita"
+                        android:id="@+id/kcalTarget"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Tipologia attività"
+                        android:hint="Target giornaliero"
                         app:endIconMode="clear_text"
                         app:startIconDrawable="@drawable/icons8_corsa_24"
                         app:boxBackgroundMode="outline"
@@ -197,6 +197,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:inputType="numberDecimal"
                             android:fontFamily="@font/poppins_semibold"/>
 
 

@@ -3,6 +3,7 @@ package it.project.appwidget
 import android.content.Context
 import android.content.SharedPreferences
 
+//Gestisce le informazioni dell'utente
 class UserPreferencesHelper(context: Context) {
     companion object {
         private const val PREFS_FILE_NAME = "UserPreferences"
@@ -31,7 +32,7 @@ class UserPreferencesHelper(context: Context) {
         get() = sharedPreferences.getString(KEY_SESSO, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_SESSO, value).apply()
 
-    var tipologiaAttivita: String
+    var kcalTarget: String
         get() = sharedPreferences.getString(KEY_TIPOLOGIA_ATTIVITA, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_TIPOLOGIA_ATTIVITA, value).apply()
 }
