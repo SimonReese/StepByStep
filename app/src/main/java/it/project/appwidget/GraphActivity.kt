@@ -81,7 +81,7 @@ class GraphActivity : AppCompatActivity() {
         val sessions = getSessionsList(selectedWeek.first, selectedWeek.second)
         //Ottieni array in cui in ogni cella è presente somma distance di quel giorno
         val values: Array<Int> = convertTrackSessionInDistanceArray(sessions)
-        barChart.valueArray = values.toIntArray()
+        //barChart.valueArray = values.toIntArray()
     }
 
     private fun loadRecyclerView(from: Long, to: Long){
