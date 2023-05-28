@@ -5,25 +5,22 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import it.project.appwidget.widgets.NewAppWidget
 import it.project.appwidget.R
-import it.project.appwidget.SharedPrefsHelper
+import it.project.appwidget.WidgetSettingsSharedPrefsHelper
 
 
 class SettingsActivity : AppCompatActivity() {
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 123
-        const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE"
     }
-    private lateinit var sharedPrefsHelper: SharedPrefsHelper
+    private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper
     private lateinit var cbSpeed: CheckBox
     private lateinit var cbDistance: CheckBox
     private lateinit var cbCalories: CheckBox
@@ -34,7 +31,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.impostazioni)
 
         //Creo oggetto SharedPrefsHelper
-        sharedPrefsHelper = SharedPrefsHelper(this)
+        widgetSettingsSharedPrefsHelper = WidgetSettingsSharedPrefsHelper(this)
 
         cbSpeed = findViewById(R.id.cb_speed)
         cbDistance = findViewById(R.id.cb_distance)
@@ -45,40 +42,32 @@ class SettingsActivity : AppCompatActivity() {
         //setOnClickListener del saveButton
         saveButton.setOnClickListener {
             //Salvo stato CheckBox
-            sharedPrefsHelper.setSpeedChecked(cbSpeed.isChecked)
-            sharedPrefsHelper.setDistanceChecked(cbDistance.isChecked)
-            sharedPrefsHelper.setCaloriesChecked(cbCalories.isChecked)
-            sharedPrefsHelper.setSessionDistanceChecked(cbSessionDistance.isChecked)
+            widgetSettingsSharedPrefsHelper.setSpeedChecked(cbSpeed.isChecked)
+            widgetSettingsSharedPrefsHelper.setDistanceChecked(cbDistance.isChecked)
+            widgetSettingsSharedPrefsHelper.setCaloriesChecked(cbCalories.isChecked)
+            widgetSettingsSharedPrefsHelper.setSessionDistanceChecked(cbSessionDistance.isChecked)
             //Lancio intent
             val intent = Intent(this, NewAppWidget::class.java)
             intent.action = NewAppWidget.ACTION_BTN_SAVE
             sendBroadcast(intent)
             finish()
         }
-        //TODO: controllare che isFirstLaunch funzioni (che al primo avvia tutti i checkbox siano true)
-        //Permette di avere inizialmente (prima volta in assoluto che apro l'app) tutti i check a true
-        val isFirstLaunch = sharedPrefsHelper.isFirstLaunch()
+        //Permette di avere inizialmente (prima volta in assoluto che apro le settings) tutti i check a true
+        val isFirstLaunch = widgetSettingsSharedPrefsHelper.isFirstLaunch()
+        println(isFirstLaunch)
         if (isFirstLaunch) {
-            sharedPrefsHelper.setSpeedChecked(true)
-            sharedPrefsHelper.setDistanceChecked(true)
-            sharedPrefsHelper.setCaloriesChecked(true)
-            sharedPrefsHelper.setSessionDistanceChecked(true)
-            sharedPrefsHelper.setFirstLaunch(false)
-        } else {
-            cbSpeed.isChecked = sharedPrefsHelper.isSpeedChecked()
-            cbDistance.isChecked = sharedPrefsHelper.isDistanceChecked()
-            cbCalories.isChecked = sharedPrefsHelper.isCaloriesChecked()
-            cbSessionDistance.isChecked = sharedPrefsHelper.isSessionDistanceChecked()
+            widgetSettingsSharedPrefsHelper.setSpeedChecked(true)
+            widgetSettingsSharedPrefsHelper.setDistanceChecked(true)
+            widgetSettingsSharedPrefsHelper.setCaloriesChecked(true)
+            widgetSettingsSharedPrefsHelper.setSessionDistanceChecked(true)
+            widgetSettingsSharedPrefsHelper.setFirstLaunch(false)
+
         }
 
-        //Documentazione: https://developer.android.com/develop/ui/views/components/spinner
-        val spinner: Spinner = findViewById(R.id.units)
-        // Creo ArrayAdapter di stringhe dall'array di stringe definito sul file strings.xml
-        ArrayAdapter.createFromResource(this, R.array.units, android.R.layout.simple_spinner_item)
-            .also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
-            }
+        cbSpeed.isChecked = widgetSettingsSharedPrefsHelper.isSpeedChecked()
+        cbDistance.isChecked = widgetSettingsSharedPrefsHelper.isDistanceChecked()
+        cbCalories.isChecked = widgetSettingsSharedPrefsHelper.isCaloriesChecked()
+        cbSessionDistance.isChecked = widgetSettingsSharedPrefsHelper.isSessionDistanceChecked()
 
         //RICHIEDO PERMESSI GPS
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)

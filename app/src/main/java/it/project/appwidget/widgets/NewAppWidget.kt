@@ -11,9 +11,10 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import it.project.appwidget.R
-import it.project.appwidget.SharedPrefsHelper
+import it.project.appwidget.WidgetSettingsSharedPrefsHelper
 import it.project.appwidget.util.WeekHelpers
 import it.project.appwidget.activities.SettingsActivity
+import java.text.DecimalFormat
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -25,9 +26,11 @@ class NewAppWidget : AppWidgetProvider() {
     }
 
     private val SHARED_PREFS_NAME = "NewAppWidget"
-    private lateinit var sharedPrefsHelper: SharedPrefsHelper // Oggetto helper per le preferenze condivise
+    private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper // Oggetto helper per le preferenze condivise
     private val weekHelper = WeekHelpers()
     private val format = "hh:mm"
+    private val singleDecimal = DecimalFormat("#.#")
+    private val doubleDecimal = DecimalFormat("#.##")
 
 
 
@@ -53,12 +56,13 @@ class NewAppWidget : AppWidgetProvider() {
             }
             views.setTextViewText(R.id.tv_value_latitude, locationArray[0])
             views.setTextViewText(R.id.tv_value_longitude, locationArray[1])
-
             val savedSpeed = loadText(context, appWidgetId, "speed")
             views.setTextViewText(R.id.tv_value_speed, savedSpeed)
-
             val savedDate = loadText(context, appWidgetId, "startTime")
             views.setTextViewText(R.id.tv_timeData, savedDate)
+            val savedCalories = loadText(context, appWidgetId, "calories")
+            views.setTextViewText(R.id.tv_value_calories, savedCalories)
+
             // Imposto elementi layout in base a quanto indicato nelle preferences
             setNewViewVisibility(context, views)
 
@@ -102,11 +106,13 @@ class NewAppWidget : AppWidgetProvider() {
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 // Aggiorno il testo del widget
-                updateLocationText(context,intent.getDoubleExtra("longitude", 0.0),
+                updateLocationText(context,
                     intent.getDoubleExtra("latitude", 0.0),
+                    intent.getDoubleExtra("longitude", 0.0),
                     intent.getFloatExtra("distance", 0F),
                     intent.getFloatExtra("speed", 0F),
-                    intent.getLongExtra("startTime", 0))
+                    intent.getLongExtra("startTime", 0),
+                    intent. getFloatExtra("calories", 0F))
             }
         }
     }
@@ -139,11 +145,8 @@ class NewAppWidget : AppWidgetProvider() {
         views.setTextViewText(R.id.tv_value_speed, savedSpeed)
         val savedDate = loadText(context, appWidgetId, "startTime")
         views.setTextViewText(R.id.tv_sessionDate, savedDate)
-
-
-
-
-
+        val savedCalories = loadText(context, appWidgetId, "calories")
+        views.setTextViewText(R.id.tv_value_calories, savedCalories)
 
         // Aggiorno impostazioni
         setNewViewVisibility(context, views)
@@ -162,7 +165,8 @@ class NewAppWidget : AppWidgetProvider() {
         longitude: Double,
         sumDistance: Float,
         speed: Float,
-        startTime: Long
+        startTime: Long,
+        calories: Float
     ) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         // Ottiene id widget
@@ -177,9 +181,10 @@ class NewAppWidget : AppWidgetProvider() {
             {
                 locationArray = arrayOf("","")
             }
-            val updatedSumDistance = (sumDistance/1000).toInt().toString()
+            val updatedSumDistance = doubleDecimal.format(sumDistance/1000).toString() + "km"
             val updatedSpeed = speed.toString()
             val sessionDate = weekHelper.getDate(startTime, format)
+            val updateCalories = singleDecimal.format(calories).toString()
 
 
             // Imposta testo widget
@@ -188,6 +193,8 @@ class NewAppWidget : AppWidgetProvider() {
             views.setTextViewText(R.id.tv_value_sumDistance, updatedSumDistance)
             views.setTextViewText(R.id.tv_value_speed, updatedSpeed)
             views.setTextViewText(R.id.tv_sessionDate, sessionDate)
+            views.setTextViewText(R.id.tv_value_calories, updateCalories)
+
 
 
 
@@ -196,6 +203,7 @@ class NewAppWidget : AppWidgetProvider() {
             saveText(context, appWidgetId, "sumDistance", updatedSumDistance)
             saveText(context, appWidgetId, "speed" ,updatedSpeed)
             saveText(context, appWidgetId, "startTime" ,sessionDate)
+            saveText(context, appWidgetId, "calories" ,updateCalories)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
@@ -203,12 +211,12 @@ class NewAppWidget : AppWidgetProvider() {
 
     // Determina cosa mostrare sull'UI del widget in base a quanto salvato in sharedPrefsHelper
     private fun setNewViewVisibility(context: Context, views: RemoteViews) {
-        sharedPrefsHelper = SharedPrefsHelper(context)
+        widgetSettingsSharedPrefsHelper = WidgetSettingsSharedPrefsHelper(context)
         // Ottiene stati sharedPrefsHelper
-        val isSpeedChecked = sharedPrefsHelper.isSpeedChecked()
-        val isPositionChecked = sharedPrefsHelper.isDistanceChecked()
-        val isCaloriesChecked = sharedPrefsHelper.isCaloriesChecked()
-        val isSessionDistanceChecked = sharedPrefsHelper.isSessionDistanceChecked()
+        val isSpeedChecked = widgetSettingsSharedPrefsHelper.isSpeedChecked()
+        val isPositionChecked = widgetSettingsSharedPrefsHelper.isDistanceChecked()
+        val isCaloriesChecked = widgetSettingsSharedPrefsHelper.isCaloriesChecked()
+        val isSessionDistanceChecked = widgetSettingsSharedPrefsHelper.isSessionDistanceChecked()
 
         // Aggiorna la visibilità dei campi nel layout del widget in base allo stato dei checkbox
         views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
@@ -237,8 +245,6 @@ class NewAppWidget : AppWidgetProvider() {
         //Ottiene dimensione attuale widget
         val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
         val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-        println("minWidth" + minWidth)
-        println("minHeight" + minHeight)
 
         //Determina view in base a dimensione
         val views = when {
