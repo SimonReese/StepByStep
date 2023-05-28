@@ -182,7 +182,7 @@ class NewAppWidget : AppWidgetProvider() {
                 locationArray = arrayOf("","")
             }
             val updatedSumDistance = doubleDecimal.format(sumDistance/1000).toString() + "km"
-            val updatedSpeed = speed.toString()
+            val updatedSpeed = doubleDecimal.format(speed).toString()
             val sessionDate = weekHelper.getDate(startTime, format)
             val updateCalories = singleDecimal.format(calories).toString()
 

@@ -7,16 +7,17 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.lifecycle.lifecycleScope
-import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.ListWidgetService
 import it.project.appwidget.activities.DetailActivity
-import it.project.appwidget.activities.DetailActivity.Companion.ARG_SESSION_ID
-import it.project.appwidget.database.TrackSession
-import kotlinx.coroutines.launch
+
 
 class ListWidget : AppWidgetProvider() {
+
+    companion object {
+        // The activity argument representing session name
+        const val ARG_SESSION_ID = "session:id"
+    }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
@@ -34,10 +35,11 @@ class ListWidget : AppWidgetProvider() {
             clickIntent.action = "ITEM_CLICK_ACTION"
             clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
-            // Creazione del PendingIntent per l'intent di clic
-            val clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_IMMUTABLE)
+            // Creazione del PendingIntent
+            val clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
 
             // Imposta il PendingIntent come template per gli elementi della ListView del widget
+            // https://developer.android.com/reference/android/widget/RemoteViews#setPendingIntentTemplate(int,%20android.app.PendingIntent)
             remoteViews.setPendingIntentTemplate(R.id.widget_listview, clickPendingIntent)
 
             // Aggiornamento del widget con le nuove viste
@@ -57,11 +59,11 @@ class ListWidget : AppWidgetProvider() {
 
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                //TODO: FIXARE E CAPIRE PERCHE' getStringExtra RITORNA SEMPRE NULL (putExtra è in ListWidgetService)
-                val sessionId = intent.getStringExtra(ARG_SESSION_ID)
-                println(sessionId)
+
+                val sessionId = intent.getStringExtra("ARG_SESSION_ID")
 
                 val detailIntent = Intent(context, DetailActivity::class.java)
+                detailIntent.putExtra(ARG_SESSION_ID,sessionId)
                 detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 context.startActivity(detailIntent)
             }

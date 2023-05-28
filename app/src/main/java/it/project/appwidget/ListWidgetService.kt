@@ -89,37 +89,37 @@ class ListWidgetService : RemoteViewsService() {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
 
             val itemText = weekHelper.getDate(items[position].startTime, format) + " | " + items[position].duration/1000 + "km"
-
             // Imposta il testo dell'elemento corrente nella TextView all'interno dell'elemento della ListView
             remoteViews.setTextViewText(R.id.item_textview, itemText)
 
+            //Imposta intent sul singolo item della lista
             val clickIntent = Intent(context, ListWidget::class.java)
             clickIntent.action = "ITEM_CLICK_ACTION"
             clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             // Inserisco Id nell'intent (putExtra FUNZIONA)
-            clickIntent.putExtra(ARG_SESSION_ID, "100")
-            println("ARG_SESSION_ID: " + ARG_SESSION_ID)
+            clickIntent.putExtra("ARG_SESSION_ID", items[position].id.toString())
+            //https://developer.android.com/reference/android/widget/RemoteViews#setOnClickFillInIntent(int,%20android.content.Intent)
             remoteViews.setOnClickFillInIntent(R.id.list_item_widget, clickIntent)
 
             return remoteViews
         }
 
-        // Restituisce una vista di caricamento personalizzata (opzionale)
+        // Restituisce una vista di caricamento personalizzata
         override fun getLoadingView(): RemoteViews? {
             return null
         }
 
-        // Restituisce il numero di tipi di visualizzatori diversi (opzionale)
+        // Restituisce il numero di tipi di visualizzatori diversi
         override fun getViewTypeCount(): Int {
             return 1
         }
 
-        // Restituisce l'ID dell'elemento nella posizione specificata (opzionale)
+        // Restituisce l'ID dell'elemento nella posizione specificata
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
-        // Restituisce true se gli ID degli elementi sono stabili (opzionale)
+        // Restituisce true se gli ID degli elementi sono stabili
         override fun hasStableIds(): Boolean {
             return true
         }
