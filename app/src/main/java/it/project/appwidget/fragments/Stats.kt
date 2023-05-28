@@ -68,9 +68,7 @@ class Stats : Fragment() {
 
 
         //Bottone settimana corrente
-        generateButton.setOnClickListener{generateButton: View ->
-            generateButton as Button
-
+        generateButton.setOnClickListener { generateButton: View ->
             selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
             loadGraph(currentDate, barChart)
 
@@ -78,16 +76,12 @@ class Stats : Fragment() {
 
         //Bottone past week
         pastWeekButton.setOnClickListener { pastWeekButton: View ->
-            pastWeekButton as Button
-
             selectedWeek = weekHelper.getPreviousWeekRange(selectedWeek)
             loadGraph(currentDate, barChart)
         }
 
         //Bottone next week
         nextWeekButton.setOnClickListener { nextWeekButton: View ->
-            nextWeekButton as Button
-
             selectedWeek = weekHelper.getNextWeekRange(selectedWeek)
             loadGraph(currentDate, barChart)
         }
