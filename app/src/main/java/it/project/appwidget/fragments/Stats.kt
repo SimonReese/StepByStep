@@ -90,13 +90,17 @@ class Stats : Fragment() {
 
 
     private fun loadGraph(currentDate: TextView, barChart: BarChart) {
-        //Carica del recyclerview dati settimana selezionata
+        //Carica nel recyclerview dati della settimana selezionata
         loadRecyclerView(selectedWeek.first, selectedWeek.second)
         currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
         //Ottieni lista di TrackSession della settimana selezionata
         val sessions = getSessionsList(selectedWeek.first, selectedWeek.second)
         //Ottieni array in cui in ogni cella è presente somma distance di quel giorno
         val values: Array<Int> = convertTrackSessionInDistanceArray(sessions)
+
+        // Carico etichette nel grafico
+        barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second).toTypedArray()
+        // Carico valori nel grafico
         barChart.valueArray = values.toIntArray()
     }
 
