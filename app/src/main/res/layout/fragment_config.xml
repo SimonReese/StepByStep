@@ -21,7 +21,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:text="Riepilogo dati"
-            android:fontFamily="@font/poppins_semibold"
             android:textSize="40sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,16 +59,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Nome: "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/valore_nome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Giovanni"
-                        android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
                         android:textSize="25sp" />
 
@@ -93,7 +91,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Peso: "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
@@ -103,7 +100,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="100 "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -129,7 +125,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Eta': "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
@@ -139,7 +134,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="20 "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -165,7 +159,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Sesso: "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
@@ -175,7 +168,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="M"
-                        android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -200,7 +192,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Tipologia attività: "
-                        android:fontFamily="@font/poppins_semibold"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
@@ -210,7 +201,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Corsa"
-                        android:fontFamily="@font/poppins_semibold"
                         android:textAlignment="viewEnd"
                         android:textSize="25sp"
                         android:textStyle="bold" />

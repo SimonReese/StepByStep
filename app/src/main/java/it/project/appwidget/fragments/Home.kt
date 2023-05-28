@@ -16,6 +16,7 @@ import android.widget.Chronometer
 import android.widget.TextView
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
+import it.project.appwidget.UserPreferencesHelper
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
@@ -25,22 +26,35 @@ class Home : Fragment() {
     // Views
     private lateinit var distanceTextView: TextView
     private lateinit var passiTextView: TextView
+    private lateinit var caloriesTextView: TextView
+
 
     private var distance: Float = 0f
     private var steps: Int = 0
+    private var kcal: Float = 0f
+
+
 
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // Classe per ricezione broadcast messages
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            
+            val preferencesHelper = UserPreferencesHelper(requireActivity())
+
             Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
             val distloc = intent?.getFloatExtra("distance", 0f)
+            val kcalloc = intent?.getFloatExtra("calories", 0f)
 
+            kcal = kcalloc!!
             distance = distloc!!
             steps = (distloc!! *3/2).roundToInt()
             distanceTextView.text = (DecimalFormat("#.#").format(distance))
-            passiTextView.text = steps.toString()
+            caloriesTextView.text = DecimalFormat("#.#").format(kcalloc/1000).toString() + "Kcal"
+
+            println(preferencesHelper.nome)
+
         }
     }
 
@@ -70,10 +84,13 @@ class Home : Fragment() {
 
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
         passiTextView = view.findViewById<TextView>(R.id.counterPassi)
+        caloriesTextView = view.findViewById<TextView>(R.id.counterCalories)
 
         // Imposto valori textviews
         distanceTextView.text = DecimalFormat("#.#").format(distance)
         passiTextView.text = steps.toString()
+        caloriesTextView.text = DecimalFormat("#.#").format(kcal/1000).toString() + "Kcal"
+
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
         if (savedInstanceState != null) {
