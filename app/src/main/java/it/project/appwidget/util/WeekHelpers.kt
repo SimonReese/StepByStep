@@ -4,6 +4,10 @@ package it.project.appwidget.util
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+/* TODO: Questa classe di fatto non ha variabili membro, ma fornisce metodi utili per
+    ricevere i riferimenti alle varie settimane. Probabilmente sarebbe opportuno renderla statica.
+ */
 class WeekHelpers {
 
     //  Dato un time in millisecondi fornisce intervallo settimanale in cui esso si trova, ovvero da Lunedì 00:00 a Domenica 23:59 di quella settimana
