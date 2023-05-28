@@ -3,6 +3,7 @@ package it.project.appwidget.util
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /* TODO: Questa classe di fatto non ha variabili membro, ma fornisce metodi utili per
@@ -61,7 +62,7 @@ class WeekHelpers {
     fun getNumberDayOfWeek(timestamp: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timestamp
-
+        //TODO: spiegare il procedimento
         var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2
         if (dayOfWeek < 0) {
             dayOfWeek += 7
@@ -94,6 +95,33 @@ class WeekHelpers {
         return formatter.format(calendar.getTime())
     }
 
+    // TODO: Aggiungere documentazione a tutti i metodi
+    /**
+     * Restituisce una lista di stringhe contenente la rappresentazione dei giorni compresi tra i valori
+     * from e to nel formato gg/mm
+     * @param from: Unix time di partenza
+     * @param to: Unix time limite
+     * @return: Un ArrayList di Stringhe con i valori dei giorni compresi nel formato gg/mm
+     */
+    fun getDateList(from: Long, to: Long): ArrayList<String>{
+        val dateList = ArrayList<String>()
+        val calendar = Calendar.getInstance()
+
+        // Imposto partenza del calendario da from
+        calendar.timeInMillis = from
+
+        /* A questo punto il calendario punta al giorno from. Incrementiamo il tempo del calendario
+        di giorno in giorno e convertiamo il tempo in formato giorno/mese */
+
+        // Creo formattazione data
+        val dateFormatting = SimpleDateFormat("dd/MM")
+        while (calendar.timeInMillis <= to){    // Finchè l'attuale tempo del calendario è minore del limite massimo
+            val date = dateFormatting.format(calendar.time) // Converto data attuale del calendario in stringa formattata
+            dateList.add(date) // Aggiungo data a lista date
+            calendar.add(Calendar.DAY_OF_WEEK, 1) // Incremento il tempo di un giorno
+        }
+        return dateList
+    }
 
 }
 
