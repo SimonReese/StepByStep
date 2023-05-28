@@ -15,14 +15,26 @@ import android.view.View
 
 class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
-    var days: Array<String> = arrayOf("LUN", "MAR", "MER", "GIOV", "VEN", "SAB", "DOM")
-
+    // TODO: A che servono? Rimuovere dopo aver compreso dall'esempio
     var mShowText: Boolean
-        get() = mShowText
 
     var mTextPos: Int
-        get() = mTextPos
 
+    /**
+     * Array di etichette da applicare lungo l'asse x
+     */
+    var days: Array<String> = arrayOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
+        set(newArray) {
+            if (newArray.size != this.valueArray.size)
+                return
+            field = newArray
+            invalidate()
+            requestLayout()
+        }
+
+    /**
+     * Array di valori da rappresentare
+     */
     var valueArray: IntArray = intArrayOf(10, 20, 70, 30, 60, 40, 50)
         set(newArray) {
             if (newArray.size != this.valueArray.size)
@@ -32,6 +44,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             requestLayout()
         }
 
+    // Oggetti paint per definire le proprietà del disegno
     private val barPaint: Paint
     private val textPaint: Paint
 
@@ -68,7 +81,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
                 Configuration.UI_MODE_NIGHT_UNDEFINED -> color = Color.BLACK
             }
             textAlign = Paint.Align.LEFT
-            textSize = 60f
+            textSize = 35f
         }
     }
 
