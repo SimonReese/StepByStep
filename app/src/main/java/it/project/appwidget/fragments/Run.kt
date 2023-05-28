@@ -1,9 +1,12 @@
 package it.project.appwidget.fragments
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
@@ -14,12 +17,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Chronometer
 import android.widget.TextView
+import androidx.core.content.PermissionChecker
+import androidx.core.content.PermissionChecker.checkSelfPermission
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 class Run : Fragment() {
+
+    // Variabile per gestione dei permessi
+    private var hasPermissions: Boolean = false
 
     // Views
     private lateinit var distanceTextView: TextView
@@ -127,14 +135,41 @@ class Run : Fragment() {
 
 
         startServiceButton.setOnClickListener {
-            requireActivity().startForegroundService(serviceIntent)
-            sessionChronometer.base = SystemClock.elapsedRealtime()
-            sessionChronometer.start()
-            runningChronometer = true
+            // Controllo permessi
+            hasPermissions = true // Devo supporla vera, perchè non è detto che onRequestPermissionsResult() sia stato chiamato
+            if (checkSelfPermission(requireActivity(),Manifest.permission.POST_NOTIFICATIONS) == PermissionChecker.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 33){
+                //TODO: analizzare permesso POST_NOTIFICATION (pare che sia introdotto da android 13, cosa fare nel 12)?
+                hasPermissions = false
+                Log.w("ServiceMonitorActivity", "Permesso {POST_NOTIFICATIONS} non concesso")
+            }
+            if (checkSelfPermission(requireActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_DENIED){
+                hasPermissions = false
+                Log.w("ServiceMonitorActivity", "Permesso {ACCESS_COARSE_LOCATION} non concesso")
+            }
+            if (checkSelfPermission(requireActivity(),Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_DENIED){
+                hasPermissions = false
+                Log.w("ServiceMonitorActivity", "Permesso {ACCESS_FINE_LOCATION} non concesso")
+            }
 
-            // Disattiva il bottone startServiceButton e attiva il bottone stopServiceButton
-            startServiceButton.isEnabled = false
-            stopServiceButton.isEnabled = true
+            if (!hasPermissions){
+                // Chiedo tutti i permessi un una volta sola
+                requestPermissions(arrayOf(
+                    Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION), 1)
+                Log.d("ServiceMonitorActivity", "Non sono stati concessi tutti i permessi necessari")
+            }
+            else
+            {
+                requireActivity().startForegroundService(serviceIntent)
+                sessionChronometer.base = SystemClock.elapsedRealtime()
+                sessionChronometer.start()
+                runningChronometer = true
+
+                // Disattiva il bottone startServiceButton e attiva il bottone stopServiceButton
+                startServiceButton.isEnabled = false
+                stopServiceButton.isEnabled = true
+            }
         }
 
         stopServiceButton.setOnClickListener {
