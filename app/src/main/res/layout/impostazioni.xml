@@ -18,7 +18,7 @@
             android:id="@+id/cb_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show distance"/>
+            android:text="Show position"/>
 
         <CheckBox
             android:id="@+id/cb_calories"
@@ -31,12 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show session distance"/>
-
-        <Spinner
-            android:id="@+id/units"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Show calories"/>
 
         <Button
             android:id="@+id/btn_save"
