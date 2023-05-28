@@ -58,7 +58,11 @@ class WeekHelpers {
         return Pair(startOfPreviousWeek, endOfPreviousWeek)
     }
 
-    //Ritorna int corrispondente al giorno della settimana (es: 0 = lunedì, 1 = martedì)
+    /**
+     * Ritorna intero corrispondente al giorno della settimana (es: 0 = lunedì, 1 = martedì)
+     * @param timestamp: Unix time che si vuole convertire in intero 0-6
+     * @return: un intero tra 0 (Lunedì) e 6 (Domenica)
+     */
     fun getNumberDayOfWeek(timestamp: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timestamp
