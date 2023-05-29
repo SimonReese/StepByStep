@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import java.text.DecimalFormat
 
 /**
  * classe che disegna il grafico a barre
@@ -131,9 +132,8 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             Log.d("Canvas", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
             canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
-            if (value != 0.0)
-            {
-                canvas?.drawText(value.toString(), left.toFloat(), top.toFloat(), textPaint)
+            if (value != 0.0) {
+                canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
             canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
