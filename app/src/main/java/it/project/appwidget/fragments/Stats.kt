@@ -127,17 +127,16 @@ class Stats : Fragment() {
         barChart.valueArray = values
     }
 
-    private fun loadRecyclerView(from: Long, to: Long){
+    private fun loadRecyclerView(){
         // Carico dati nel recyclerview in modo asincrono
         Log.d("StatsFragment", "Imposto coroutine cariacamento dati")
 
         // Dall' acttivity scope avvio una nuova coroutine per caricare e impostare i dati
         lifecycleScope.launch {
-            val sessionList = Datasource(requireActivity().applicationContext).getSessionListIdString(from,to)
+            val sessionList = Datasource(requireActivity().applicationContext).getSessionListIdString(selectedWeek.first, selectedWeek.second)
             recyclerView.adapter = TrackSessionAdapter(sessionList)
             Log.d("AsyncStatsFragment", "Dati caricati.")
         }
-
         Log.d("StatsFragment", "Fine impostazione routine caricamento dati.")
     }
 
