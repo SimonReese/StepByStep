@@ -214,8 +214,6 @@ class Run : Fragment() {
 
     override fun onDestroy() {
         Log.d("RunFragment", "Chiamato onDestroy")
-        // Tolgo registrazione receiver
-        requireActivity().unregisterReceiver(locationBroadcastReceiver)
         super.onDestroy()
     }
 
