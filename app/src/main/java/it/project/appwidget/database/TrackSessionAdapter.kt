@@ -35,7 +35,7 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
     // Returns a new ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.session_item, parent, false)
+            .inflate(R.layout.tracksession_item, parent, false)
 
         view.setOnClickListener(onClickListener)
 
