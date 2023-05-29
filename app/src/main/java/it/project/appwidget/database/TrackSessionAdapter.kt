@@ -11,7 +11,7 @@ import it.project.appwidget.R
 
 // TODO: Ri-organizzare layout della lista
 class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
-    RecyclerView.Adapter<TrackSessionAdapter.SessionViewHolder>() {
+    RecyclerView.Adapter<TrackSessionAdapter.TrackSessionViewHolder>() {
 
     private val onClickListener = View.OnClickListener { v ->
         //Passa id alla nuova activity
@@ -22,7 +22,7 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
     }
 
     // Describes an item view and its place within the RecyclerView
-    class SessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrackSessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val sessionTextView: TextView = itemView.findViewById(R.id.session_text)
         private val sessionId: TextView = itemView.findViewById(R.id.session_id)
 
@@ -33,13 +33,13 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
     }
 
     // Returns a new ViewHolder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackSessionViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.tracksession_item, parent, false)
 
         view.setOnClickListener(onClickListener)
 
-        return SessionViewHolder(view)
+        return TrackSessionViewHolder(view)
     }
 
     // Returns size of data list
@@ -48,7 +48,7 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
     }
 
     // Displays data at a certain position
-    override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrackSessionViewHolder, position: Int) {
         holder.bind(sessionList[position])
     }
 }
