@@ -27,7 +27,7 @@ class Stats : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private val weekHelper = WeekHelpers()
     val format = "yyyy-dd-MM"
-    private var selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
+    private var selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis()) // TODO: Spostare inizializzazioni
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,11 @@ class Stats : Fragment() {
         // Mostro etichetta settimana corrente
         currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
 
-        //Carica dati settimana corrente
+        // Recupero stato eventualmente salvato
+        if (savedInstanceState != null){
+            restoreState(savedInstanceState)
+        }
+        //Carica dati settimana selezionata
         loadGraph(currentDate, barChart)
 
 
@@ -88,6 +92,20 @@ class Stats : Fragment() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("StatsFragment", "Chiamato onSaveInstanceState")
+        outState.putLongArray("selectedWeek", longArrayOf(selectedWeek.first, selectedWeek.second))
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun restoreState(inState: Bundle){
+        Log.d("StatsFragment", "Chiamato restoreState")
+        val pair = inState.getLongArray("selectedWeek")
+        if (pair != null) {
+            selectedWeek = Pair<Long, Long>(pair[0], pair[1])
+        }
+
+    }
 
     private fun loadGraph(currentDate: TextView, barChart: BarChart) {
         //Carica nel recyclerview dati della settimana selezionata
@@ -106,31 +124,37 @@ class Stats : Fragment() {
 
     private fun loadRecyclerView(from: Long, to: Long){
         // Carico dati nel recyclerview in modo asincrono
-        Log.d("GraphActivity", "Imposto coroutine cariacamento dati")
+        Log.d("StatsFragment", "Imposto coroutine cariacamento dati")
 
         // Dall' acttivity scope avvio una nuova coroutine per caricare e impostare i dati
         lifecycleScope.launch {
             val sessionList = Datasource(requireActivity().applicationContext).getSessionListIdString(from,to)
             recyclerView.adapter = TrackSessionAdapter(sessionList)
-            Log.d("AsyncGraphActivty", "Dati caricati.")
+            Log.d("AsyncStatsFragment", "Dati caricati.")
         }
 
-        Log.d("GraphActivity", "Fine impostazione routine caricamento dati.")
+        Log.d("StatsFragment", "Fine impostazione routine caricamento dati.")
     }
 
+    /**
+     * Ottiene lista di sessioni comprese tra due date espresse in Unix time.
+     * @param from: data di partenza
+     * @param to: data limite finale
+     * @return: Una lista di oggetti TrackSession
+     */
     private fun getSessionsList(from: Long, to: Long) : List<TrackSession>?{
         // Carico dati nel recyclerview in modo asincrono
-        Log.d("GraphActivity", "getSessionsList()")
+        Log.d("StatsFragment", "getSessionsList()")
         var sessionList: List<TrackSession>? = null
 
         // Dall' activity scope avvio una nuova coroutine per caricare i dati
         lifecycleScope.launch {
             //Sostituito il context this@GraphActivity con requireActivity().applicationContext
             sessionList = Datasource(requireActivity().applicationContext).getSessionList(from,to)
-            Log.d("AsyncGraphActivty", "Dati salvati")
+            Log.d("AsyncStatsFragment", "Dati salvati")
         }
 
-        Log.d("GraphActivity", "Ritornati")
+        Log.d("StatsFragment", "Ritornati")
         return sessionList
     }
 
@@ -151,6 +175,5 @@ class Stats : Fragment() {
         println(distanceList.joinToString(" "))
         return distanceList
     }
-
 
 }
