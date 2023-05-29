@@ -123,13 +123,16 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
             var right = abs_center + space/4
 
-            //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
-            val scale: Double = value / maxValue
+            var scale: Double = 0.0
+            if(maxValue != 0f) {
+                //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
+                scale = value / maxValue
+            }
 
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
             var top = bottom - (height - upperMargin)*scale
 
-            Log.d("Canvas", "$position: $top, $bottom, $right, $left")
+            Log.d("BarChart", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
             canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
             if (value != 0.0) {
