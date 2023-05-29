@@ -20,13 +20,19 @@ import kotlinx.coroutines.launch
 
 class Stats : Fragment() {
 
+    // Variabili di istanza
+    private val weekHelper = WeekHelpers()
+    val format = "yyyy-dd-MM"
+
+    // Views del fragment
+    private lateinit var barChart: BarChart
     private lateinit var generateButton: Button
     private lateinit var pastWeekButton: Button
     private lateinit var nextWeekButton: Button
     private lateinit var currentDate: TextView
     private lateinit var recyclerView: RecyclerView
-    private val weekHelper = WeekHelpers()
-    val format = "yyyy-dd-MM"
+
+    // Stato del fragment
     private var selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis()) // TODO: Spostare inizializzazioni
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +60,7 @@ class Stats : Fragment() {
         loadRecyclerView(0, System.currentTimeMillis())
 
         // Riferimenti a elementi del layout
-        val barChart: BarChart = view.findViewById(R.id.barChart)
+        barChart = view.findViewById(R.id.barChart)
         generateButton= view.findViewById(R.id.generateButton)
         pastWeekButton= view.findViewById(R.id.pastWeekButton)
         nextWeekButton= view.findViewById(R.id.nextWeekButton)
@@ -65,7 +71,7 @@ class Stats : Fragment() {
 
         // Recupero stato eventualmente salvato
         if (savedInstanceState != null){
-            restoreState(savedInstanceState)
+            restoreState(savedInstanceState) //TODO: dato che si fa un restore solo della settimana corrente, coverrebbe ripristinare in onCreate
         }
         //Carica dati settimana selezionata
         loadGraph(currentDate, barChart)
@@ -104,7 +110,6 @@ class Stats : Fragment() {
         if (pair != null) {
             selectedWeek = Pair<Long, Long>(pair[0], pair[1])
         }
-
     }
 
     private fun loadGraph(currentDate: TextView, barChart: BarChart) {
