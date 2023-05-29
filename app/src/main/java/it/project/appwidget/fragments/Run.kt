@@ -88,11 +88,9 @@ class Run : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("RunFragment", "Chiamato onCreate")
-
-        // Registro receiver
+        // Creo BroadcastReceiver
         locationBroadcastReceiver = LocationBroadcastReceiver()
-        requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
+        Log.d("RunFragment", "Chiamato onCreate")
     }
 
     // La documentazione di Android dice di usare questo metodo solo per caricare il layout
@@ -124,6 +122,9 @@ class Run : Fragment() {
         speed_debug_textview = view.findViewById(R.id.debug_speed_textview)
         distance_debug_textview = view.findViewById(R.id.debug_distance_textview)
         stopServiceButton.isEnabled = false
+
+        // Registro receiver
+        requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
 
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
@@ -184,6 +185,13 @@ class Run : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        Log.d("RunFragment", "Chiamato onDestroyView")
+        // Tolgo registrazione receiver
+        requireActivity().unregisterReceiver(locationBroadcastReceiver)
+        super.onDestroyView()
+    }
+
     // Viene chiamato solo quando activity chiama lo stesso!! Non va bene per il salvataggio in navigazione
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("RunFragment", "Chiamato onSaveInstanceState")
@@ -206,10 +214,8 @@ class Run : Fragment() {
 
     override fun onDestroy() {
         Log.d("RunFragment", "Chiamato onDestroy")
-
         // Tolgo registrazione receiver
         requireActivity().unregisterReceiver(locationBroadcastReceiver)
-
         super.onDestroy()
     }
 
