@@ -11,9 +11,11 @@ import android.view.View
 import java.text.DecimalFormat
 
 /**
- * classe che disegna il grafico a barre
+ * Classe che implementa un basilare grafico a barre. Viene utilizzato un [Canvas] per disegnare
+ * rettangoli sullo schermo, scalati rispetto ad un certo valore massimo.
+ * @property days Lista di etichette da applicare alla barra orizziontale del grafico.
+ * @property valueArray Lista di valori da graficare tramite barre.
  */
-
 class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
     // TODO: A che servono? Rimuovere dopo aver compreso dall'esempio
@@ -22,7 +24,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
     var mTextPos: Int
 
     /**
-     * Array di etichette da applicare lungo l'asse x
+     * Array di etichette da applicare lungo l'asse x.
      */
     var days: ArrayList<String> = arrayListOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
         set(newArray) {
@@ -34,7 +36,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
         }
 
     /**
-     * Array di valori da rappresentare
+     * Array di valori da rappresentare tramite barre.
      */
     var valueArray: ArrayList<Double> = arrayListOf(10.0, 20.0, 70.0, 30.0, 60.0, 40.0, 50.0)
         set(newArray) {
