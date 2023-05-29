@@ -91,7 +91,7 @@ class GraphActivity : AppCompatActivity() {
         // Dall' acttivity scope avvio una nuova coroutine per caricare e impostare i dati
         lifecycleScope.launch {
             val sessionList = Datasource(this@GraphActivity).getSessionListIdString(from,to)
-            recyclerView.adapter = TrackSessionAdapter(sessionList)
+            //recyclerView.adapter = TrackSessionAdapter(sessionList)
             Log.d("AsyncGraphActivty", "Dati caricati.")
         }
 
