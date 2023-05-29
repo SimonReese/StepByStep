@@ -36,8 +36,6 @@ class Home : Fragment() {
     private var kcal: Float = 0f
 
 
-
-
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // Classe per ricezione broadcast messages
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
@@ -57,8 +55,6 @@ class Home : Fragment() {
 
             //TODO: progress = SommaCalorieOdierne + CalorieSessioneCorrente
             //progressBar.progress = progress
-
-
             println(preferencesHelper.nome)
 
         }
@@ -66,11 +62,9 @@ class Home : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("HomeFragment", "Chiamato onCreate")
-
-        // Registro receiver
+        // Creo BroadcastReceiver
         locationBroadcastReceiver = LocationBroadcastReceiver()
-        requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
+        Log.d("HomeFragment", "Chiamato onCreate")
     }
 
     override fun onCreateView(
@@ -105,6 +99,8 @@ class Home : Fragment() {
         passiTextView.text = steps.toString()
         caloriesTextView.text = DecimalFormat("#.#").format(kcal/1000).toString() + "Kcal"
 
+        // Registro receiver
+        requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
         if (savedInstanceState != null) {
@@ -115,20 +111,20 @@ class Home : Fragment() {
         val serviceIntent = Intent(requireActivity(), LocationService::class.java)
     }
 
+    override fun onDestroyView() {
+        Log.d("HomeFragment", "Chiamato onDestroyView")
+        // Tolgo registrazione receiver
+        requireActivity().unregisterReceiver(locationBroadcastReceiver)
+        super.onDestroyView()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("HomeFragment", "Chiamato onSaveInstanceState")
         super.onSaveInstanceState(outState)
     }
 
-    override fun onDestroyView() {
-        Log.d("HomeFragment", "Chiamato onDestroyView")
-        super.onDestroyView()
-    }
-
     override fun onDestroy() {
         Log.d("HomeFragment", "Chiamato onDestroy")
-        // Tolgo registrazione receiver
-        requireActivity().unregisterReceiver(locationBroadcastReceiver)
         super.onDestroy()
     }
 
