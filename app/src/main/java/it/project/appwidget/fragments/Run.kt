@@ -59,6 +59,7 @@ class Run : Fragment() {
             val rate = intent?.getFloatExtra("rate", 0f)
             val calories = intent?.getFloatExtra("calories", 0f)
 
+            val noDecimalFormat = DecimalFormat("#")
             val singleDecimal = DecimalFormat("#.#")
             val doubleDecimal = DecimalFormat("#.##")
 
@@ -76,7 +77,7 @@ class Run : Fragment() {
             }
             rateTextView.text = singleDecimal.format(rate)
             distanceTextView.text = doubleDecimal.format(distloc!! / 1000)
-            kcalTextView.text = singleDecimal.format(calories)
+            kcalTextView.text = noDecimalFormat.format(calories)
 
             // Debug
             speed_debug_textview.text = "speed: " + (doubleDecimal.format(speedloc!! * 3.6)) + "km/h"
