@@ -96,12 +96,12 @@ class Stats : Fragment() {
         //Ottieni lista di TrackSession della settimana selezionata
         val sessions = getSessionsList(selectedWeek.first, selectedWeek.second)
         //Ottieni array in cui in ogni cella è presente somma distance di quel giorno
-        val values: Array<Int> = convertTrackSessionInDistanceArray(sessions)
+        val values: ArrayList<Double> = convertTrackSessionInDistanceArray(sessions)
 
         // Carico etichette nel grafico
-        barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second).toTypedArray()
+        barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second)
         // Carico valori nel grafico
-        barChart.valueArray = values.toIntArray()
+        barChart.valueArray = values
     }
 
     private fun loadRecyclerView(from: Long, to: Long){
@@ -135,18 +135,21 @@ class Stats : Fragment() {
     }
 
 
-    //Converte List di TrackSession in Array di distance
-    private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): Array<Int> {
+    /**
+     * Converte lista di TrackSession in lista di distanze
+     * @param weekSession: lista di sessioni in una settimana
+     * @return: un ArrayList di Double contenente la somma delle distanze giorno per giorno
+     */
+    private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): ArrayList<Double> {
         //Lista di dimensione 7
-        val graphList: MutableList<Int> = MutableList(7) { 0 }
+        val distanceList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         if (!weekSession.isNullOrEmpty()) {
             for (session in weekSession) {
-                graphList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance.toInt()
+                distanceList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance / 1000
             }
-
         }
-        println(graphList.joinToString(" "))
-        return graphList.toTypedArray()
+        println(distanceList.joinToString(" "))
+        return distanceList
     }
 
 
