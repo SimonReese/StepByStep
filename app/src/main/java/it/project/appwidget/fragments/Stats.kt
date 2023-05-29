@@ -37,6 +37,14 @@ class Stats : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Ripristino o creo lo stato di selectedWeek
+        if (savedInstanceState != null){
+            restoreState(savedInstanceState)
+        } else {
+            // Inizializzo settimana corrente
+            selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
+        }
         Log.d("StatsFragment", "Chiamato onCreate")
     }
 
@@ -62,12 +70,6 @@ class Stats : Fragment() {
         nextWeekButton= view.findViewById(R.id.nextWeekButton)
         currentDate= view.findViewById(R.id.tv_date)
 
-        // Inizializzo settimana corrente
-        selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis()) //TODO-A: spostare inizializzazione dove più opportuno (vedi con TODO-B)
-        // Recupero stato eventualmente salvato
-        if (savedInstanceState != null){
-            restoreState(savedInstanceState) //TODO-B: dato che si fa un restore solo della settimana corrente, coverrebbe ripristinare in onCreate
-        }
 
         // Mostro etichetta settimana corrente
         currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
@@ -77,7 +79,6 @@ class Stats : Fragment() {
 
         //Carica dati settimana selezionata
         loadBarChart()
-
 
         //Bottone settimana corrente
         generateButton.setOnClickListener { generateButton: View ->
@@ -108,6 +109,9 @@ class Stats : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+    /**
+     * Ripristina lo stato di [selectedWeek] recuperandone i valori dal Bundle [inState]
+     */
     private fun restoreState(inState: Bundle){
         Log.d("StatsFragment", "Chiamato restoreState")
         val pair = inState.getLongArray("selectedWeek")
@@ -116,8 +120,12 @@ class Stats : Fragment() {
         }
     }
 
+    /**
+     * Carica il [BarChart] con i dati della settimana di riferimento in modo asincrono.
+     * Appena i dati e le etichette sono pronti, vengono inseriti nel [BarChart], che viene rigenerato.
+     */
     private fun loadBarChart() {
-
+        // Lancio coroutine per caricare dati e etichette nel grafico
         lifecycleScope.launch {
             val trackSessionList = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
             val values = convertTrackSessionInDistanceArray(trackSessionList)
@@ -126,11 +134,15 @@ class Stats : Fragment() {
         }
     }
 
+    /**
+     * Carica il recyclerView con i dati della settimana di riferimento in modo asincrono.
+     * Appena i dati sono pronti, vengono inseriti nel recyclerView tramite l'adapter [TrackSessionAdapter].
+     */
     private fun loadRecyclerView(){
         // Carico dati nel recyclerview in modo asincrono
         Log.d("StatsFragment", "Imposto coroutine cariacamento dati")
 
-        // Dall' activity scope avvio una nuova coroutine per caricare e impostare i dati
+        // Dall' activity scope avvio una nuova coroutine per caricare e impostare i dati nell'adapter
         lifecycleScope.launch {
             val sessionList = Datasource(requireActivity().applicationContext).getSessionListIdString(selectedWeek.first, selectedWeek.second)
             recyclerView.adapter = TrackSessionAdapter(sessionList)
@@ -140,6 +152,7 @@ class Stats : Fragment() {
     }
 
 /*
+* TODO: rimuovere
 * Questo metodo non è veramente asincrono - commentato a fini di studio
 * *//**
      * Ottiene lista di sessioni comprese tra due date espresse in Unix time.
@@ -167,17 +180,17 @@ class Stats : Fragment() {
     /**
      * Converte lista di [TrackSession] in lista di distanze sommate giorno per giorno
      * @param weekSession Lista di sessioni in una settimana
-     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno
+     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno. Restituisce
+     * sempre una lista di dimensione 7.
      */
-    private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): ArrayList<Double> {
-        //Lista di dimensione 7
+    private fun convertTrackSessionInDistanceArray(weekSession: ArrayList<TrackSession>): ArrayList<Double> {
+        // Inizializzo lista di dimensione 7 con valori azzerati
         val distanceList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        if (!weekSession.isNullOrEmpty()) {
-            for (session in weekSession) {
-                distanceList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance / 1000
-            }
+        for (session in weekSession) {
+            // Aggiorno la distanza totale percorsa giorno per giorno (in km)
+            distanceList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance / 1000
         }
-        println(distanceList.joinToString(" "))
+        Log.d("StatsFragment", "Ho costruito la lista di distanze ${distanceList}")
         return distanceList
     }
 
