@@ -92,8 +92,8 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        val lowerMargin = 200f
-        val upperMargin = 400f
+        val lowerMargin = 50f
+        val upperMargin = 100f
 
         //Numero di barre
         var numbars = valueArray.size
