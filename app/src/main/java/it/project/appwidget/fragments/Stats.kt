@@ -139,12 +139,14 @@ class Stats : Fragment() {
         Log.d("StatsFragment", "Fine impostazione routine caricamento dati.")
     }
 
-    /**
+/*
+* Questo metodo non è veramente asincrono - commentato a fini di studio
+* *//**
      * Ottiene lista di sessioni comprese tra due date espresse in Unix time.
      * @param from: data di partenza
      * @param to: data limite finale
      * @return: Una lista di oggetti TrackSession
-     */
+     *//*
     private fun getSessionsList(from: Long, to: Long) : List<TrackSession>?{
         // Carico dati nel recyclerview in modo asincrono
         Log.d("StatsFragment", "getSessionsList()")
@@ -159,7 +161,7 @@ class Stats : Fragment() {
 
         Log.d("StatsFragment", "Ritornati")
         return sessionList
-    }
+    }*/
 
 
     /**
