@@ -34,7 +34,7 @@ interface TrackSessionDao {
      * Restituisce tutti gli oggetti TrackSession nel database
      */
     @Query("SELECT * FROM track_sessions")
-    fun getAllTrackSessions(): LiveData<List<TrackSession>>
+    fun getAllTrackSessions(): LiveData<List<TrackSession>> //TODO: dove usiamo il livedata?
 
     /**
      * Restituisce tutti gli oggetti TrackSession nel database tramite id
