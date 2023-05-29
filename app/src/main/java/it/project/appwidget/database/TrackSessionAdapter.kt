@@ -23,12 +23,16 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
 
     // Describes an item view and its place within the RecyclerView
     class TrackSessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val sessionTextView: TextView = itemView.findViewById(R.id.trackSessionDateTextView)
-        private val sessionId: TextView = itemView.findViewById(R.id.trackSessionIdTextView)
+
+        // Views associate all'item
+        private val trackSessionIdTextView: TextView = itemView.findViewById(R.id.trackSessionIdTextView)
+        private val trackSessionDateTextView: TextView = itemView.findViewById(R.id.trackSessionDateTextView)
+        private val trackSessionTimeTextView: TextView = itemView.findViewById(R.id.trackSessionTimeTextView)
+        private val trackSessionDistanceTextView: TextView = itemView.findViewById(R.id.trackSessionDistanceTextView)
 
         fun bind(pair: Pair<Int, String>) {
-            sessionTextView.text = pair.second
-            sessionId.text = pair.first.toString()
+            trackSessionDateTextView.text = pair.second
+            trackSessionIdTextView.text = pair.first.toString()
         }
     }
 
