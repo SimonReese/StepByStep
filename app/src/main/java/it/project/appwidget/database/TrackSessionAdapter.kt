@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.project.appwidget.activities.DetailActivity
 import it.project.appwidget.R
 
-
+// TODO: Ri-organizzare layout della lista
 class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
     RecyclerView.Adapter<TrackSessionAdapter.SessionViewHolder>() {
 
