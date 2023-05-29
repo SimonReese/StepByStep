@@ -8,11 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.project.appwidget.activities.DetailActivity
 import it.project.appwidget.R
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 
 // TODO: Ri-organizzare layout della lista
-class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
+class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>) :
     RecyclerView.Adapter<TrackSessionAdapter.TrackSessionViewHolder>() {
 
+    // TODO: Impostare listener tramite parametro su costruttore
     private val onClickListener = View.OnClickListener { v ->
         //Passa id alla nuova activity
         val sessionId = v.findViewById<TextView>(R.id.trackSessionIdTextView).text
@@ -30,9 +33,14 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
         private val trackSessionTimeTextView: TextView = itemView.findViewById(R.id.trackSessionTimeTextView)
         private val trackSessionDistanceTextView: TextView = itemView.findViewById(R.id.trackSessionDistanceTextView)
 
-        fun bind(pair: Pair<Int, String>) {
-            trackSessionDateTextView.text = pair.second
-            trackSessionIdTextView.text = pair.first.toString()
+        fun bind(trackSession: TrackSession) {
+            trackSessionIdTextView.text = trackSession.id.toString()
+            val dateFormat = SimpleDateFormat("dd/MM")
+            val hourFormat = SimpleDateFormat("HH:mm")
+            val distanceFormat = DecimalFormat("##.#")
+            trackSessionDateTextView.text = dateFormat.format(trackSession.startTime)
+            trackSessionTimeTextView.text = hourFormat.format(trackSession.startTime)
+            trackSessionDistanceTextView.text = distanceFormat.format(trackSession.distance / 1000) + "km"
         }
     }
 
@@ -48,11 +56,11 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
 
     // Returns size of data list
     override fun getItemCount(): Int {
-        return sessionList.size
+        return trackSessionList.size
     }
 
     // Displays data at a certain position
     override fun onBindViewHolder(holder: TrackSessionViewHolder, position: Int) {
-        holder.bind(sessionList[position])
+        holder.bind(trackSessionList[position])
     }
 }
