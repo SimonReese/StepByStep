@@ -165,9 +165,9 @@ class Stats : Fragment() {
 
 
     /**
-     * Converte lista di TrackSession in lista di distanze
-     * @param weekSession: lista di sessioni in una settimana
-     * @return: un ArrayList di Double contenente la somma delle distanze giorno per giorno
+     * Converte lista di [TrackSession] in lista di distanze sommate giorno per giorno
+     * @param weekSession Lista di sessioni in una settimana
+     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno
      */
     private fun convertTrackSessionInDistanceArray(weekSession: List<TrackSession>?): ArrayList<Double> {
         //Lista di dimensione 7
