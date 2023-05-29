@@ -76,26 +76,26 @@ class Stats : Fragment() {
         loadRecyclerView()
 
         //Carica dati settimana selezionata
-        loadGraph(currentDate, barChart)
+        loadBarChart()
 
 
         //Bottone settimana corrente
         generateButton.setOnClickListener { generateButton: View ->
             selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
-            loadGraph(currentDate, barChart)
+            loadBarChart()
 
         }
 
         //Bottone past week
         pastWeekButton.setOnClickListener { pastWeekButton: View ->
             selectedWeek = weekHelper.getPreviousWeekRange(selectedWeek)
-            loadGraph(currentDate, barChart)
+            loadBarChart()
         }
 
         //Bottone next week
         nextWeekButton.setOnClickListener { nextWeekButton: View ->
             selectedWeek = weekHelper.getNextWeekRange(selectedWeek)
-            loadGraph(currentDate, barChart)
+            loadBarChart()
         }
 
     }
@@ -114,26 +114,21 @@ class Stats : Fragment() {
         }
     }
 
-    private fun loadGraph(currentDate: TextView, barChart: BarChart) {
-        //Carica nel recyclerview dati della settimana selezionata
-        loadRecyclerView(selectedWeek.first, selectedWeek.second)
-        currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
-        //Ottieni lista di TrackSession della settimana selezionata
-        val sessions = getSessionsList(selectedWeek.first, selectedWeek.second)
-        //Ottieni array in cui in ogni cella è presente somma distance di quel giorno
-        val values: ArrayList<Double> = convertTrackSessionInDistanceArray(sessions)
+    private fun loadBarChart() {
 
-        // Carico etichette nel grafico
-        barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second)
-        // Carico valori nel grafico
-        barChart.valueArray = values
+        lifecycleScope.launch {
+            val trackSessionList = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
+            val values = convertTrackSessionInDistanceArray(trackSessionList)
+            barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second)
+            barChart.valueArray = values
+        }
     }
 
     private fun loadRecyclerView(){
         // Carico dati nel recyclerview in modo asincrono
         Log.d("StatsFragment", "Imposto coroutine cariacamento dati")
 
-        // Dall' acttivity scope avvio una nuova coroutine per caricare e impostare i dati
+        // Dall' activity scope avvio una nuova coroutine per caricare e impostare i dati
         lifecycleScope.launch {
             val sessionList = Datasource(requireActivity().applicationContext).getSessionListIdString(selectedWeek.first, selectedWeek.second)
             recyclerView.adapter = TrackSessionAdapter(sessionList)
