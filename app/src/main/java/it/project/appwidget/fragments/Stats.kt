@@ -33,7 +33,7 @@ class Stats : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     // Stato del fragment
-    private var selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis()) // TODO: Spostare inizializzazioni
+    private lateinit var selectedWeek: Pair<Long, Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +55,6 @@ class Stats : Fragment() {
 
         // Imposto RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView)
-
-        // Carico dati in background
-        loadRecyclerView(0, System.currentTimeMillis())
-
         // Riferimenti a elementi del layout
         barChart = view.findViewById(R.id.barChart)
         generateButton= view.findViewById(R.id.generateButton)
@@ -66,13 +62,19 @@ class Stats : Fragment() {
         nextWeekButton= view.findViewById(R.id.nextWeekButton)
         currentDate= view.findViewById(R.id.tv_date)
 
+        // Inizializzo settimana corrente
+        selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis()) //TODO-A: spostare inizializzazione dove più opportuno (vedi con TODO-B)
+        // Recupero stato eventualmente salvato
+        if (savedInstanceState != null){
+            restoreState(savedInstanceState) //TODO-B: dato che si fa un restore solo della settimana corrente, coverrebbe ripristinare in onCreate
+        }
+
         // Mostro etichetta settimana corrente
         currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
 
-        // Recupero stato eventualmente salvato
-        if (savedInstanceState != null){
-            restoreState(savedInstanceState) //TODO: dato che si fa un restore solo della settimana corrente, coverrebbe ripristinare in onCreate
-        }
+        // Carico dati in background
+        loadRecyclerView()
+
         //Carica dati settimana selezionata
         loadGraph(currentDate, barChart)
 
