@@ -1,6 +1,7 @@
 package it.project.appwidget.fragments
 
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -144,8 +145,8 @@ class Stats : Fragment() {
 
         // Dall' activity scope avvio una nuova coroutine per caricare e impostare i dati nell'adapter
         lifecycleScope.launch {
-            val sessionList = Datasource(requireActivity().applicationContext).getSessionListIdString(selectedWeek.first, selectedWeek.second)
-            recyclerView.adapter = TrackSessionAdapter(sessionList)
+            val trackSessionList: ArrayList<TrackSession> = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
+            recyclerView.adapter = TrackSessionAdapter(trackSessionList)
             Log.d("AsyncStatsFragment", "Dati caricati.")
         }
         Log.d("StatsFragment", "Fine impostazione routine caricamento dati.")
