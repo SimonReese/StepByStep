@@ -15,7 +15,7 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
 
     private val onClickListener = View.OnClickListener { v ->
         //Passa id alla nuova activity
-        val sessionId = v.findViewById<TextView>(R.id.session_id).text
+        val sessionId = v.findViewById<TextView>(R.id.trackSessionIdTextView).text
         val intent = Intent(v.context, DetailActivity::class.java)
         intent.putExtra(DetailActivity.ARG_SESSION_ID, sessionId)
         v.context.startActivity(intent)
@@ -23,8 +23,8 @@ class TrackSessionAdapter(private val sessionList: Array<Pair<Int, String>>) :
 
     // Describes an item view and its place within the RecyclerView
     class TrackSessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val sessionTextView: TextView = itemView.findViewById(R.id.session_text)
-        private val sessionId: TextView = itemView.findViewById(R.id.session_id)
+        private val sessionTextView: TextView = itemView.findViewById(R.id.trackSessionDateTextView)
+        private val sessionId: TextView = itemView.findViewById(R.id.trackSessionIdTextView)
 
         fun bind(pair: Pair<Int, String>) {
             sessionTextView.text = pair.second

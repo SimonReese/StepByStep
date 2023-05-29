@@ -7,7 +7,7 @@
     <!-- Add in TextView to display flower name   -->
 
     <TextView
-        android:id="@+id/session_id"
+        android:id="@+id/trackSessionIdTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.2"
@@ -16,7 +16,7 @@
 
 
     <TextView
-        android:id="@+id/session_text"
+        android:id="@+id/trackSessionDateTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -24,7 +24,7 @@
         tools:text="31/12" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/trackSessionTimeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -32,11 +32,10 @@
         tools:text="9:21" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/trackSessionDistanceTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView"
         android:textSize="35sp"
         tools:text="17km" />
 
