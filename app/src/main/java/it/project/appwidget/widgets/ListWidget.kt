@@ -26,20 +26,22 @@ class ListWidget : AppWidgetProvider() {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_widget)
 
             // Creazione dell'intent per il servizio che gestisce il caricamento dei dati nella ListView
-            val intent = Intent(context, ListWidgetService::class.java)
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            val remoteAdaperIntent = Intent(context, ListWidgetService::class.java)
+            remoteAdaperIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
             // Collega l'intent al layout della ListView del widget
-            remoteViews.setRemoteAdapter(R.id.widget_listview, intent)
+            remoteViews.setRemoteAdapter(R.id.widget_listview, remoteAdaperIntent)
 
 
             // Creazione di un intent per la gestione dei clic sugli elementi della ListView
-            val clickIntent = Intent(context, ListWidget::class.java)
-            clickIntent.action = "ITEM_CLICK_ACTION"
-            clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            val clickIntent = Intent(context, DetailActivity::class.java)
+            clickIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            //clickIntent.action = "ITEM_CLICK_ACTION"
+            //clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
             // Creazione di un Broadcast PendingIntent
-            val clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
+            //val clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
+            val clickPendingIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
 
             // Imposta il PendingIntent come template per gli elementi della ListView del widget
             // https://developer.android.com/reference/android/widget/RemoteViews#setPendingIntentTemplate(int,%20android.app.PendingIntent)
@@ -58,20 +60,20 @@ class ListWidget : AppWidgetProvider() {
         Log.d("onReceive", "Intent " + intent.action + " ricevuto")
 
         // Controllo action intent. Se corrisponde a quella generata dagli elementi avvio gestione del clic sugli elementi della ListView
-        if (intent.action == "ITEM_CLICK_ACTION") {
-
-            // Ottengo id widget dall'intent
-            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-            if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-
-                val sessionId = intent.getIntExtra("ARG_SESSION_ID",-1)
-
-                val detailIntent = Intent(context, DetailActivity::class.java)
-                detailIntent.putExtra(ARG_SESSION_ID,sessionId)
-                detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                context.startActivity(detailIntent)
-            }
-        }
+//        if (intent.action == "ITEM_CLICK_ACTION") {
+//
+//            // Ottengo id widget dall'intent
+//            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+//            if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+//
+//                val sessionId = intent.getIntExtra("ARG_SESSION_ID",-1)
+//
+//                val detailIntent = Intent(context, DetailActivity::class.java)
+//                detailIntent.putExtra(ARG_SESSION_ID,sessionId)
+//                detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+//                context.startActivity(detailIntent)
+//            }
+//        }
     }
 
 
