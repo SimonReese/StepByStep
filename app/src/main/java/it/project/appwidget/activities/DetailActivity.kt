@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.R
 import it.project.appwidget.database.AppDatabase
+import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
+import kotlinx.coroutines.launch
 
 class DetailActivity : AppCompatActivity() {
 
@@ -44,65 +47,35 @@ class DetailActivity : AppCompatActivity() {
 
         // Ottengo Id della sessione cliccata
         val sessionId = intent.getIntExtra(ARG_SESSION_ID, -1)
-        // dall'Id ottiene tutte le informazioni della sessione
-        val trackSessionDao = AppDatabase.getInstance(this).trackSessionDao()
 
         println("Id ricevuto in DetailActivity: " + sessionId)
 
-        if (sessionId != -1)
-        {
-            try {
-                val session = trackSessionDao.getTrackSessionById(sessionId!!.toInt())[0]
-
-                val format = "yyyy-dd-MM HH:mm:ss"
-
-                val startTime = session.startTime
-                val endTime = session.endTime
-                val type = session.activityType
-                val distance = session.distance
-                val time = session.duration
-                val avrSpeed = session.averageSpeed
-
-
-
-                val startDate = weekHelper.getDate(startTime, format)
-                val endDate = weekHelper.getDate(endTime, format)
-
-
-
-                tv_startData.text = startDate
-
-
-                tv_endData.text = endDate
-
-
-                tv_typeData.text = type
-
-
-                tv_distanceData.text = distance.toString()
-
-
-                tv_timeData.text = time.toString()
-
-
-                tv_avrSpeedData.text = avrSpeed.toString()
-
-            }
-            catch (e: NullPointerException)
-            {
-                Log.d("NullPointerException", "ERRORE")
-            }
-
+        if (sessionId == -1){
+            return
         }
 
-
+        loadData(sessionId)
     }
 
-    override fun onDestroy()
-    {
+    override fun onDestroy() {
         super.onDestroy()
         Log.v(mTAG, "onDestroy() called")
     }
 
+    private fun loadData(sessionId: Int){
+        lifecycleScope.launch {
+            // Dall'Id ottengo tutte le informazioni sulla sessione
+            val trackSessionDao = AppDatabase.getInstance(this@DetailActivity).trackSessionDao()
+            val trackSession = trackSessionDao.getTrackSessionById(sessionId)[0]
+            val format = "yyyy-dd-MM HH:mm:ss"
+
+            tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
+            tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
+            tv_typeData.text = trackSession.activityType
+            tv_distanceData.text = trackSession.distance.toString()
+            tv_timeData.text = trackSession.duration.toString()
+            tv_avrSpeedData.text = trackSession.averageSpeed.toString()
+        }
+    }
 
 }
