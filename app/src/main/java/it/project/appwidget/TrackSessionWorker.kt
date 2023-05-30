@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import it.project.appwidget.database.AppDatabase
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.LocationParser
+import it.project.appwidget.util.SessionDataProcessor
 
 class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     override fun doWork(): Result {
