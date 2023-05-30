@@ -50,7 +50,7 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             distance = distance.toDouble(),
             averageSpeed = avgSpeed.toDouble(),
             maxSpeed = maxSpeed.toDouble(),
-            activityType = "Walking" // TODO: Usare la classe utility apposita
+            activityType = SessionDataProcessor.calculateActivityType(distance, duration)
         )
 
         val db = AppDatabase.getInstance(applicationContext)
