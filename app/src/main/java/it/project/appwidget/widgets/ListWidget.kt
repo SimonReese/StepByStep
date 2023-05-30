@@ -60,7 +60,7 @@ class ListWidget : AppWidgetProvider() {
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 
-                val sessionId = intent.getStringExtra("ARG_SESSION_ID")
+                val sessionId = intent.getIntExtra("ARG_SESSION_ID",-1)
 
                 val detailIntent = Intent(context, DetailActivity::class.java)
                 detailIntent.putExtra(ARG_SESSION_ID,sessionId)

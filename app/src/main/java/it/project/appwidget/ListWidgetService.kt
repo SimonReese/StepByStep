@@ -101,7 +101,7 @@ class ListWidgetService : RemoteViewsService() {
             clickIntent.action = "ITEM_CLICK_ACTION"
             clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             // Inserisco Id nell'intent (putExtra FUNZIONA)
-            clickIntent.putExtra("ARG_SESSION_ID", items[position].id.toString())
+            clickIntent.putExtra("ARG_SESSION_ID", items[position].id)
             //https://developer.android.com/reference/android/widget/RemoteViews#setOnClickFillInIntent(int,%20android.content.Intent)
             remoteViews.setOnClickFillInIntent(R.id.list_item_widget, clickIntent)
 
