@@ -59,6 +59,11 @@ class DetailActivity : AppCompatActivity() {
         loadData(sessionId)
     }
 
+    override fun onStop() {
+        super.onStop()
+        finish()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Log.v(mTAG, "onDestroy() called")
