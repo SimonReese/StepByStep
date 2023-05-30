@@ -1,5 +1,6 @@
 package it.project.appwidget.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract.Data
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.project.appwidget.BarChart
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
+import it.project.appwidget.activities.DetailActivity
 import it.project.appwidget.util.WeekHelpers
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.database.TrackSessionAdapter
@@ -143,10 +145,18 @@ class Stats : Fragment() {
         // Carico dati nel recyclerview in modo asincrono
         Log.d("StatsFragment", "Imposto coroutine cariacamento dati")
 
+        // Creo listener da passare all'adapter
+        val onClickListener: (TrackSession) -> Unit = {trackSession ->
+            // Creo intent per lanciare activity
+            val intent = Intent(requireContext(), DetailActivity::class.java)
+            intent.putExtra(DetailActivity.ARG_SESSION_ID, trackSession.id)
+            requireContext().startActivity(intent)
+        }
+
         // Dall' activity scope avvio una nuova coroutine per caricare e impostare i dati nell'adapter
         lifecycleScope.launch {
             val trackSessionList: ArrayList<TrackSession> = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
-            recyclerView.adapter = TrackSessionAdapter(trackSessionList)
+            recyclerView.adapter = TrackSessionAdapter(trackSessionList, onClickListener)
             Log.d("AsyncStatsFragment", "Dati caricati.")
         }
         Log.d("StatsFragment", "Fine impostazione routine caricamento dati.")
