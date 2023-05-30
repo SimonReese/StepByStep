@@ -48,16 +48,20 @@ class ListWidgetService : RemoteViewsService() {
         private val appWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
         // Elenco degli elementi da visualizzare nella ListView del widget
-        private lateinit var items: List<TrackSession>
+        private lateinit var items: ArrayList<TrackSession>
 
         private val scope = CoroutineScope(Dispatchers.Default) // CoroutineScope all'interno della classe ListWidgetFactory
 
         override fun onCreate() {
             // Inizializza l'elenco items come vuoto
-            items = emptyList()
+            items = arrayListOf()
+            scope.async {
+                val range = weekHelper.getWeekRange(System.currentTimeMillis())
+                items = Datasource(context).getSessionList(range.first, range.second)
+            }
         }
 
-        private suspend fun getSessionsList(context: Context, from: Long, to: Long): Deferred<List<TrackSession>> {
+        private suspend fun getSessionsList(context: Context, from: Long, to: Long): Deferred<ArrayList<TrackSession>> {
             // Carico dati nel recyclerview in modo asincrono
             Log.d("ListWidgetService", "getSessionsList()")
 
