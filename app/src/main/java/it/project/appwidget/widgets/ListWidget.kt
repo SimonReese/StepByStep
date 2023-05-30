@@ -11,7 +11,7 @@ import it.project.appwidget.R
 import it.project.appwidget.ListWidgetService
 import it.project.appwidget.activities.DetailActivity
 
-
+//TODO: refactor nome in ListWidgetProvider
 class ListWidget : AppWidgetProvider() {
 
     companion object {
@@ -20,6 +20,8 @@ class ListWidget : AppWidgetProvider() {
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+
+        // Per ogni widget associato a questo provider
         for (appWidgetId in appWidgetIds) {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_widget)
 
@@ -30,19 +32,20 @@ class ListWidget : AppWidgetProvider() {
             // Collega l'intent al layout della ListView del widget
             remoteViews.setRemoteAdapter(R.id.widget_listview, intent)
 
-            // Creazione dell'intent per la gestione dei clic sugli elementi della ListView
+
+            // Creazione di un intent per la gestione dei clic sugli elementi della ListView
             val clickIntent = Intent(context, ListWidget::class.java)
             clickIntent.action = "ITEM_CLICK_ACTION"
             clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
-            // Creazione del PendingIntent
+            // Creazione di un Broadcast PendingIntent
             val clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
 
             // Imposta il PendingIntent come template per gli elementi della ListView del widget
             // https://developer.android.com/reference/android/widget/RemoteViews#setPendingIntentTemplate(int,%20android.app.PendingIntent)
             remoteViews.setPendingIntentTemplate(R.id.widget_listview, clickPendingIntent)
 
-            // Aggiornamento del widget con le nuove viste
+            // Richiedo aggiornamento del widget con le nuove views
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
 
@@ -54,9 +57,10 @@ class ListWidget : AppWidgetProvider() {
 
         Log.d("onReceive", "Intent " + intent.action + " ricevuto")
 
-        // Gestione del clic sugli elementi della ListView
+        // Controllo action intent. Se corrisponde a quella generata dagli elementi avvio gestione del clic sugli elementi della ListView
         if (intent.action == "ITEM_CLICK_ACTION") {
 
+            // Ottengo id widget dall'intent
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 
