@@ -29,13 +29,13 @@ class DetailActivity : AppCompatActivity()
         setContentView(R.layout.activity_session_detail)
 
         // ottiene Id della sessione cliccata
-        val sessionId = intent.getStringExtra(ARG_SESSION_ID)
+        val sessionId = intent.getIntExtra(ARG_SESSION_ID, -1)
         // dall'Id ottiene tutte le informazioni della sessione
         val trackSessionDao = AppDatabase.getInstance(this).trackSessionDao()
 
         println("Id ricevuto in DetailActivity: " + sessionId)
 
-        if (sessionId != "-1")
+        if (sessionId != -1)
         {
             try {
                 val session = trackSessionDao.getTrackSessionById(sessionId!!.toInt())[0]
