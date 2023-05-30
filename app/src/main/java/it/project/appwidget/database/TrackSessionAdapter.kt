@@ -3,6 +3,7 @@ package it.project.appwidget.database
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,20 +13,20 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 // TODO: Ri-organizzare layout della lista
-class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>) :
+class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>, private val onClickListener: (TrackSession) -> Unit) :
     RecyclerView.Adapter<TrackSessionAdapter.TrackSessionViewHolder>() {
 
     // TODO: Impostare listener tramite parametro su costruttore
-    private val onClickListener = View.OnClickListener { v ->
-        //Passa id alla nuova activity
-        val sessionId = v.findViewById<TextView>(R.id.trackSessionIdTextView).text
-        val intent = Intent(v.context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.ARG_SESSION_ID, sessionId)
-        v.context.startActivity(intent)
-    }
+//    private val onClickListener = View.OnClickListener { v ->
+//        //Passa id alla nuova activity
+//        val sessionId = v.findViewById<TextView>(R.id.trackSessionIdTextView).text
+//        val intent = Intent(v.context, DetailActivity::class.java)
+//        intent.putExtra(DetailActivity.ARG_SESSION_ID, sessionId)
+//        v.context.startActivity(intent)
+//    }
 
     // Describes an item view and its place within the RecyclerView
-    class TrackSessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrackSessionViewHolder(itemView: View, val onClickListener: (TrackSession) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
         // Views associate all'item
         private val trackSessionIdTextView: TextView = itemView.findViewById(R.id.trackSessionIdTextView)
@@ -33,11 +34,27 @@ class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>)
         private val trackSessionTimeTextView: TextView = itemView.findViewById(R.id.trackSessionTimeTextView)
         private val trackSessionDistanceTextView: TextView = itemView.findViewById(R.id.trackSessionDistanceTextView)
 
+        // Salvo trackSession corrente
+        private var trackSession: TrackSession? = null
+
+        init {
+            // Imposto funzione listener sulla view associata all'item
+            itemView.setOnClickListener {
+                // Se l'oggetto trackSession non è null, lo passo come argomento alla funzione onClickListener passata al ViewHoder
+                trackSession?.let {
+                    onClickListener(it)
+                }
+            }
+        }
+
         fun bind(trackSession: TrackSession) {
-            trackSessionIdTextView.text = trackSession.id.toString()
+            this.trackSession = trackSession
+
             val dateFormat = SimpleDateFormat("dd/MM")
             val hourFormat = SimpleDateFormat("HH:mm")
             val distanceFormat = DecimalFormat("##.#")
+
+            trackSessionIdTextView.text = trackSession.id.toString()
             trackSessionDateTextView.text = dateFormat.format(trackSession.startTime)
             trackSessionTimeTextView.text = hourFormat.format(trackSession.startTime)
             trackSessionDistanceTextView.text = distanceFormat.format(trackSession.distance / 1000) + "km"
@@ -49,9 +66,7 @@ class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>)
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.tracksession_item, parent, false)
 
-        view.setOnClickListener(onClickListener)
-
-        return TrackSessionViewHolder(view)
+        return TrackSessionViewHolder(view, onClickListener)
     }
 
     // Returns size of data list
