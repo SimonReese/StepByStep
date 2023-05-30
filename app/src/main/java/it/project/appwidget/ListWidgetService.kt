@@ -26,19 +26,23 @@ class ListWidgetService : RemoteViewsService() {
     // crea un oggetto CoroutineScope utilizzato per avviare e gestire le coroutine in modo asincrono all'interno della classe
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    // Metodo che viene chiamato quando viene richiesta la fabbrica di visualizzatori per il widget.
-    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        return ListWidgetFactory(applicationContext, intent)
-    }
-
     override fun onCreate() {
         super.onCreate()
         // Inizializza il CoroutineScope
         scope
     }
 
+    // Metodo che viene chiamato quando viene richiesta la fabbrica di visualizzatori per il widget.
+    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
+        return ListWidgetFactory(applicationContext, intent)
+    }
 
-    // La classe interna ListWidgetFactory implementa l'interfaccia RemoteViewsFactory e gestisce il caricamento dei dati per la ListView del widget.
+
+
+
+    /* Classe interna ListWidgetFactory implementa l'interfaccia RemoteViewsService.RemoteViewsFactory
+        e gestisce il caricamento dei dati per la ListView del widget.
+     */
     class ListWidgetFactory(private val context: Context, intent: Intent) : RemoteViewsFactory {
 
         private val weekHelper = WeekHelpers()
@@ -53,6 +57,7 @@ class ListWidgetService : RemoteViewsService() {
 
         private val scope = CoroutineScope(Dispatchers.Default) // CoroutineScope all'interno della classe ListWidgetFactory
 
+
         override fun onCreate() {
             // Inizializza l'elenco items come vuoto
             items = arrayListOf()
@@ -60,33 +65,6 @@ class ListWidgetService : RemoteViewsService() {
                 val range = weekHelper.getWeekRange(System.currentTimeMillis())
                 items = Datasource(context).getSessionList(range.first, range.second)
             }
-        }
-
-        private suspend fun getSessionsList(context: Context, from: Long, to: Long): Deferred<ArrayList<TrackSession>> {
-            // Carico dati nel recyclerview in modo asincrono
-            Log.d("ListWidgetService", "getSessionsList()")
-
-            return scope.async {
-                Datasource(context).getSessionList(from, to)
-            }
-        }
-
-        override fun onDataSetChanged() {
-            // Avvia la coroutine per ottenere i dati delle sessioni
-            scope.launch {
-                // Ottieni lista di TrackSession
-                val sessionListDeferred = getSessionsList(context, 0, System.currentTimeMillis())
-                //Quando il thread si è concluso imposta valore di items
-                items = sessionListDeferred.await()
-            }
-        }
-
-        override fun onDestroy() {
-        }
-
-        // Restituisce il numero di elementi nella ListView del widget
-        override fun getCount(): Int {
-            return items.size
         }
 
         // Ottieni la vista per un determinato elemento della ListView del widget
@@ -109,6 +87,21 @@ class ListWidgetService : RemoteViewsService() {
             return remoteViews
         }
 
+        // Restituisce il numero di elementi nella ListView del widget
+        override fun getCount(): Int {
+            return items.size
+        }
+
+        override fun onDataSetChanged() {
+            // Avvia la coroutine per ottenere i dati delle sessioni
+            scope.launch {
+                // Ottieni lista di TrackSession
+                val sessionListDeferred = getSessionsList(context, 0, System.currentTimeMillis())
+                //Quando il thread si è concluso imposta valore di items
+                items = sessionListDeferred.await()
+            }
+        }
+
         // Restituisce una vista di caricamento personalizzata
         override fun getLoadingView(): RemoteViews? {
             return null
@@ -127,6 +120,20 @@ class ListWidgetService : RemoteViewsService() {
         // Restituisce true se gli ID degli elementi sono stabili
         override fun hasStableIds(): Boolean {
             return true
+        }
+
+        override fun onDestroy() {
+
+        }
+
+
+        private suspend fun getSessionsList(context: Context, from: Long, to: Long): Deferred<ArrayList<TrackSession>> {
+            // Carico dati nel recyclerview in modo asincrono
+            Log.d("ListWidgetService", "getSessionsList()")
+
+            return scope.async {
+                Datasource(context).getSessionList(from, to)
+            }
         }
 
     }
