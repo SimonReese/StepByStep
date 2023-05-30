@@ -16,6 +16,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 // La classe ListWidgetService è responsabile di fornire una fabbrica di visualizzatori per il widget
 
@@ -92,7 +93,7 @@ class ListWidgetService : RemoteViewsService() {
         override fun getViewAt(position: Int): RemoteViews {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
 
-            val itemText = weekHelper.getDate(items[position].startTime, format) + " | " + items[position].duration/1000 + "km"
+            val itemText = weekHelper.getDate(items[position].startTime, format) + " | " + DecimalFormat("#.##").format(items[position].distance/1000) + "km"
             // Imposta il testo dell'elemento corrente nella TextView all'interno dell'elemento della ListView
             remoteViews.setTextViewText(R.id.item_textview, itemText)
 
