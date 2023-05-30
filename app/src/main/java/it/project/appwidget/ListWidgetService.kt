@@ -6,10 +6,9 @@ import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import it.project.appwidget.activities.DetailActivity
+import androidx.lifecycle.LifecycleCoroutineScope
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
-import it.project.appwidget.widgets.ListWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -21,36 +20,25 @@ import java.text.DecimalFormat
 
 class ListWidgetService : RemoteViewsService() {
 
-    // crea un oggetto CoroutineScope utilizzato per avviare e gestire le coroutine in modo asincrono all'interno della classe
-    private val scope = CoroutineScope(Dispatchers.Default)
-
     override fun onCreate() {
         super.onCreate()
-        // Inizializza il CoroutineScope
-        scope
+        Log.d("ListWidgetService", "Chiamato onCreate()")
     }
 
-    // Metodo che viene chiamato quando viene richiesta la fabbrica di visualizzatori per il widget.
+    // Metodo che viene chiamato quando viene richiesta la fabbrica di views per il widget.
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         return ListWidgetFactory(applicationContext, intent)
     }
 
 
-
-
     /* Classe interna ListWidgetFactory implementa l'interfaccia RemoteViewsService.RemoteViewsFactory
-        e gestisce il caricamento dei dati per la ListView del widget.
-     */
+        e gestisce il caricamento dei dati per la ListView del widget. */
     class ListWidgetFactory(private val context: Context, intent: Intent) : RemoteViewsFactory {
 
         private val weekHelper = WeekHelpers()
         private val format = "yyyy-dd-MM hh:mm"
 
-
-        // ID del widget associato alla fabbrica
-        private val appWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-
-        // Elenco degli elementi da visualizzare nella ListView del widget
+        // Lista degli elementi da visualizzare nella ListView del widget
         private lateinit var trackSessionList: ArrayList<TrackSession>
 
         private val scope = CoroutineScope(Dispatchers.Default) // CoroutineScope all'interno della classe ListWidgetFactory
@@ -65,7 +53,34 @@ class ListWidgetService : RemoteViewsService() {
             }
         }
 
-        // Ottieni la vista per un determinato elemento della ListView del widget
+        /* Una volta che ListWidgetFactory viene creato, o quando viene aggiornato, viene chiamato
+        il seguente metodo per popolare la RemoteView */
+        override fun onDataSetChanged() {
+            // Avvia la coroutine per ottenere i dati delle sessioni
+            scope.launch {
+                // Ottieni lista di TrackSession
+                val sessionListDeferred = getSessionsList(context, 0, System.currentTimeMillis())
+                //Quando il thread si è concluso imposta valore di items
+                trackSessionList = sessionListDeferred.await()
+            }
+        }
+
+        // Restituisce il numero di elementi nella ListView del widget
+        override fun getCount(): Int {
+            return trackSessionList.size
+        }
+
+        // Restituisce il numero di tipi di visualizzatori diversi
+        override fun getViewTypeCount(): Int {
+            return 1
+        }
+
+        // Volendo, restituisce una view di caricamento personalizzata. In questo caso restituisce null e viene utilizzata la view di default
+        override fun getLoadingView(): RemoteViews? {
+            return null
+        }
+
+        // Ottieni la view per un determinato elemento della ListView del widget
         override fun getViewAt(position: Int): RemoteViews {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
             val trackSession: TrackSession = trackSessionList[position]
@@ -86,30 +101,6 @@ class ListWidgetService : RemoteViewsService() {
             return remoteViews
         }
 
-        // Restituisce il numero di elementi nella ListView del widget
-        override fun getCount(): Int {
-            return trackSessionList.size
-        }
-
-        override fun onDataSetChanged() {
-            // Avvia la coroutine per ottenere i dati delle sessioni
-            scope.launch {
-                // Ottieni lista di TrackSession
-                val sessionListDeferred = getSessionsList(context, 0, System.currentTimeMillis())
-                //Quando il thread si è concluso imposta valore di items
-                trackSessionList = sessionListDeferred.await()
-            }
-        }
-
-        // Restituisce una vista di caricamento personalizzata
-        override fun getLoadingView(): RemoteViews? {
-            return null
-        }
-
-        // Restituisce il numero di tipi di visualizzatori diversi
-        override fun getViewTypeCount(): Int {
-            return 1
-        }
 
         // Restituisce l'ID dell'elemento nella posizione specificata
         override fun getItemId(position: Int): Long {
