@@ -10,6 +10,8 @@ import it.project.appwidget.database.AppDatabase
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.time.Duration
 
 class DetailActivity : AppCompatActivity() {
 
@@ -68,13 +70,15 @@ class DetailActivity : AppCompatActivity() {
             val trackSessionDao = AppDatabase.getInstance(this@DetailActivity).trackSessionDao()
             val trackSession = trackSessionDao.getTrackSessionById(sessionId)[0]
             val format = "yyyy-dd-MM HH:mm:ss"
+            val noDecimal = DecimalFormat("#")
+            val duration = Duration.ofMillis(trackSession.duration)
 
             tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
             tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
             tv_typeData.text = trackSession.activityType
-            tv_distanceData.text = trackSession.distance.toString()
-            tv_timeData.text = trackSession.duration.toString()
-            tv_avrSpeedData.text = trackSession.averageSpeed.toString()
+            tv_distanceData.text = noDecimal.format(trackSession.distance) + "m"
+            tv_timeData.text = "" + duration.toHours() + ":" + duration.toMinutesPart() + "h"
+            tv_avrSpeedData.text = trackSession.averageSpeed.toString() + "m/s"
         }
     }
 
