@@ -8,8 +8,8 @@ import it.project.appwidget.R
 import it.project.appwidget.database.AppDatabase
 import it.project.appwidget.util.WeekHelpers
 
-class DetailActivity : AppCompatActivity()
-{
+class DetailActivity : AppCompatActivity() {
+
     // Tag for Log messages
     private val mTAG = this::class.simpleName
     private val weekHelper = WeekHelpers()
@@ -19,16 +19,30 @@ class DetailActivity : AppCompatActivity()
         const val ARG_SESSION_ID = "session:id"
     }
 
+    // Views
+    private lateinit var tv_startData: TextView
+    private lateinit var tv_endData: TextView
+    private lateinit var tv_typeData: TextView
+    private lateinit var tv_distanceData: TextView
+    private lateinit var tv_timeData: TextView
+    private lateinit var tv_avrSpeedData: TextView
 
     // Called when the activity is first created
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Display the layout
         setContentView(R.layout.activity_session_detail)
 
-        // ottiene Id della sessione cliccata
+        // Riferimenti alle Views
+        tv_startData = findViewById(R.id.tv_startData)
+        tv_endData = findViewById(R.id.tv_endData)
+        tv_typeData = findViewById(R.id.tv_typeData)
+        tv_distanceData = findViewById(R.id.tv_distanceData)
+        tv_timeData = findViewById(R.id.tv_timeData)
+        tv_avrSpeedData = findViewById(R.id.tv_avrSpeedData)
+
+        // Ottengo Id della sessione cliccata
         val sessionId = intent.getIntExtra(ARG_SESSION_ID, -1)
         // dall'Id ottiene tutte le informazioni della sessione
         val trackSessionDao = AppDatabase.getInstance(this).trackSessionDao()
@@ -55,22 +69,22 @@ class DetailActivity : AppCompatActivity()
                 val endDate = weekHelper.getDate(endTime, format)
 
 
-                val tv_startData: TextView = findViewById(R.id.tv_startData)
+
                 tv_startData.text = startDate
 
-                val tv_endData: TextView = findViewById(R.id.tv_endData)
+
                 tv_endData.text = endDate
 
-                val tv_typeData: TextView = findViewById(R.id.tv_typeData)
+
                 tv_typeData.text = type
 
-                val tv_distanceData: TextView = findViewById(R.id.tv_distanceData)
+
                 tv_distanceData.text = distance.toString()
 
-                val tv_timeData: TextView = findViewById(R.id.tv_timeData)
+
                 tv_timeData.text = time.toString()
 
-                val tv_avrSpeedData: TextView = findViewById(R.id.tv_avrSpeedData)
+
                 tv_avrSpeedData.text = avrSpeed.toString()
 
             }
