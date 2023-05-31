@@ -42,7 +42,7 @@ class Setup : Fragment() {
                 preferencesHelper.peso = peso
                 preferencesHelper.eta = eta
                 preferencesHelper.sesso = sesso
-                preferencesHelper.kcalTarget = kcalTarget
+                preferencesHelper.kcalTarget = kcalTarget.toInt()
 
                 // Apri il fragment "config"
                 navigateToSetupFragment()
@@ -84,7 +84,7 @@ class Setup : Fragment() {
         view?.findViewById<TextInputLayout>(R.id.peso)?.editText?.setText(peso)
         view?.findViewById<TextInputLayout>(R.id.eta)?.editText?.setText(eta)
         view?.findViewById<TextInputLayout>(R.id.sesso)?.editText?.setText(sesso)
-        view?.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.setText(kcalTarget)
+        view?.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.setText(kcalTarget.toString())
     }
 
     private fun navigateToSetupFragment() {
