@@ -19,6 +19,7 @@ class UserPreferencesHelper(context: Context) {
         private const val KEY_ETA = "eta"
         private const val KEY_SESSO = "sesso"
         private const val KEY_TIPOLOGIA_ATTIVITA = "tipologia_attivita"
+        private const val KEY_KCAL_TARGET = "kcal"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
@@ -54,7 +55,7 @@ class UserPreferencesHelper(context: Context) {
     /**
      * Target calorico giornaliero
      */
-    var kcalTarget: String
-        get() = sharedPreferences.getString(KEY_TIPOLOGIA_ATTIVITA, "") ?: ""
-        set(value) = sharedPreferences.edit().putString(KEY_TIPOLOGIA_ATTIVITA, value).apply()
+    var kcalTarget: Int
+        get() = sharedPreferences.getInt(KEY_KCAL_TARGET, 0)
+        set(value) = sharedPreferences.edit().putInt(KEY_KCAL_TARGET, value).apply()
 }
