@@ -22,12 +22,12 @@ class ListWidget : AppWidgetProvider() {
 
             // Creazione dell'intent per avvio servizio di gestione caricamento dei dati nella ListView
             val remoteAdaperIntent = Intent(context, ListWidgetService::class.java)
-            remoteAdaperIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            remoteAdaperIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId) // Invio id widget al service
 
             // Collega l'intent del servizio al layout della ListView del widget
             remoteViews.setRemoteAdapter(R.id.widget_listview, remoteAdaperIntent)
 
-            // Creazione di un intent per la gestione dei clic sugli elementi della ListView
+            // Creazione di un intent per la gestione dei click sugli elementi della ListView
             val clickIntent = Intent(context, DetailActivity::class.java)
             clickIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
