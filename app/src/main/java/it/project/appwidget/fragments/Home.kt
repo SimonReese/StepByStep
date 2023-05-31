@@ -15,10 +15,15 @@ import android.widget.Button
 import android.widget.Chronometer
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import it.project.appwidget.Datasource
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import it.project.appwidget.UserPreferencesHelper
+import it.project.appwidget.util.WeekHelpers
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -29,11 +34,17 @@ class Home : Fragment() {
     private lateinit var passiTextView: TextView
     private lateinit var caloriesTextView: TextView
     private lateinit var progressBar: ProgressBar
+    private lateinit var usernameTextView: TextView
 
-
-    private var distance: Float = 0f
+    // Stato
+    private var distance: Double = 0.0
     private var steps: Int = 0
-    private var kcal: Float = 0f
+    private var kcal: Int = 0
+    private var kcalTarget: Int = 0
+    private var username: String = "Utente"
+
+    private var kcal_to_m_to_kg_factor = 0.001f
+    private var weight = 70f
 
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
@@ -44,14 +55,16 @@ class Home : Fragment() {
             val preferencesHelper = UserPreferencesHelper(requireActivity())
 
             Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
-            val distloc = intent?.getFloatExtra("distance", 0f)
+            val distloc = intent?.getDoubleExtra("distance", 0.0)
             val kcalloc = intent?.getFloatExtra("calories", 0f)
 
-            kcal = kcalloc!!
+            /*
+            kcal += (kcalloc!!)
             distance = distloc!!
             steps = (distloc!! *3/2).roundToInt()
             distanceTextView.text = (DecimalFormat("#.#").format(distance))
             caloriesTextView.text = DecimalFormat("#.#").format(kcalloc/1000).toString() + "Kcal"
+            */
 
             //TODO: progress = SommaCalorieOdierne + CalorieSessioneCorrente
             //progressBar.progress = progress
@@ -64,6 +77,12 @@ class Home : Fragment() {
         super.onCreate(savedInstanceState)
         // Creo BroadcastReceiver
         locationBroadcastReceiver = LocationBroadcastReceiver()
+        // Leggo valori stato
+        if (savedInstanceState == null){
+            // TODO: salvare stato
+        }
+
+
         Log.d("HomeFragment", "Chiamato onCreate")
     }
 
@@ -80,24 +99,22 @@ class Home : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("HomeFragment", "Chiamato onViewCreated")
 
-        // Inizializza preferencesHelper
-        val preferencesHelper = UserPreferencesHelper(requireContext())
-        val nomeUtente = preferencesHelper.nome
-        view.findViewById<TextView>(R.id.nome_utente).text = nomeUtente
 
-        val kcalTarget = preferencesHelper.kcalTarget
-
-
+        // Riferiementi alle Views
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
         passiTextView = view.findViewById<TextView>(R.id.counterPassi)
         caloriesTextView = view.findViewById<TextView>(R.id.counterCalories)
         progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
+        usernameTextView = view.findViewById<TextView>(R.id.nome_utente)
 
 
-        // Imposto valori textviews
+        // Imposto valori default textviews
         distanceTextView.text = DecimalFormat("#.#").format(distance)
         passiTextView.text = steps.toString()
         caloriesTextView.text = DecimalFormat("#.#").format(kcal/1000).toString() + "Kcal"
+        progressBar.max = kcalTarget
+        progressBar.progress = kcal
+        usernameTextView.text = username
 
         // Registro receiver
         requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
@@ -109,6 +126,47 @@ class Home : Fragment() {
 
         // Creo intent per il LocationService
         val serviceIntent = Intent(requireActivity(), LocationService::class.java)
+
+        // Avvio coroutine impostazione valori
+        lifecycleScope.launch {
+            // Leggo da sharedpreferences
+            val userPreferencesHelper = UserPreferencesHelper(requireActivity())
+            username = userPreferencesHelper.nome
+            kcalTarget = userPreferencesHelper.kcalTarget
+
+            // Leggo da database
+            val calendar = Calendar.getInstance()
+            var from = 0L
+            var to = 0L
+            with(calendar) {
+                timeInMillis = System.currentTimeMillis()
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+                from = timeInMillis
+
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+                to = timeInMillis
+            }
+            val trackSessionList = Datasource(requireActivity()).getSessionList(from, to)
+
+            for (trackSession in trackSessionList){
+                distance += trackSession.distance
+                kcal += (kcal_to_m_to_kg_factor * trackSession.distance * weight).roundToInt()
+                steps += (trackSession.distance * 3/2).roundToInt()
+            }
+
+            // Modifico valori views
+            distanceTextView.text = distance.toString()
+            passiTextView.text = steps.toString()
+            caloriesTextView.text = kcal.toString()
+            progressBar.max = kcalTarget
+            progressBar.progress = kcal
+            usernameTextView.text = username
+        }
     }
 
     override fun onDestroyView() {
