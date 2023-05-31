@@ -3,7 +3,14 @@ package it.project.appwidget
 import android.content.Context
 import android.content.SharedPreferences
 
-//Gestisce le informazioni dell'utente
+/**
+ * Classe che rappresenta le informazioni utente descritte in uno Shared Preferences.
+ * @property nome Nome utente
+ * @property eta Età utente
+ * @property peso Peso utente
+ * @property sesso Sesso utente
+ * @property kcalTarget Target calorico giornaliero
+ */
 class UserPreferencesHelper(context: Context) {
     companion object {
         private const val PREFS_FILE_NAME = "UserPreferences"
@@ -16,22 +23,37 @@ class UserPreferencesHelper(context: Context) {
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
 
+    /**
+     * Nome utente
+     */
     var nome: String
         get() = sharedPreferences.getString(KEY_NOME_UTENTE, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_NOME_UTENTE, value).apply()
 
+    /**
+     * Età utente
+     */
     var peso: String
         get() = sharedPreferences.getString(KEY_PESO, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_PESO, value).apply()
 
+    /**
+     * Peso utente
+     */
     var eta: String
         get() = sharedPreferences.getString(KEY_ETA, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_ETA, value).apply()
 
+    /**
+     * Sesso utente
+     */
     var sesso: String
         get() = sharedPreferences.getString(KEY_SESSO, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_SESSO, value).apply()
 
+    /**
+     * Target calorico giornaliero
+     */
     var kcalTarget: String
         get() = sharedPreferences.getString(KEY_TIPOLOGIA_ATTIVITA, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_TIPOLOGIA_ATTIVITA, value).apply()
