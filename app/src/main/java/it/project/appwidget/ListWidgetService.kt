@@ -45,8 +45,6 @@ class ListWidgetService : RemoteViewsService() {
         // Range della settimana di riferimento
         private lateinit var weekRange: Pair<Long, Long>
 
-        private val scope = CoroutineScope(Dispatchers.Default) // CoroutineScope all'interno della classe ListWidgetFactory
-
 
         override fun onCreate() {
             Log.d("ListWidgetFatory", "Chiamato onCreate()")
@@ -106,9 +104,7 @@ class ListWidgetService : RemoteViewsService() {
 
             //Imposta intent sul singolo item della lista
             val fillInIntent = Intent()
-            //clickIntent.action = "ITEM_CLICK_ACTION"
-            //fillInIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            // Inserisco Id nell'intent (putExtra FUNZIONA)
+            // Inserisco Id sessione nell'intent
             fillInIntent.putExtra("session:id", trackSession.id)
             //https://developer.android.com/reference/android/widget/RemoteViews#setOnClickFillInIntent(int,%20android.content.Intent)
             remoteViews.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent)
@@ -128,17 +124,7 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun onDestroy() {
-
-        }
-
-
-        private suspend fun getSessionsList(context: Context, from: Long, to: Long): Deferred<ArrayList<TrackSession>> {
-            // Carico dati nel recyclerview in modo asincrono
-            Log.d("ListWidgetService", "getSessionsList()")
-
-            return scope.async {
-                Datasource(context).getSessionList(from, to)
-            }
+            Log.d("ListWidgetFactory", "Chiamato onDestroy()")
         }
 
     }
