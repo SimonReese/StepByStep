@@ -49,7 +49,7 @@ class Config : Fragment() {
         view.findViewById<TextView>(R.id.valore_peso).text = peso
         view.findViewById<TextView>(R.id.valore_eta).text = eta
         view.findViewById<TextView>(R.id.valore_sesso).text = sesso
-        view.findViewById<TextView>(R.id.valore_kcal).text = kcalTarget
+        view.findViewById<TextView>(R.id.valore_kcal).text = kcalTarget.toString()
     }
 
 
