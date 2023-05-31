@@ -1,6 +1,8 @@
 package it.project.appwidget.util
 
 
+import android.util.Log
+import it.project.appwidget.database.TrackSession
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -125,6 +127,23 @@ class WeekHelpers {
             calendar.add(Calendar.DAY_OF_WEEK, 1) // Incremento il tempo di un giorno
         }
         return dateList
+    }
+
+    /**
+     * Converte lista di [TrackSession] in lista di distanze sommate giorno per giorno
+     * @param weekSession Lista di sessioni in una settimana
+     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno. Restituisce
+     * sempre una lista di dimensione 7.
+     */
+    fun convertTrackSessionInDistanceArray(weekSession: ArrayList<TrackSession>): ArrayList<Double> {
+        // Inizializzo lista di dimensione 7 con valori azzerati
+        val distanceList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        for (session in weekSession) {
+            // Aggiorno la distanza totale percorsa giorno per giorno (in km)
+            distanceList[getNumberDayOfWeek(session.startTime)] += session.distance / 1000
+        }
+        Log.d("StatsFragment", "Ho costruito la lista di distanze ${distanceList}")
+        return distanceList
     }
 
 }

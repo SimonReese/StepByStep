@@ -131,7 +131,7 @@ class Stats : Fragment() {
         // Lancio coroutine per caricare dati e etichette nel grafico
         lifecycleScope.launch {
             val trackSessionList = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
-            val values = convertTrackSessionInDistanceArray(trackSessionList)
+            val values = weekHelper.convertTrackSessionInDistanceArray(trackSessionList)
             barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second)
             barChart.valueArray = values
         }
@@ -188,21 +188,6 @@ class Stats : Fragment() {
     }*/
 
 
-    /**
-     * Converte lista di [TrackSession] in lista di distanze sommate giorno per giorno
-     * @param weekSession Lista di sessioni in una settimana
-     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno. Restituisce
-     * sempre una lista di dimensione 7.
-     */
-    private fun convertTrackSessionInDistanceArray(weekSession: ArrayList<TrackSession>): ArrayList<Double> {
-        // Inizializzo lista di dimensione 7 con valori azzerati
-        val distanceList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        for (session in weekSession) {
-            // Aggiorno la distanza totale percorsa giorno per giorno (in km)
-            distanceList[weekHelper.getNumberDayOfWeek(session.startTime)] += session.distance / 1000
-        }
-        Log.d("StatsFragment", "Ho costruito la lista di distanze ${distanceList}")
-        return distanceList
-    }
+
 
 }
