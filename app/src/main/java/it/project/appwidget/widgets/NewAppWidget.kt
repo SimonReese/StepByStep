@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import it.project.appwidget.BarChart
 import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
 import it.project.appwidget.util.WeekHelpers
@@ -62,6 +63,8 @@ class NewAppWidget : AppWidgetProvider() {
             views.setTextViewText(R.id.tv_timeData, savedDate)
             val savedCalories = loadText(context, appWidgetId, "calories")
             views.setTextViewText(R.id.tv_value_calories, savedCalories)
+
+
 
             // Imposto elementi layout in base a quanto indicato nelle preferences
             setNewViewVisibility(context, views)
@@ -147,6 +150,16 @@ class NewAppWidget : AppWidgetProvider() {
         views.setTextViewText(R.id.tv_sessionDate, savedDate)
         val savedCalories = loadText(context, appWidgetId, "calories")
         views.setTextViewText(R.id.tv_value_calories, savedCalories)
+
+        println("layoutId: " + context.resources.getResourceEntryName(views.layoutId))
+
+        //Se large_view_layout crea nuovo barChart
+        if (context.resources.getResourceEntryName(views.layoutId) == "large_view_layout")
+        {
+            val barChart = BarChart(context, null)
+            val bitmap = barChart.getChartImage()
+            views.setImageViewBitmap(R.id.img1,bitmap)
+        }
 
         // Aggiorno impostazioni
         setNewViewVisibility(context, views)
@@ -289,6 +302,5 @@ class NewAppWidget : AppWidgetProvider() {
         }
         return prefs.getString("$appWidgetId-$fieldName", "") ?: ""
     }
-
 
 }

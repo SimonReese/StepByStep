@@ -2,6 +2,7 @@ package it.project.appwidget
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -16,7 +17,7 @@ import java.text.DecimalFormat
  * @property days Lista di etichette da applicare alla barra orizziontale del grafico.
  * @property valueArray Lista di valori da graficare tramite barre.
  */
-class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
+class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
     // TODO: A che servono? Rimuovere dopo aver compreso dall'esempio
     var mShowText: Boolean
@@ -106,6 +107,85 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
         // Bordo inferiore con margine
         val bottom = height - lowerMargin
+
+        println(width)
+        println(height)
+
+
+        //Cerco l'elemento più grande
+        val maxValue: Float = valueArray.max().toFloat()
+
+        // 623.0, 723.0, 6159, 5873
+        //$top, $bottom, $right, $left
+        //canvas?.drawRect(0 + 20F, 0 + 20F, width -20F, height -20F, paint)
+
+        //return
+
+        //Per ogni barra
+        for ((position, value) in valueArray.withIndex()){
+            //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
+            var abs_center = relative_center + (position * space)
+            //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
+            var left = abs_center - space/4
+            //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
+            var right = abs_center + space/4
+
+            var scale: Double = 0.0
+            if(maxValue != 0f) {
+                //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
+                scale = value / maxValue
+            }
+
+            // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
+            var top = bottom - (height - upperMargin)*scale
+
+            Log.d("BarChart", "$position: $top, $bottom, $right, $left")
+            //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
+            canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
+            if (value != 0.0) {
+                canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
+
+            }
+            canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
+        }
+
+    }
+
+    /**
+     * Metodo che restituisce l'immagine del grafico a barre.
+     * @return Bitmap rappresentante il grafico a barre.
+     */
+    fun getChartImage(): Bitmap {
+        // Creo una bitmap vuota con le dimensioni della view
+        val w = 900
+        val h = 850
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        // Creo un canvas sulla bitmap
+        val canvas = Canvas(bitmap)
+        // Disegno la view sul canvas
+        onDrawBit(canvas, w, h)
+        // Restituisco la bitmap
+        return bitmap
+    }
+
+    //TODO: spostare funzione in un'altra classe?
+    private fun onDrawBit(canvas: Canvas?, w: Int, h: Int) {
+        val lowerMargin = 50f
+        val upperMargin = -700f
+
+        //Numero di barre
+        var numbars = valueArray.size
+        //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
+        var space = w / numbars
+        //Distanza del centro della barra dall'inizio dello spazio
+        var relative_center = space / 2
+
+        // Bordo inferiore con margine
+        val bottom = h - lowerMargin
+
+        println(w)
+        println(h)
+
 
         //Cerco l'elemento più grande
         val maxValue: Float = valueArray.max().toFloat()

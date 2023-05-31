@@ -128,7 +128,6 @@
 
     </RelativeLayout>
 
-    <!-- Add StackView -->
     <ImageView
         android:id="@+id/img1"
         android:layout_width="match_parent"
