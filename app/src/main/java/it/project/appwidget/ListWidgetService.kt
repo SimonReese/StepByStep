@@ -33,40 +33,54 @@ class ListWidgetService : RemoteViewsService() {
 
     /* Classe interna ListWidgetFactory implementa l'interfaccia RemoteViewsService.RemoteViewsFactory
         e gestisce il caricamento dei dati per la ListView del widget. */
-    class ListWidgetFactory(private val context: Context, intent: Intent) : RemoteViewsFactory {
+    class ListWidgetFactory(private val context: Context, private val intent: Intent) : RemoteViewsFactory {
 
         private val weekHelper = WeekHelpers()
         private val format = "yyyy-dd-MM hh:mm"
 
         // Lista degli elementi da visualizzare nella ListView del widget
         private lateinit var trackSessionList: ArrayList<TrackSession>
+        // Id widget di riferimento
+        private var appWidgetId: Int = -1
+        // Range della settimana di riferimento
+        private lateinit var weekRange: Pair<Long, Long>
 
         private val scope = CoroutineScope(Dispatchers.Default) // CoroutineScope all'interno della classe ListWidgetFactory
 
 
         override fun onCreate() {
+            Log.d("ListWidgetFatory", "Chiamato onCreate()")
             // Inizializza l'elenco items come vuoto
             trackSessionList = arrayListOf()
-            scope.async {
-                val range = weekHelper.getWeekRange(System.currentTimeMillis())
-                trackSessionList = Datasource(context).getSessionList(range.first, range.second)
-            }
+            // Recupero widgetID dall' intent
+            appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
         }
 
         /* Una volta che ListWidgetFactory viene creato, o quando viene aggiornato, viene chiamato
-        il seguente metodo per popolare la RemoteView */
+        il seguente metodo per popolare la RemoteView. Non è necessario avviare una coroutine perchè
+         il sistema continuerà a mostrare il dataset precedente finchè il nuovo dato non è pronto.*/
         override fun onDataSetChanged() {
-            // Avvia la coroutine per ottenere i dati delle sessioni
-            scope.launch {
-                // Ottieni lista di TrackSession
-                val sessionListDeferred = getSessionsList(context, 0, System.currentTimeMillis())
-                //Quando il thread si è concluso imposta valore di items
-                trackSessionList = sessionListDeferred.await()
+            Log.d("ListWidgetFactory", "Chiamato onDatasetChanged()")
+            // Recupero sharedPreferences
+            val preferencesFileName = "it.project.appwidget.listwidget." + appWidgetId
+            val sharedPreferences = context.getSharedPreferences(preferencesFileName, Context.MODE_PRIVATE)
+            // Cerco il primo valore di weekRange eventualmente salvato
+            var startRange =  sharedPreferences.getLong("range.first", -1L)
+
+            if (startRange == -1L){
+                Log.d("ListWidgetFactory", "Range non trovato. Imposto range settimana corrente.")
+                startRange = System.currentTimeMillis()
             }
+            // Aggiorno valore weekRange
+            weekRange = weekHelper.getWeekRange(startRange)
+
+            // Leggo entries dal database in base alla settimana selezionata e aggiorno dati
+            trackSessionList = Datasource(context).getSessionList(weekRange.first, weekRange.second)
         }
 
         // Restituisce il numero di elementi nella ListView del widget
         override fun getCount(): Int {
+            Log.d("ListWidgetFactory", "Chiamato getCount()")
             return trackSessionList.size
         }
 
@@ -82,6 +96,7 @@ class ListWidgetService : RemoteViewsService() {
 
         // Ottieni la view per un determinato elemento della ListView del widget
         override fun getViewAt(position: Int): RemoteViews {
+            Log.d("ListWidgetFactory", "Chiamato getViewAt()")
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
             val trackSession: TrackSession = trackSessionList[position]
 
