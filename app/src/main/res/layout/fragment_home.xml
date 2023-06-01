@@ -247,7 +247,6 @@
 
                             <ProgressBar
                                 android:id="@+id/progress_bar"
-                                style="?android:attr/progressBarStyle"
                                 android:layout_width="150dp"
                                 android:layout_height="150dp"
                                 android:layout_gravity="center"
@@ -258,10 +257,12 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                android:progress="20"
                                 tools:progress="20" />
 
 
                             <TextView
+                                android:id="@+id/percent"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="20%"

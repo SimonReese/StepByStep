@@ -35,6 +35,8 @@ class Home : Fragment() {
     private lateinit var caloriesTextView: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var usernameTextView: TextView
+    private lateinit var percentTextView: TextView
+
 
     // Stato
     private var distance: Double = 0.0
@@ -112,13 +114,14 @@ class Home : Fragment() {
         caloriesTextView = view.findViewById<TextView>(R.id.counterCalories)
         progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         usernameTextView = view.findViewById<TextView>(R.id.nome_utente)
+        percentTextView = view.findViewById<TextView>(R.id.percent)
 
 
         // Imposto valori default textviews
         distanceTextView.text = DecimalFormat("#.#").format(distance)
         passiTextView.text = steps.toString()
         caloriesTextView.text = DecimalFormat("#.#").format(kcal/1000).toString() + "Kcal"
-        progressBar.max = kcalTarget
+        progressBar.max = 100
         progressBar.progress = kcal
         usernameTextView.text = username
 
@@ -132,6 +135,11 @@ class Home : Fragment() {
 
         // Creo intent per il LocationService
         val serviceIntent = Intent(requireActivity(), LocationService::class.java)
+
+        /*
+           TODO: capire perchè progress si aggiorna solo in seguito ad un onDestroy e
+           non ogni volta che cambio valore da setup
+         */
 
         // Avvio coroutine impostazione valori
         lifecycleScope.launch {
@@ -158,8 +166,11 @@ class Home : Fragment() {
             distanceTextView.text = distance.toString()
             passiTextView.text = steps.toString()
             caloriesTextView.text = kcal.toString()
-            progressBar.max = kcalTarget
-            progressBar.progress = kcal
+            progressBar.max = 100
+            val progress = kcal.toDouble()/kcalTarget.toDouble()*100
+            progressBar.progress = progress.roundToInt()
+            percentTextView.text = progress.roundToInt().toString() + "%"
+            println("percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
             usernameTextView.text = username
         }
     }
