@@ -34,7 +34,7 @@ interface TrackSessionDao {
      * Restituisce tutti gli oggetti TrackSession nel database
      */
     @Query("SELECT * FROM track_sessions")
-    fun getAllTrackSessions(): LiveData<List<TrackSession>>
+    fun getAllTrackSessions(): LiveData<List<TrackSession>> //TODO: dove usiamo il livedata?
 
     /**
      * Restituisce tutti gli oggetti TrackSession nel database tramite id
@@ -43,7 +43,12 @@ interface TrackSessionDao {
     fun getTrackSessionById(sessionId: Int): List<TrackSession>
 
     /**
-     * Restituisce tutti gli oggetti TrackSession nel database tra due date
+     * Restituisce una lista di oggetti [TrackSession] nel database in cui lo Unix time della
+     * prima location salvata è compreso tra [startTime] <= data <= [endTime].
+     * @param startTime limite inferiore inclusivo alla data in Unix time
+     * @param endTime limite superiore inclusivo alla data in Unix time
+     * @return restituisce una lista di [TrackSession] che rispettano la condizione, o una lista vuota
+     * se nessun elemento è stato trovato.
      */
     @Query("SELECT * FROM track_sessions WHERE startTime >= :startTime AND startTime <= :endTime")
     fun getTrackSessionsBetweenDates(startTime: Long, endTime: Long): List<TrackSession>

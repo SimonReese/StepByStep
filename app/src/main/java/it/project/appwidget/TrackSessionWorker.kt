@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import it.project.appwidget.database.AppDatabase
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.LocationParser
+import it.project.appwidget.util.SessionDataProcessor
 
 class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     override fun doWork(): Result {
@@ -50,7 +51,7 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             distance = distance.toDouble(),
             averageSpeed = avgSpeed.toDouble(),
             maxSpeed = maxSpeed.toDouble(),
-            activityType = "Walking" // TODO: Usare la classe utility apposita
+            activityType = SessionDataProcessor.calculateActivityType(distance, duration)
         )
 
         val db = AppDatabase.getInstance(applicationContext)

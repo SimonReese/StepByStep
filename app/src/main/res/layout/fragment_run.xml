@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAlignment="center"
-                android:textSize="100dp" />
+                android:textSize="100sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -33,9 +33,9 @@
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tempo trascorso"
+                android:text="@string/run_fragment_time_label"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,9 +62,10 @@
                 android:id="@+id/distanceTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1.54"
+                android:text="@string/run_fragment_distance_default_value"
                 android:textAlignment="center"
-                android:textSize="100dp" />
+                android:textSize="100sp"
+                tools:text="1.54" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,9 +77,9 @@
                 android:id="@+id/testo_dist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Distanza percorsa (km)"
+                android:text="@string/run_fragment_distance_label"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -112,16 +113,17 @@
                     android:id="@+id/rateTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="7:54"
+                    android:text="@string/run_fragment_rate_default_value"
                     android:textAlignment="center"
-                    android:textSize="80sp" />
+                    android:textSize="80sp"
+                    tools:text="7:42" />
 
                 <TextView
                     android:id="@+id/passo_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="Tempo al km"
+                    android:text="@string/run_fragment_rate_label"
                     android:textAlignment="center"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -142,16 +144,17 @@
                     android:id="@+id/kcalTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="157"
+                    android:text="@string/run_fragment_kcal_default_value"
                     android:textAlignment="center"
-                    android:textSize="80sp" />
+                    android:textSize="80sp"
+                    tools:text="123" />
 
                 <TextView
                     android:id="@+id/calorietxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="Calorie bruciate"
+                    android:text="@string/run_fragment_calories_label"
                     android:textAlignment="center"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -171,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-                android:text="Avvia corsa" />
+                android:text="@string/run_fragment_start_button_label" />
 
             <Space
                 android:layout_width="match_parent"
@@ -184,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-                android:text="Termina corsa" />
+                android:text="@string/run_fragment_stop_button_label" />
         </LinearLayout>
 
         <LinearLayout

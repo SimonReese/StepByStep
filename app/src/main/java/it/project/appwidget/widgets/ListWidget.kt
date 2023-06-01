@@ -7,40 +7,38 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.lifecycle.lifecycleScope
-import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.ListWidgetService
 import it.project.appwidget.activities.DetailActivity
-import it.project.appwidget.activities.DetailActivity.Companion.ARG_SESSION_ID
-import it.project.appwidget.database.TrackSession
-import kotlinx.coroutines.launch
 
+//TODO: refactor nome in ListWidgetProvider
 class ListWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+
+        // Per ogni widget associato a questo provider
         for (appWidgetId in appWidgetIds) {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_widget)
 
-            // Creazione dell'intent per il servizio che gestisce il caricamento dei dati nella ListView
-            val intent = Intent(context, ListWidgetService::class.java)
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            // Creazione dell'intent per avvio servizio di gestione caricamento dei dati nella ListView
+            val remoteAdaperIntent = Intent(context, ListWidgetService::class.java)
+            remoteAdaperIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId) // Invio id widget al service
 
-            // Collega l'intent al layout della ListView del widget
-            remoteViews.setRemoteAdapter(R.id.widget_listview, intent)
+            // Collega l'intent del servizio al layout della ListView del widget
+            remoteViews.setRemoteAdapter(R.id.widget_listview, remoteAdaperIntent)
 
-            // Creazione dell'intent per la gestione dei clic sugli elementi della ListView
-            val clickIntent = Intent(context, ListWidget::class.java)
-            clickIntent.action = "ITEM_CLICK_ACTION"
-            clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            // Creazione di un intent per la gestione dei click sugli elementi della ListView
+            val clickIntent = Intent(context, DetailActivity::class.java)
+            clickIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-            // Creazione del PendingIntent per l'intent di clic
-            val clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_IMMUTABLE)
+            // Creazione di un PendingIntent che apre una Activity
+            val clickPendingIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
 
             // Imposta il PendingIntent come template per gli elementi della ListView del widget
+            // https://developer.android.com/reference/android/widget/RemoteViews#setPendingIntentTemplate(int,%20android.app.PendingIntent)
             remoteViews.setPendingIntentTemplate(R.id.widget_listview, clickPendingIntent)
 
-            // Aggiornamento del widget con le nuove viste
+            // Richiedo aggiornamento del widget con le nuove views
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
 
@@ -49,25 +47,8 @@ class ListWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-
-        Log.d("onReceive", "Intent " + intent.action + " ricevuto")
-
-        // Gestione del clic sugli elementi della ListView
-        if (intent.action == "ITEM_CLICK_ACTION") {
-
-            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-            if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                //TODO: FIXARE E CAPIRE PERCHE' getStringExtra RITORNA SEMPRE NULL (putExtra è in ListWidgetService)
-                val sessionId = intent.getStringExtra(ARG_SESSION_ID)
-                println(sessionId)
-
-                val detailIntent = Intent(context, DetailActivity::class.java)
-                detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                context.startActivity(detailIntent)
-            }
-        }
+        Log.d("ListWidget", "Chiamato onReceive con intent:  $intent" )
     }
-
 
 }
 

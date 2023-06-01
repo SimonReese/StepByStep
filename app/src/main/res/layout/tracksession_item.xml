@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Add in TextView to display flower name   -->
+
+    <TextView
+        android:id="@+id/trackSessionIdTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:textSize="35sp"
+        tools:text="99" />
+
+
+    <TextView
+        android:id="@+id/trackSessionDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="35sp"
+        tools:text="31/12" />
+
+    <TextView
+        android:id="@+id/trackSessionTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="35sp"
+        tools:text="9:21" />
+
+    <TextView
+        android:id="@+id/trackSessionDistanceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="35sp"
+        tools:text="17km" />
+
+</LinearLayout>

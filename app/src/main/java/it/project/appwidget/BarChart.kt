@@ -2,28 +2,32 @@ package it.project.appwidget
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import java.text.DecimalFormat
 
 /**
- * classe che disegna il grafico a barre
+ * Classe che implementa un basilare grafico a barre. Viene utilizzato un [Canvas] per disegnare
+ * rettangoli sullo schermo, scalati rispetto ad un certo valore massimo.
+ * @property days Lista di etichette da applicare alla barra orizziontale del grafico.
+ * @property valueArray Lista di valori da graficare tramite barre.
  */
+class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
-class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
-
-    var days: Array<String> = arrayOf("LUN", "MAR", "MER", "GIOV", "VEN", "SAB", "DOM")
-
+    // TODO: A che servono? Rimuovere dopo aver compreso dall'esempio
     var mShowText: Boolean
-        get() = mShowText
 
     var mTextPos: Int
-        get() = mTextPos
 
-    var valueArray: IntArray = intArrayOf(10, 20, 70, 30, 60, 40, 50)
+    /**
+     * Array di etichette da applicare lungo l'asse x.
+     */
+    var days: ArrayList<String> = arrayListOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
         set(newArray) {
             if (newArray.size != this.valueArray.size)
                 return
@@ -32,6 +36,19 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             requestLayout()
         }
 
+    /**
+     * Array di valori da rappresentare tramite barre.
+     */
+    var valueArray: ArrayList<Double> = arrayListOf(10.0, 20.0, 70.0, 30.0, 60.0, 40.0, 50.0)
+        set(newArray) {
+            if (newArray.size != this.valueArray.size)
+                return
+            field = newArray
+            invalidate()
+            requestLayout()
+        }
+
+    // Oggetti paint per definire le proprietà del disegno
     private val barPaint: Paint
     private val textPaint: Paint
 
@@ -68,7 +85,7 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
                 Configuration.UI_MODE_NIGHT_UNDEFINED -> color = Color.BLACK
             }
             textAlign = Paint.Align.LEFT
-            textSize = 60f
+            textSize = 35f
         }
     }
 
@@ -78,8 +95,8 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        val lowerMargin = 200f
-        val upperMargin = 400f
+        val lowerMargin = 50f
+        val upperMargin = 100f
 
         //Numero di barre
         var numbars = valueArray.size
@@ -90,6 +107,10 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
 
         // Bordo inferiore con margine
         val bottom = height - lowerMargin
+
+        println(width)
+        println(height)
+
 
         //Cerco l'elemento più grande
         val maxValue: Float = valueArray.max().toFloat()
@@ -109,18 +130,95 @@ class BarChart(context: Context, attrs: AttributeSet): View(context, attrs) {
             //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
             var right = abs_center + space/4
 
-            //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
-            val scale: Float = value / maxValue
+            var scale: Double = 0.0
+            if(maxValue != 0f) {
+                //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
+                scale = value / maxValue
+            }
 
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
             var top = bottom - (height - upperMargin)*scale
 
-            Log.d("Canvas", "$position: $top, $bottom, $right, $left")
+            Log.d("BarChart", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
-            canvas?.drawRect(left.toFloat(), top, right.toFloat(), bottom, barPaint)
-            if (value != 0)
-            {
-                canvas?.drawText(value.toString(), left.toFloat(), top, textPaint)
+            canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
+            if (value != 0.0) {
+                canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
+
+            }
+            canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
+        }
+
+    }
+
+    /**
+     * Metodo che restituisce l'immagine del grafico a barre.
+     * @return Bitmap rappresentante il grafico a barre.
+     */
+    fun getChartImage(): Bitmap {
+        // Creo una bitmap vuota con le dimensioni della view
+        val w = 900
+        val h = 850
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        // Creo un canvas sulla bitmap
+        val canvas = Canvas(bitmap)
+        // Disegno la view sul canvas
+        onDrawBit(canvas, w, h)
+        // Restituisco la bitmap
+        return bitmap
+    }
+
+    //TODO: spostare funzione in un'altra classe?
+    private fun onDrawBit(canvas: Canvas?, w: Int, h: Int) {
+        val lowerMargin = 50f
+        val upperMargin = -700f
+
+        //Numero di barre
+        var numbars = valueArray.size
+        //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
+        var space = w / numbars
+        //Distanza del centro della barra dall'inizio dello spazio
+        var relative_center = space / 2
+
+        // Bordo inferiore con margine
+        val bottom = h - lowerMargin
+
+        println(w)
+        println(h)
+
+
+        //Cerco l'elemento più grande
+        val maxValue: Float = valueArray.max().toFloat()
+
+        // 623.0, 723.0, 6159, 5873
+        //$top, $bottom, $right, $left
+        //canvas?.drawRect(0 + 20F, 0 + 20F, width -20F, height -20F, paint)
+
+        //return
+
+        //Per ogni barra
+        for ((position, value) in valueArray.withIndex()){
+            //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
+            var abs_center = relative_center + (position * space)
+            //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
+            var left = abs_center - space/4
+            //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
+            var right = abs_center + space/4
+
+            var scale: Double = 0.0
+            if(maxValue != 0f) {
+                //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
+                scale = value / maxValue
+            }
+
+            // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
+            var top = bottom - (height - upperMargin)*scale
+
+            Log.d("BarChart", "$position: $top, $bottom, $right, $left")
+            //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
+            canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
+            if (value != 0.0) {
+                canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
             canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)

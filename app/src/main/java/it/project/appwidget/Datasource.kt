@@ -4,8 +4,7 @@ import android.content.Context
 import it.project.appwidget.database.AppDatabase
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.ArrayList
 
 //Crea e restituisce l'array contentente le varie sessioni visualizzabili dall'utente
 class Datasource(private val context: Context) {
@@ -35,9 +34,15 @@ class Datasource(private val context: Context) {
         return pairArray.toTypedArray()
     }
 
-    fun getSessionList(from: Long, to: Long): List<TrackSession> {
+    /**
+     * Restituisce una lista di [TrackSession] comprese tra le date [from] e [to]
+     * @param from Limite inferiore inclusivo alla data di [TrackSession]
+     * @param to Limite superiore inclusivo alla data di [TrackSession]
+     * @return Una lista non nulla di [TrackSession]
+     */
+    fun getSessionList(from: Long, to: Long): ArrayList<TrackSession> {
         val trackSessionDao = AppDatabase.getInstance(context).trackSessionDao()
-        return trackSessionDao.getTrackSessionsBetweenDates(from, to)
+        return ArrayList(trackSessionDao.getTrackSessionsBetweenDates(from, to))
     }
 
 

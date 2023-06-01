@@ -88,7 +88,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="35dp"
+            android:layout_marginEnd="30dp"
             android:text="Latitude:"
             android:textSize="18sp" />
 
@@ -99,7 +99,7 @@
             android:layout_below="@id/tv_latitude"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="27dp"
+            android:layout_marginEnd="22dp"
             android:text=""
             android:textSize="15sp" />
 
@@ -111,7 +111,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="27dp"
+            android:layout_marginEnd="22dp"
             android:text="Longitude:"
             android:textSize="18sp" />
 
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_longitude"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="33dp"
+            android:layout_marginEnd="28dp"
             android:text=""
             android:textSize="15sp" />
 

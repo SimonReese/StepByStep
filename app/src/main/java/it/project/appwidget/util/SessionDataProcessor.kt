@@ -1,8 +1,4 @@
-package it.project.appwidget
-
-import android.content.Context
-import android.location.Location
-import java.util.Date
+package it.project.appwidget.util
 
 // Classe per elaborare i dati della sessione
 

@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 
 // Classe helper separata per gestire le operazioni relative alle preferenze condivise.
 // Ha lo scopo di poter aver accesso alle preferences sia in SettingsActivity che NewAppWidget
-class SharedPrefsHelper(context: Context) {
+class WidgetSettingsSharedPrefsHelper(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     fun isFirstLaunch(): Boolean {

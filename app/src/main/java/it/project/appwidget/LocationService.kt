@@ -3,6 +3,7 @@ package it.project.appwidget
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
@@ -18,6 +19,8 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import it.project.appwidget.activities.MainActivity
+import it.project.appwidget.fragments.Run
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.widgets.NewAppWidget
 
@@ -43,19 +46,23 @@ class LocationService : Service() {
         const val NOTIFICATION_CHANNEL_DESCRIPTION: String = "Canale per notifiche servizio localizzazione" //TODO: Spostare in strings.xml
     }
 
-    // Variabili per la localizzazione
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
+
+    // Parametri per la localizzazione
     private val minLocationUpdateIntervalMs: Long = 0
     private var minLocationUpdateDistanceM: Float = 0F
     private var minAccuracy: Float = 20F
-    private var minSum: Float = 100F
+    private var minSum: Float = 10F
+
+    // Parametri sessione
+    private val kcal_to_m_to_kg_factor: Float = 0.001f //kcal consumate per ogni metro per ogni chilo
+    private val weight: Float = 70f // Peso in kg di riferimento
+
+    // Stato della sessione
     private lateinit var lastRelevantLocation: Location
     private var sumDistance: Float = 0F
-    //Calcola tempo totale sessione
-    private lateinit var firstRelevantLocation: Location
-    // Vettore per il salvataggio delle location
-    private var locationList: ArrayList<Location> = ArrayList()
+    private var locationList: ArrayList<Location> = ArrayList() // Vettore per il salvataggio delle location
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
@@ -89,21 +96,37 @@ class LocationService : Service() {
                 locationList.add(currentLocation)
             }
 
+            // Calcolo il rate: tempo (in minuti) necessario a percorrere 1 km
+            var rate: Float = 0.00f
+            // Considero solo velocità superiori a 0.5 m/s
+            if (currentLocation.speed > 0.5){
+                rate = (1000 / currentLocation.speed) / 60
+            }
+
+            // Calcolo calorico
+            var calories: Float = 0f
+            if (sumDistance > 0){
+                calories = kcal_to_m_to_kg_factor * sumDistance * weight
+            }
 
             /* Invio broadcasts.
             Affinchè il widget riceva il broadcast, è necessario inviare un intent ESPLICITO. Tuttavia
-            per è necessario inviare il broadcast anche al fragment. Creiamo quindi due intent.*/
+            è necessario inviare il broadcast anche al fragment. Creiamo quindi due intent.*/
 
             // Creo intent implicito generico
             val implicitIntent = Intent("location-update")
-            implicitIntent.putExtra("speed", currentLocation.speed)
-            implicitIntent.putExtra("accuracy", currentLocation.accuracy)
-            implicitIntent.putExtra("distance", sumDistance)
-            implicitIntent.putExtra("longitude", currentLocation.longitude)
+            // Valori recuperati
             implicitIntent.putExtra("latitude", currentLocation.latitude)
+            implicitIntent.putExtra("longitude", currentLocation.longitude)
+            implicitIntent.putExtra("accuracy", currentLocation.accuracy)
+            implicitIntent.putExtra("speed", currentLocation.speed)
+            // Valori calcolati
+            implicitIntent.putExtra("distance", sumDistance)
+            implicitIntent.putExtra("rate", rate)
+            implicitIntent.putExtra("calories", calories)
+            // Valori costanti
             implicitIntent.putExtra("startTime", locationList[0].time) // E' il tempo rispetto alla Unix Epoch
             implicitIntent.putExtra("startTime_elapsedRealtimeNanos", locationList[0].elapsedRealtimeNanos) // E' il tempo trascorso rispetto al boot di sistema
-
 
             // Copio intent generico e creo intent esplicito
             val explicitIntent = Intent(implicitIntent)
@@ -151,6 +174,11 @@ class LocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val runFragmentIntent = Intent(this, MainActivity::class.java).apply{
+            this.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("fromService", true)
+        }
+        val pendingIntent = PendingIntent.getActivity(this, 0, runFragmentIntent, PendingIntent.FLAG_IMMUTABLE)
         // Impostazioni notifica
         notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground) //TODO: cambiare icona
@@ -159,6 +187,7 @@ class LocationService : Service() {
             setPriority(NotificationCompat.PRIORITY_DEFAULT)    //Priorità notifica standard
             setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)   //La notifica viene impostata immediatamente
             setOnlyAlertOnce(true) //Se la notifica viene aggiornata, solo la prima volta emette suono
+            setContentIntent(pendingIntent)
         }
 
         // Controllo permessi

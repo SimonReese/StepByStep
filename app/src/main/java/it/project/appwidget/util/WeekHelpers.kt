@@ -1,9 +1,16 @@
 package it.project.appwidget.util
 
 
+import android.util.Log
+import it.project.appwidget.database.TrackSession
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
+
+/* TODO: Questa classe di fatto non ha variabili membro, ma fornisce metodi utili per
+    ricevere i riferimenti alle varie settimane. Probabilmente sarebbe opportuno renderla statica.
+ */
 class WeekHelpers {
 
     //  Dato un time in millisecondi fornisce intervallo settimanale in cui esso si trova, ovvero da Lunedì 00:00 a Domenica 23:59 di quella settimana
@@ -53,11 +60,15 @@ class WeekHelpers {
         return Pair(startOfPreviousWeek, endOfPreviousWeek)
     }
 
-    //Ritorna int corrispondente al giorno della settimana (es: 0 = lunedì, 1 = martedì)
+    /**
+     * Ritorna intero corrispondente al giorno della settimana (es: 0 = lunedì, 1 = martedì)
+     * @param timestamp: Unix time che si vuole convertire in intero 0-6
+     * @return: un intero tra 0 (Lunedì) e 6 (Domenica)
+     */
     fun getNumberDayOfWeek(timestamp: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timestamp
-
+        //TODO: spiegare il procedimento
         var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2
         if (dayOfWeek < 0) {
             dayOfWeek += 7
@@ -90,6 +101,50 @@ class WeekHelpers {
         return formatter.format(calendar.getTime())
     }
 
+    // TODO: Aggiungere documentazione a tutti i metodi
+    /**
+     * Restituisce una lista di stringhe contenente la rappresentazione dei giorni compresi tra i valori
+     * from e to nel formato gg/mm
+     * @param from: Unix time di partenza
+     * @param to: Unix time limite
+     * @return: Un ArrayList di Stringhe con i valori dei giorni compresi nel formato gg/mm
+     */
+    fun getDateList(from: Long, to: Long): ArrayList<String>{
+        val dateList = ArrayList<String>()
+        val calendar = Calendar.getInstance()
+
+        // Imposto partenza del calendario da from
+        calendar.timeInMillis = from
+
+        /* A questo punto il calendario punta al giorno from. Incrementiamo il tempo del calendario
+        di giorno in giorno e convertiamo il tempo in formato giorno/mese */
+
+        // Creo formattazione data
+        val dateFormatting = SimpleDateFormat("dd/MM")
+        while (calendar.timeInMillis <= to){    // Finchè l'attuale tempo del calendario è minore del limite massimo
+            val date = dateFormatting.format(calendar.time) // Converto data attuale del calendario in stringa formattata
+            dateList.add(date) // Aggiungo data a lista date
+            calendar.add(Calendar.DAY_OF_WEEK, 1) // Incremento il tempo di un giorno
+        }
+        return dateList
+    }
+
+    /**
+     * Converte lista di [TrackSession] in lista di distanze sommate giorno per giorno
+     * @param weekSession Lista di sessioni in una settimana
+     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno. Restituisce
+     * sempre una lista di dimensione 7.
+     */
+    fun convertTrackSessionInDistanceArray(weekSession: ArrayList<TrackSession>): ArrayList<Double> {
+        // Inizializzo lista di dimensione 7 con valori azzerati
+        val distanceList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        for (session in weekSession) {
+            // Aggiorno la distanza totale percorsa giorno per giorno (in km)
+            distanceList[getNumberDayOfWeek(session.startTime)] += session.distance / 1000
+        }
+        Log.d("StatsFragment", "Ho costruito la lista di distanze ${distanceList}")
+        return distanceList
+    }
 
 }
 

@@ -1,25 +1,22 @@
 package it.project.appwidget.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.project.appwidget.R
-import it.project.appwidget.fragments.Config
-import it.project.appwidget.fragments.Home
-import it.project.appwidget.fragments.Run
-import it.project.appwidget.fragments.Setup
-import it.project.appwidget.fragments.Stats
+
 
 class MainActivity : AppCompatActivity() {
+
+    // Variabile per gestione dei permessi
+    private var hasPermissions: Boolean = false
 
     // Il riferimento alla view che ospiterà i vari fragment
     private lateinit var navigationHostFragment: NavHostFragment
@@ -47,6 +44,33 @@ class MainActivity : AppCompatActivity() {
          Poichè gli id del menù sono gli stessi id dei vari fragments nel grafo di navigazione, il controller
          collega autmaticamente i click sugli elementi della barra (definiti nel menù) al fragment corrispondente*/
         bottomNavigationView.setupWithNavController(navigationController)
+
+        // Controllo permessi
+        hasPermissions = true // Devo supporla vera, perchè non è detto che onRequestPermissionsResult() sia stato chiamato
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 33){
+            //TODO: analizzare permesso POST_NOTIFICATION (pare che sia introdotto da android 13, cosa fare nel 12)?
+            hasPermissions = false
+            Log.w("ServiceMonitorActivity", "Permesso {POST_NOTIFICATIONS} non concesso")
+        }
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED){
+            hasPermissions = false
+            Log.w("ServiceMonitorActivity", "Permesso {ACCESS_COARSE_LOCATION} non concesso")
+        }
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
+            hasPermissions = false
+            Log.w("ServiceMonitorActivity", "Permesso {ACCESS_FINE_LOCATION} non concesso")
+        }
+
+        if (!hasPermissions){
+            // Chiedo tutti i permessi un una volta sola
+            //TODO testare cosa succede se un permesso viene negato dalle impostazioni (i permessi concessi vengono chiesti nuovamente?)
+            requestPermissions(arrayOf(
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            Log.d("ServiceMonitorActivity", "Non sono stati concessi tutti i permessi necessari")
+            return
+        }
     }
 
 

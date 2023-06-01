@@ -32,4 +32,10 @@
         android:name="it.project.appwidget.fragments.Config"
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" />
+
+    <fragment
+        android:id="@+id/setup"
+        android:name="it.project.appwidget.fragments.Setup"
+        android:label="fragment_setup"
+        tools:layout="@layout/fragment_setup" />
 </navigation>

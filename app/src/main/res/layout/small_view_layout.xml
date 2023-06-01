@@ -89,6 +89,8 @@
         android:id="@+id/btn_settings"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:text="i"
+
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
