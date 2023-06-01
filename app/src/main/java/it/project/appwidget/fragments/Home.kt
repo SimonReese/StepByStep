@@ -46,6 +46,8 @@ class Home : Fragment() {
     private var kcal_to_m_to_kg_factor = 0.001f
     private var weight = 70f
 
+    private val weekHelper = WeekHelpers()
+
 
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // Classe per ricezione broadcast messages
@@ -99,6 +101,10 @@ class Home : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("HomeFragment", "Chiamato onViewCreated")
 
+        distance = 0.0
+        steps = 0
+        kcal = 0
+
 
         // Riferiementi alle Views
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
@@ -135,29 +141,18 @@ class Home : Fragment() {
             kcalTarget = userPreferencesHelper.kcalTarget
 
             // Leggo da database
-            val calendar = Calendar.getInstance()
-            var from = 0L
-            var to = 0L
-            with(calendar) {
-                timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-                from = timeInMillis
+            val weekRange = weekHelper.getWeekRange(System.currentTimeMillis())
+            val from = weekRange.first
+            val to = weekRange.second
 
-                set(Calendar.HOUR_OF_DAY, 23)
-                set(Calendar.MINUTE, 59)
-                set(Calendar.SECOND, 59)
-                to = timeInMillis
-            }
             val trackSessionList = Datasource(requireActivity()).getSessionList(from, to)
 
             for (trackSession in trackSessionList){
-                distance += trackSession.distance
+                distance += trackSession.distance.roundToInt()
                 kcal += (kcal_to_m_to_kg_factor * trackSession.distance * weight).roundToInt()
                 steps += (trackSession.distance * 3/2).roundToInt()
             }
+
 
             // Modifico valori views
             distanceTextView.text = distance.toString()
