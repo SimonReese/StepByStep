@@ -64,6 +64,12 @@ class DetailActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.v(mTAG, "onPause() called")
+        finish()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Log.v(mTAG, "onDestroy() called")

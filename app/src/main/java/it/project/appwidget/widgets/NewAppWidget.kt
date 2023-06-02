@@ -65,6 +65,13 @@ class NewAppWidget : AppWidgetProvider() {
             views.setTextViewText(R.id.tv_value_calories, savedCalories)
 
 
+            //Se large_view_layout crea nuovo barChart
+            if (context.resources.getResourceEntryName(views.layoutId) == "large_view_layout")
+            {
+                val barChart = BarChart(context, null)
+                val bitmap = barChart.getChartImage()
+                views.setImageViewBitmap(R.id.img1,bitmap)
+            }
 
             // Imposto elementi layout in base a quanto indicato nelle preferences
             setNewViewVisibility(context, views)
@@ -86,7 +93,7 @@ class NewAppWidget : AppWidgetProvider() {
             // Creo intent per lanciare SettingsActivity
             val settingsIntent = Intent(context, SettingsActivity::class.java)
             // Imposto flag per creare l'activity in una nuova task
-            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             // Lancio intent
             context.startActivity(settingsIntent)
         }
@@ -258,11 +265,18 @@ class NewAppWidget : AppWidgetProvider() {
         //Ottiene dimensione attuale widget
         val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
         val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+        println(minWidth)
+        println(minHeight)
+
 
         //Determina view in base a dimensione
         val views = when {
-            minWidth <= 255 && minHeight < 190 -> {RemoteViews(context.packageName,
+            minWidth <= 255 && minHeight < 188 -> {RemoteViews(context.packageName,
                 R.layout.small_view_layout
+            )}
+
+            minWidth <= 255 && minHeight > 188 -> {RemoteViews(context.packageName,
+                R.layout.long_view_layout
             )}
 
             (minWidth > 255 && minHeight > 121) || (minWidth > 190 && minHeight > 190) -> {RemoteViews(context.packageName,
