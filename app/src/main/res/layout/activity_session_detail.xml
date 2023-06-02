@@ -63,7 +63,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/start_time_value"
+                        android:id="@+id/tv_startData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -96,7 +96,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/end_time_value"
+                        android:id="@+id/tv_endData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -130,7 +130,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tipologia_sessione_value"
+                        android:id="@+id/tv_typeData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -164,7 +164,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/distance_value"
+                        android:id="@+id/tv_distanceData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -197,7 +197,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/time_value"
+                        android:id="@+id/tv_timeData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -232,7 +232,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/avg_speed_value"
+                        android:id="@+id/tv_avrSpeedData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -244,26 +244,9 @@
 
                 </LinearLayout>
 
-
-
-
-
-
-
-
-
-
-
-
-
             </LinearLayout>
 
-
-
         </androidx.cardview.widget.CardView>
-
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

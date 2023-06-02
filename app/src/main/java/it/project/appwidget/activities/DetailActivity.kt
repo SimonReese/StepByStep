@@ -80,15 +80,19 @@ class DetailActivity : AppCompatActivity() {
             // Dall'Id ottengo tutte le informazioni sulla sessione
             val trackSessionDao = AppDatabase.getInstance(this@DetailActivity).trackSessionDao()
             val trackSession = trackSessionDao.getTrackSessionById(sessionId)[0]
-            val format = "yyyy-dd-MM HH:mm:ss"
+            val format = "HH:mm:ss"
             val noDecimal = DecimalFormat("#")
-            val duration = Duration.ofMillis(trackSession.duration)
+            val duration = trackSession.duration/1000
+
+            val hours = duration / 3600;
+            val minutes = (duration % 3600) / 60;
+            val seconds = duration % 60;
 
             tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
             tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
             tv_typeData.text = trackSession.activityType
             tv_distanceData.text = noDecimal.format(trackSession.distance) + "m"
-            tv_timeData.text = "" + duration.toHours() + ":" + duration.toMinutesPart() + "h" //TODO: non funziona
+            tv_timeData.text = "" + hours + "h " + minutes + "min " + seconds + "sec"
             tv_avrSpeedData.text = trackSession.averageSpeed.toString() + "m/s"
         }
     }
