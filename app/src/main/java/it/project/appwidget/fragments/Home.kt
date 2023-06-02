@@ -136,11 +136,6 @@ class Home : Fragment() {
         // Creo intent per il LocationService
         val serviceIntent = Intent(requireActivity(), LocationService::class.java)
 
-        /*
-           TODO: capire perchè progress si aggiorna solo in seguito ad un onDestroy e
-           non ogni volta che cambio valore da setup
-         */
-
         // Avvio coroutine impostazione valori
         lifecycleScope.launch {
             // Leggo da sharedpreferences
@@ -166,11 +161,7 @@ class Home : Fragment() {
             distanceTextView.text = distance.toString()
             passiTextView.text = steps.toString()
             caloriesTextView.text = kcal.toString()
-            progressBar.max = 100
-            val progress = kcal.toDouble()/kcalTarget.toDouble()*100
-            progressBar.progress = progress.roundToInt()
-            percentTextView.text = progress.roundToInt().toString() + "%"
-            println("percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
+            updateProgressBar(kcalTarget)
             usernameTextView.text = username
         }
     }
@@ -192,8 +183,25 @@ class Home : Fragment() {
         super.onDestroy()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Leggo da sharedpreferences
+        val userPreferencesHelper = UserPreferencesHelper(requireActivity())
+        kcalTarget = userPreferencesHelper.kcalTarget
+        updateProgressBar(kcalTarget)
+    }
+
     // Recupero stato del fragment
     private fun restoreState(inState: Bundle) {
         Log.d("HomeFragment", "Chiamato restoreState")
+    }
+
+    private fun updateProgressBar(newKcalTarget: Int) {
+        kcalTarget = newKcalTarget
+        progressBar.max = 100
+        val progress = kcal.toDouble() / kcalTarget.toDouble() * 100
+        progressBar.progress = progress.roundToInt()
+        percentTextView.text = progress.roundToInt().toString() + "%"
+        println("percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
     }
 }
