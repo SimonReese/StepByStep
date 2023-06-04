@@ -59,7 +59,7 @@ class Home : Fragment() {
             val preferencesHelper = UserPreferencesHelper(requireActivity())
 
             Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
-            val distloc = intent?.getDoubleExtra("distance", 0.0)
+            val distloc = intent?.getFloatExtra("distance", 0f)
             val kcalloc = intent?.getFloatExtra("calories", 0f)
 
             /*
