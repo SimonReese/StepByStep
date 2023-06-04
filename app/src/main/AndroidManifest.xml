@@ -50,6 +50,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_SIZE_CHANGED" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
                 <action android:name="location-update" />
             </intent-filter>
 
