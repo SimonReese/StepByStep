@@ -1,13 +1,10 @@
 package it.project.appwidget.database
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import it.project.appwidget.activities.DetailActivity
 import it.project.appwidget.R
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat

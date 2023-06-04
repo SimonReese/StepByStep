@@ -98,7 +98,7 @@ class WeekHelpers {
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         val calendar: Calendar = Calendar.getInstance()
         calendar.timeInMillis = milliSeconds
-        return formatter.format(calendar.getTime())
+        return formatter.format(calendar.time)
     }
 
     // TODO: Aggiungere documentazione a tutti i metodi
@@ -142,7 +142,7 @@ class WeekHelpers {
             // Aggiorno la distanza totale percorsa giorno per giorno (in km)
             distanceList[getNumberDayOfWeek(session.startTime)] += session.distance / 1000
         }
-        Log.d("StatsFragment", "Ho costruito la lista di distanze ${distanceList}")
+        Log.d("StatsFragment", "Ho costruito la lista di distanze $distanceList")
         return distanceList
     }
 

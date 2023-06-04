@@ -64,10 +64,12 @@ class MainActivity : AppCompatActivity() {
         if (!hasPermissions){
             // Chiedo tutti i permessi un una volta sola
             //TODO testare cosa succede se un permesso viene negato dalle impostazioni (i permessi concessi vengono chiesti nuovamente?)
-            requestPermissions(arrayOf(
-                Manifest.permission.POST_NOTIFICATIONS,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Manifest.permission.POST_NOTIFICATIONS
+            }
+            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
+
             Log.d("ServiceMonitorActivity", "Non sono stati concessi tutti i permessi necessari")
             return
         }

@@ -2,7 +2,6 @@ package it.project.appwidget.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 /**
  * Entità TrackSession. Memorizza informazioni sul percorso quali ora inizio e fine, distanza, velocità media,

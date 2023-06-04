@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.R
 import it.project.appwidget.database.AppDatabase
-import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import java.time.Duration
 
+
+//Activity contenente i dettagli della sessione selezionata
 class DetailActivity : AppCompatActivity() {
 
     // Tag for Log messages
@@ -20,11 +20,9 @@ class DetailActivity : AppCompatActivity() {
     private val weekHelper = WeekHelpers()
 
     companion object {
-        // The activity argument representing session name
         const val ARG_SESSION_ID = "session:id"
     }
 
-    // Views
     private lateinit var tv_startData: TextView
     private lateinit var tv_endData: TextView
     private lateinit var tv_typeData: TextView
@@ -32,11 +30,9 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var tv_timeData: TextView
     private lateinit var tv_avrSpeedData: TextView
 
-    // Called when the activity is first created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Display the layout
         setContentView(R.layout.activity_session_detail)
 
         // Riferimenti alle Views
@@ -84,9 +80,9 @@ class DetailActivity : AppCompatActivity() {
             val noDecimal = DecimalFormat("#")
             val duration = trackSession.duration/1000
 
-            val hours = duration / 3600;
-            val minutes = (duration % 3600) / 60;
-            val seconds = duration % 60;
+            val hours = duration / 3600
+            val minutes = (duration % 3600) / 60
+            val seconds = duration % 60
 
             tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
             tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
