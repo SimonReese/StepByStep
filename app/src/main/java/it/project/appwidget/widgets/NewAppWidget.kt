@@ -45,9 +45,6 @@ class NewAppWidget : AppWidgetProvider() {
             // Ottengo la view in base alla dimensione
             val views = getWidgetSize(context, appWidgetId)
 
-
-            // Imposto intent al bottone impostazioni
-            views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
             // Carica il testo precedentemente salvato e impostalo sul TextView
             val savedText = loadText(context, appWidgetId, "position")
             var locationArray = savedText.split(",").toTypedArray()
@@ -86,17 +83,6 @@ class NewAppWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
 
         Log.d("NewAppWidget", "Intent " + intent.action + " ricevuto")
-
-        // Controllo se il bottone impostazioni è stato premuto
-        if (intent.action == ACTION_BTN_SETTINGS) {
-            Log.d("OnReceive", "Bottone impostazioni premuto")
-            // Creo intent per lanciare SettingsActivity
-            val settingsIntent = Intent(context, SettingsActivity::class.java)
-            // Imposto flag per creare l'activity in una nuova task
-            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            // Lancio intent
-            context.startActivity(settingsIntent)
-        }
 
         // Controllo se è stato mandato l'intent dal bottone save nell'activity impostazioni
         if (intent.action == ACTION_BTN_SAVE) {
