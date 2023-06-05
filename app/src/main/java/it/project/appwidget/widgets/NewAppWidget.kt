@@ -45,9 +45,6 @@ class NewAppWidget : AppWidgetProvider() {
             // Ottengo la view in base alla dimensione
             val views = getWidgetSize(context, appWidgetId)
 
-
-            // Imposto intent al bottone impostazioni
-            views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
             // Carica il testo precedentemente salvato e impostalo sul TextView
             val savedText = loadText(context, appWidgetId, "position")
             var locationArray = savedText.split(",").toTypedArray()
