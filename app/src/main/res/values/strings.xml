@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">AppWidget</string>
 
-    <string name="appwidget_text">EXAMPLE</string>
+    <!-- NewAppWidget -->
+    <string name="new_appwidget_label">NewAppWidget</string>
     <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
+    <string name="new_appwidget_description">Descrizione widget NewAppWidget</string>
+
+    <!--ListWidget -->
+    <string name="list_widget_label">ListWidget</string>
+    <string name="list_widget_description">Descrizione widget ListWidget</string>
+
+    <!--Fragment Run -->
     <string name="run_fragment_calories_label">Calorie bruciate</string>
     <string name="run_fragment_time_label">Tempo trascorso</string>
     <string name="run_fragment_distance_label">Distanza percorsa (km)</string>
