@@ -6,15 +6,22 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import it.project.appwidget.BarChart
+import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
+import it.project.appwidget.database.AppDatabase
+import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
-import it.project.appwidget.activities.SettingsActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 
 
@@ -32,6 +39,7 @@ class NewAppWidget : AppWidgetProvider() {
     private val format = "hh:mm"
     private val singleDecimal = DecimalFormat("#.#")
     private val doubleDecimal = DecimalFormat("#.##")
+
 
 
 
@@ -150,18 +158,33 @@ class NewAppWidget : AppWidgetProvider() {
         if (context.resources.getResourceEntryName(views.layoutId) == "large_view_layout")
         {
             val barChart = BarChart(context, null)
-            val bitmap = barChart.getChartImage()
-            views.setImageViewBitmap(R.id.img1,bitmap)
+            val database = AppDatabase.getInstance(context)
+            val trackSessionDao = database.trackSessionDao()
+            val selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
+            var values = arrayListOf(0.0,0.0,0.0,0.0,0.0,0.0,0.0,)
+            // Ricerca asincrona
+            CoroutineScope(Dispatchers.Main).launch {
+                val trackSessionList = withContext(Dispatchers.IO) {
+                    trackSessionDao.getTrackSessionsBetweenDates(selectedWeek.first, selectedWeek.second)
+                }
+                values = weekHelper.convertTrackSessionInDistanceArray(trackSessionList as ArrayList<TrackSession>)
+                println("Valori: " + values)
+                barChart.valueArray = values
+                val bitmap = barChart.getChartImage()
+                views.setImageViewBitmap(R.id.img1,bitmap)
+                // Aggiorno impostazioni
+                setNewViewVisibility(context, views)
+                // Aggiorno widget
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
         }
-
-        // Aggiorno impostazioni
-        setNewViewVisibility(context, views)
-
-        // Imposto Listener sul bottone
-        views.setOnClickPendingIntent(R.id.btn_settings, getPendingSelfIntent(context, ACTION_BTN_SETTINGS))
-
-        // Aggiorno widget
-        appWidgetManager.updateAppWidget(appWidgetId, views)
+        else
+        {
+            // Aggiorno impostazioni
+            setNewViewVisibility(context, views)
+            // Aggiorno widget
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
     }
 
     // Metodo chiamato da LocationService ogni volta che riceve un nuovo dato
