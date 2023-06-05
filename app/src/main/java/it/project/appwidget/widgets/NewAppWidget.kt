@@ -84,17 +84,6 @@ class NewAppWidget : AppWidgetProvider() {
 
         Log.d("NewAppWidget", "Intent " + intent.action + " ricevuto")
 
-        // Controllo se il bottone impostazioni è stato premuto
-        if (intent.action == ACTION_BTN_SETTINGS) {
-            Log.d("OnReceive", "Bottone impostazioni premuto")
-            // Creo intent per lanciare SettingsActivity
-            val settingsIntent = Intent(context, SettingsActivity::class.java)
-            // Imposto flag per creare l'activity in una nuova task
-            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            // Lancio intent
-            context.startActivity(settingsIntent)
-        }
-
         // Controllo se è stato mandato l'intent dal bottone save nell'activity impostazioni
         if (intent.action == ACTION_BTN_SAVE) {
             Log.d("onReceive", ACTION_BTN_SAVE)
