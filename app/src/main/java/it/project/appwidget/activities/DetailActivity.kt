@@ -87,9 +87,11 @@ class DetailActivity : AppCompatActivity() {
             tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
             tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
             tv_typeData.text = trackSession.activityType
-            tv_distanceData.text = noDecimal.format(trackSession.distance) + "m"
+            //aggiunta modifica per la distanza in km
+            tv_distanceData.text = noDecimal.format(trackSession.distance/1000) + "km"
             tv_timeData.text = "" + hours + "h " + minutes + "min " + seconds + "sec"
-            tv_avrSpeedData.text = trackSession.averageSpeed.toString() + "m/s"
+            //aggiunta modifica per la velocità media in km/h
+            tv_avrSpeedData.text = (trackSession.averageSpeed * 3.6).toString() + "km/h"
         }
     }
 
