@@ -46,7 +46,8 @@
         <!-- Widget riepilogo-->
         <receiver
             android:name=".widgets.NewAppWidget"
-            android:exported="false">
+            android:exported="false"
+            android:label="@string/new_appwidget_label" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_SIZE_CHANGED" />
@@ -62,7 +63,8 @@
         <!-- Widget a lista -->
         <receiver
             android:name=".widgets.ListWidget"
-            android:exported="false">
+            android:exported="false"
+            android:label="@string/list_widget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
