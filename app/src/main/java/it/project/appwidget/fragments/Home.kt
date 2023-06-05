@@ -200,6 +200,7 @@ class Home : Fragment() {
         kcalTarget = newKcalTarget
         progressBar.max = 100
         val progress = kcal.toDouble() / kcalTarget.toDouble() * 100
+        //TODO Cannont round a NaN value - l'applicazione va in crash
         progressBar.progress = progress.roundToInt()
         percentTextView.text = progress.roundToInt().toString() + "%"
         println("percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
