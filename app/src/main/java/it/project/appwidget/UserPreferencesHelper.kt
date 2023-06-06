@@ -34,7 +34,7 @@ class UserPreferencesHelper(context: Context) {
      * Età utente
      */
     var peso: String
-        get() = sharedPreferences.getString(KEY_PESO, "") ?: ""
+        get() = sharedPreferences.getString(KEY_PESO, "70") ?: "70"
         set(value) = sharedPreferences.edit().putString(KEY_PESO, value).apply()
 
     /**
@@ -55,6 +55,6 @@ class UserPreferencesHelper(context: Context) {
      * Target calorico giornaliero
      */
     var kcalTarget: Int
-        get() = sharedPreferences.getInt(KEY_KCAL_TARGET, 0)
+        get() = sharedPreferences.getInt(KEY_KCAL_TARGET, 100)
         set(value) = sharedPreferences.edit().putInt(KEY_KCAL_TARGET, value).apply()
 }
