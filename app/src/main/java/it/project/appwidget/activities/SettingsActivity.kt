@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.impostazioni)
+        setContentView(R.layout.settings_layout)
 
         //Creo oggetto SharedPrefsHelper
         widgetSettingsSharedPrefsHelper = WidgetSettingsSharedPrefsHelper(this)
