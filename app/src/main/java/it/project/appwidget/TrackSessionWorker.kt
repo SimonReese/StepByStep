@@ -21,8 +21,8 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
         }
         // TODO: usare la classe utility SessionDataProcessor apposita
         // Calcolo media delle velocità e cerco velocità più alta
-        var maxSpeed: Float = 0f
-        var avgSpeed: Float = 0f
+        var maxSpeed = 0f
+        var avgSpeed = 0f
         for (location in locationList){
             // Cerco distanza
             if (location.speed > maxSpeed)
@@ -33,19 +33,19 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
         avgSpeed = avgSpeed / locationList.size
 
         // Calcolo la durata totale della sessione
-        var duration = locationList.last().time - locationList.first().time
+        val duration = locationList.last().time - locationList.first().time
 
         // TODO: Ricalcolare o leggere dal servizio? Da decidere, nel caso di lettura dal servizio servirà un dato extra
-        var distance: Float = 0f
+        var distance = 0f
         var index = 0
         while (index < locationList.size -1){
-            distance += locationList.get(index).distanceTo(locationList.get(index+1))
+            distance += locationList[index].distanceTo(locationList[index+1])
             index++
         }
 
         // Calcolo valori
         val trackSession = TrackSession(
-            startTime = locationList.get(0).time,
+            startTime = locationList[0].time,
             endTime = locationList.last().time,
             duration = duration,
             distance = distance.toDouble(),
@@ -56,7 +56,7 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         val db = AppDatabase.getInstance(applicationContext)
         db.trackSessionDao().insertSession(trackSession)
-        Log.d("TrackSessionWorker", "Salvataggio sessione ${trackSession}")
+        Log.d("TrackSessionWorker", "Salvataggio sessione $trackSession")
 
         Log.d("TrackSessionWorker", "Fine worker.")
         return Result.success()

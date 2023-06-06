@@ -20,9 +20,9 @@ import java.text.DecimalFormat
 class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
     // TODO: A che servono? Rimuovere dopo aver compreso dall'esempio
-    var mShowText: Boolean
+    private var mShowText: Boolean
 
-    var mTextPos: Int
+    private var mTextPos: Int
 
     /**
      * Array di etichette da applicare lungo l'asse x.
@@ -89,21 +89,17 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-    }
-
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         val lowerMargin = 50f
         val upperMargin = 100f
 
         //Numero di barre
-        var numbars = valueArray.size
+        val numbars = valueArray.size
         //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
-        var space = width / numbars
+        val space = width / numbars
         //Distanza del centro della barra dall'inizio dello spazio
-        var relative_center = space / 2
+        val relative_center = space / 2
 
         // Bordo inferiore con margine
         val bottom = height - lowerMargin
@@ -124,11 +120,11 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         //Per ogni barra
         for ((position, value) in valueArray.withIndex()){
             //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
-            var abs_center = relative_center + (position * space)
+            val abs_center = relative_center + (position * space)
             //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
-            var left = abs_center - space/4
+            val left = abs_center - space/4
             //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
-            var right = abs_center + space/4
+            val right = abs_center + space/4
 
             var scale: Double = 0.0
             if(maxValue != 0f) {
@@ -137,7 +133,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
             }
 
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
-            var top = bottom - (height - upperMargin)*scale
+            val top = bottom - (height - upperMargin)*scale
 
             Log.d("BarChart", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
@@ -174,11 +170,11 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         val upperMargin = -700f
 
         //Numero di barre
-        var numbars = valueArray.size
+        val numbars = valueArray.size
         //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
-        var space = w / numbars
+        val space = w / numbars
         //Distanza del centro della barra dall'inizio dello spazio
-        var relative_center = space / 2
+        val relative_center = space / 2
 
         // Bordo inferiore con margine
         val bottom = h - lowerMargin
@@ -199,20 +195,20 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         //Per ogni barra
         for ((position, value) in valueArray.withIndex()){
             //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
-            var abs_center = relative_center + (position * space)
+            val abs_center = relative_center + (position * space)
             //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
-            var left = abs_center - space/4
+            val left = abs_center - space/4
             //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
-            var right = abs_center + space/4
+            val right = abs_center + space/4
 
-            var scale: Double = 0.0
+            var scale = 0.0
             if(maxValue != 0f) {
                 //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
                 scale = value / maxValue
             }
 
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
-            var top = bottom - (height - upperMargin)*scale
+            val top = bottom - (height - upperMargin)*scale
 
             Log.d("BarChart", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
