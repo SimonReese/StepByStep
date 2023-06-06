@@ -56,10 +56,10 @@ class LocationService : Service() {
 
     // Parametri sessione
     private val kcal_to_m_to_kg_factor: Float = 0.001f //kcal consumate per ogni metro per ogni chilo
-    private val weight: Float = 70f // Peso in kg di riferimento
 
     private var sumDistance: Float = 0F
     private var locationList: ArrayList<Location> = ArrayList() // Vettore per il salvataggio delle location
+
 
     // Classe privata per gestire aggionamenti della posizione
     private inner class CustomLocationListener: LocationListener {
@@ -101,6 +101,8 @@ class LocationService : Service() {
             }
 
             // Calcolo calorico
+            val userPreferencesHelper = UserPreferencesHelper(applicationContext)
+            val weight = userPreferencesHelper.peso.toInt()
             var calories = 0f
             if (sumDistance > 0){
                 calories = kcal_to_m_to_kg_factor * sumDistance * weight
