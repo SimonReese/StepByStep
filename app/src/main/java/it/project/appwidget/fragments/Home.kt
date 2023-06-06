@@ -45,9 +45,6 @@ class Home : Fragment() {
     private var kcalTarget: Int = 0
     private var username: String = "Utente"
 
-    private var kcal_to_m_to_kg_factor = 0.001f
-    private var weight = 70f
-
     private val weekHelper = WeekHelpers()
 
 
@@ -152,7 +149,7 @@ class Home : Fragment() {
 
             for (trackSession in trackSessionList){
                 distance += trackSession.distance.roundToInt()
-                kcal += (kcal_to_m_to_kg_factor * trackSession.distance * weight).roundToInt()
+                kcal += trackSession.kcal
                 steps += (trackSession.distance * 3/2).roundToInt()
             }
 

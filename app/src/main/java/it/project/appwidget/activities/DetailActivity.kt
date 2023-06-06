@@ -29,6 +29,8 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var tv_distanceData: TextView
     private lateinit var tv_timeData: TextView
     private lateinit var tv_avrSpeedData: TextView
+    private lateinit var tv_calorieData: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,8 @@ class DetailActivity : AppCompatActivity() {
         tv_distanceData = findViewById(R.id.tv_distanceData)
         tv_timeData = findViewById(R.id.tv_timeData)
         tv_avrSpeedData = findViewById(R.id.tv_avrSpeedData)
+        tv_calorieData = findViewById(R.id.tv_caloriesData)
+
 
         // Ottengo Id della sessione cliccata
         val sessionId = intent.getIntExtra(ARG_SESSION_ID, -1)
@@ -92,6 +96,8 @@ class DetailActivity : AppCompatActivity() {
             tv_timeData.text = "" + hours + "h " + minutes + "min " + seconds + "sec"
             //aggiunta modifica per la velocità media in km/h
             tv_avrSpeedData.text = (trackSession.averageSpeed * 3.6).toString() + "km/h"
+            tv_calorieData.text = (trackSession.kcal).toString() + "Kcal"
+
         }
     }
 

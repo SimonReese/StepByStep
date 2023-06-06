@@ -45,5 +45,10 @@ data class TrackSession(
     /**
      * TODO
      */
-    var activityType: String
+    var activityType: String,
+
+    /**
+     * TODO
+     */
+    var kcal: Int
 )

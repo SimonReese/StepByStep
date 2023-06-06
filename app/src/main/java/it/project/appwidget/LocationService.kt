@@ -139,7 +139,7 @@ class LocationService : Service() {
             Log.d("CustomLocationListener","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
 
-            if(System.currentTimeMillis() - locationList.last().time >= 6000) {
+            if(System.currentTimeMillis() - locationList.last().time >= 600000) {
                 // Resetto i valori per creare una nuova sessione
                 Log.d("CustomLocationListener", "Sessione resettata")
                 //TODO: Mandare broadcast a Run per fermare timer e disattivare bottone?

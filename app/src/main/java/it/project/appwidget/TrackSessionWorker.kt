@@ -11,6 +11,9 @@ import it.project.appwidget.util.LocationParser
 import it.project.appwidget.util.SessionDataProcessor
 
 class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+
+    private val kcal_to_m_to_kg_factor: Float = 0.001f //kcal consumate per ogni metro per ogni chilo
+
     override fun doWork(): Result {
         Log.d("TrackSessionWorker", "Avvio worker.")
         val locationListString: Array<String> = inputData.getStringArray("locationListString") as Array<String>
@@ -43,6 +46,14 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             index++
         }
 
+        val userPreferencesHelper = UserPreferencesHelper(applicationContext)
+
+        // Calcolo calorico
+        var calories = 0
+        if (distance.toDouble() > 0){
+            calories = (kcal_to_m_to_kg_factor * distance * userPreferencesHelper.peso.toInt()).toInt()
+        }
+
         // Calcolo valori
         val trackSession = TrackSession(
             startTime = locationList[0].time,
@@ -51,7 +62,8 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             distance = distance.toDouble(),
             averageSpeed = avgSpeed.toDouble(),
             maxSpeed = maxSpeed.toDouble(),
-            activityType = SessionDataProcessor.calculateActivityType(distance, duration)
+            activityType = SessionDataProcessor.calculateActivityType(distance, duration),
+            kcal = calories
         )
 
         val db = AppDatabase.getInstance(applicationContext)
