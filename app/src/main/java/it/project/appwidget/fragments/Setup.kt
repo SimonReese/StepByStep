@@ -1,5 +1,6 @@
 package it.project.appwidget.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import it.project.appwidget.R
@@ -48,8 +50,15 @@ class Setup : Fragment() {
                 navigateToSetupFragment()
 
             } else {
-                // Mostra un messaggio di errore o un feedback all'utente
-                Log.d("Setup", "Compila tutti i campi")
+                //Creo finestra di dialogo con l'utente
+                val alert = AlertDialog.Builder(context)
+                    .setTitle("Inserimento errato")
+                    .setMessage("Non hai compilato correttamente i campi")
+                    .setIcon(R.drawable.icons8_errore_24)
+                    .setPositiveButton("Ritorna alla pagina inserimento"){_, _ ->
+
+                    }
+                alert.show()
             }
         }
 
