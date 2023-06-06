@@ -20,7 +20,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import it.project.appwidget.activities.MainActivity
-import it.project.appwidget.fragments.Run
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.widgets.NewAppWidget
 
@@ -59,8 +58,6 @@ class LocationService : Service() {
     private val kcal_to_m_to_kg_factor: Float = 0.001f //kcal consumate per ogni metro per ogni chilo
     private val weight: Float = 70f // Peso in kg di riferimento
 
-    // Stato della sessione
-    private lateinit var lastRelevantLocation: Location
     private var sumDistance: Float = 0F
     private var locationList: ArrayList<Location> = ArrayList() // Vettore per il salvataggio delle location
 
@@ -97,14 +94,14 @@ class LocationService : Service() {
             }
 
             // Calcolo il rate: tempo (in minuti) necessario a percorrere 1 km
-            var rate: Float = 0.00f
+            var rate = 0.00f
             // Considero solo velocità superiori a 0.5 m/s
             if (currentLocation.speed > 0.5){
                 rate = (1000 / currentLocation.speed) / 60
             }
 
             // Calcolo calorico
-            var calories: Float = 0f
+            var calories = 0f
             if (sumDistance > 0){
                 calories = kcal_to_m_to_kg_factor * sumDistance * weight
             }
@@ -142,20 +139,13 @@ class LocationService : Service() {
             Log.d("CustomLocationListener","Tempo trascorso: ${System.currentTimeMillis() - locationList.last().time}\"")
 
 
-            //TODO: Stoppare servizio
-            if(System.currentTimeMillis() - locationList.last().time >= 600000) {
+            if(System.currentTimeMillis() - locationList.last().time >= 6000) {
                 // Resetto i valori per creare una nuova sessione
                 Log.d("CustomLocationListener", "Sessione resettata")
-                sumDistance = 0F
-                lastRelevantLocation = currentLocation
-
+                //TODO: Mandare broadcast a Run per fermare timer e disattivare bottone?
+                //Oppure togliamo tutto questo codice?
+                stopSelf()
             }
-
-                /*
-                 * TODO: Se vogliamo implementare il reset/stop del servizio in automatico rivediamo
-                 *  le condizioni. Se vogliamo fermarlo, basta chiamare Service.stopSelf(), mentre se vogliamo resettarlo
-                 *  bisogna rivedere bene quali variabili reimpostare e come notificare l'utente.
-                 */
 
         }
     }
@@ -184,8 +174,8 @@ class LocationService : Service() {
             setSmallIcon(R.drawable.ic_launcher_foreground) //TODO: cambiare icona
             setContentTitle("Servizio di localizzazione")   //Titolo notifica
             setContentText("Servizio di localizzazione in esecuzione")  //Descrizione notifica
-            setPriority(NotificationCompat.PRIORITY_DEFAULT)    //Priorità notifica standard
-            setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)   //La notifica viene impostata immediatamente
+            priority = NotificationCompat.PRIORITY_DEFAULT    //Priorità notifica standard
+            foregroundServiceBehavior = NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE   //La notifica viene impostata immediatamente
             setOnlyAlertOnce(true) //Se la notifica viene aggiornata, solo la prima volta emette suono
             setContentIntent(pendingIntent)
         }
@@ -200,8 +190,8 @@ class LocationService : Service() {
 
         // RICEVO PARAMETRI DI DEBUG
         minLocationUpdateDistanceM = intent?.getFloatExtra("minDistance", 0F)!!
-        minAccuracy = intent?.getFloatExtra("minAccuracy", 30F)!!
-        minSum = intent?.getFloatExtra("minSum", 100F)!!
+        minAccuracy = intent.getFloatExtra("minAccuracy", 30F)
+        minSum = intent.getFloatExtra("minSum", 100F)
 
         // Imposto listener
         //locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,
@@ -221,10 +211,11 @@ class LocationService : Service() {
         return START_NOT_STICKY
     }
 
-    override fun onBind(intent: Intent): IBinder {
+    override fun onBind(intent: Intent): IBinder? {
         // TODO: restituire null se bind non supportata.
-        TODO("Return the communication channel to the service.")
+        // TODO("Return the communication channel to the service.")
         Log.d("LocationService", "Servizio collegato (onBind)")
+        return null
     }
 
     override fun onDestroy() {
@@ -235,7 +226,7 @@ class LocationService : Service() {
         // TODO: rivedeve bene come fermare un servizio
 
         // Converto locations in stringhe
-        val locationListString = Array<String>(locationList.size) { "" }
+        val locationListString = Array(locationList.size) { "" }
         for ((position, location) in locationList.withIndex()){
             // Effettuo parsing della location
             val stringLocation = LocationParser.toString(location)

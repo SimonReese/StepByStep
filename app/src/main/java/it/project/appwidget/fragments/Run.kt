@@ -48,7 +48,7 @@ class Run : Fragment() {
     // TODO: Come rendo il timer consistente anche a seguito della chiusura del fragemnts?
 
     // Classe per ricezione broadcast messages
-    private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
+    private inner class LocationBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive")
 
@@ -110,12 +110,12 @@ class Run : Fragment() {
         Log.d("RunFragment", "Chiamato onViewCreated")
 
         // Inizializzazione Views
-        distanceTextView = view.findViewById<TextView>(R.id.distanceTextView)
-        rateTextView = view.findViewById<TextView>(R.id.rateTextView)
-        kcalTextView = view.findViewById<TextView>(R.id.kcalTextView)
-        sessionChronometer = view.findViewById<Chronometer>(R.id.sessionChronometer)
-        startServiceButton = view.findViewById<Button>(R.id.startServiceButton)
-        stopServiceButton = view.findViewById<Button>(R.id.stopServiceButton)
+        distanceTextView = view.findViewById(R.id.distanceTextView)
+        rateTextView = view.findViewById(R.id.rateTextView)
+        kcalTextView = view.findViewById(R.id.kcalTextView)
+        sessionChronometer = view.findViewById(R.id.sessionChronometer)
+        startServiceButton = view.findViewById(R.id.startServiceButton)
+        stopServiceButton = view.findViewById(R.id.stopServiceButton)
         // Views di DEBUG
         accuracy_debug_textview = view.findViewById(R.id.debug_accuracy_textview)
         speed_debug_textview = view.findViewById(R.id.debug_speed_textview)

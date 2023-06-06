@@ -18,7 +18,6 @@ class UserPreferencesHelper(context: Context) {
         private const val KEY_PESO = "peso"
         private const val KEY_ETA = "eta"
         private const val KEY_SESSO = "sesso"
-        private const val KEY_TIPOLOGIA_ATTIVITA = "tipologia_attivita"
         private const val KEY_KCAL_TARGET = "kcal"
     }
 
@@ -28,7 +27,7 @@ class UserPreferencesHelper(context: Context) {
      * Nome utente
      */
     var nome: String
-        get() = sharedPreferences.getString(KEY_NOME_UTENTE, "") ?: ""
+        get() = sharedPreferences.getString(KEY_NOME_UTENTE, "Utente") ?: "Utente"
         set(value) = sharedPreferences.edit().putString(KEY_NOME_UTENTE, value).apply()
 
     /**
