@@ -13,7 +13,7 @@
         android:layout_marginTop="15dp"
         android:text="Data"
         android:textAlignment="center"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/innerView"
@@ -35,14 +35,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Distanza: "
-                android:textSize="12sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_value_sumDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_speed"
@@ -50,14 +50,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="Velocità: "
-                android:textSize="12sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_value_speed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_calories"
@@ -65,14 +65,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="Calories: "
-                android:textSize="12sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_value_calories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
