@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.EditText
 import it.project.appwidget.R
 import it.project.appwidget.databinding.GraphWidgetConfigureBinding
-import it.project.appwidget.widgets.updateAppWidget
+import it.project.appwidget.widgets.*
 
 /**
  * The configuration screen for the [it.project.appwidget.widgets.GraphWidget] AppWidget.
@@ -26,7 +26,7 @@ class GraphWidgetConfigureActivity : Activity() {
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        updateAppWidget(context, appWidgetManager, appWidgetId)
+        //updateAppWidget(context, appWidgetManager, appWidgetId)
 
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()

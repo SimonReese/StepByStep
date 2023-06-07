@@ -30,16 +30,11 @@
         android:layout_marginEnd="16dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tv_sumDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Distanza: "
                 android:textSize="18sp" />
 
@@ -47,79 +42,39 @@
                 android:id="@+id/tv_value_sumDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/tv_speed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Velocità: "
+                android:layout_weight="1"
+                android:text="Valore"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/tv_value_speed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="15sp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_calories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Calories: "
-                android:textSize="18sp" />
+    <LinearLayout
+        android:id="@+id/buttonView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_value_calories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/startServiceButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_latitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+            android:text="@string/run_fragment_start_button_label" />
 
-                android:text="Latitude:"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/stopServiceButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
 
-            <TextView
-                android:id="@+id/tv_value_latitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="15sp" />
+            android:text="Ferma corsa" />
 
-            <TextView
-                android:id="@+id/tv_longitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Longitude:"
-                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/tv_value_longitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="15sp" />
-
-        </LinearLayout>
+        <!-- Add StackView -->
 
     </LinearLayout>
 
