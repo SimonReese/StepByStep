@@ -2,6 +2,7 @@ package it.project.appwidget.widgets
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -28,9 +29,17 @@ class GraphWidget : AppWidgetProvider() {
         Log.d("GraphWidget", "Chiamato onEnabled")
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context, intent: Intent) {
         Log.d("GraphWidget", "Chiamato onReceive")
         super.onReceive(context, intent)
+        if(intent?.action == "database-updated"){
+            Log.d("GraphWidget", "Ricevuto intent database-updated")
+            // Ottengo istanza AppWidgetMananger
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, GraphWidget::class.java))
+            // Aggiorno tutti i widget di questo provider
+            onUpdate(context, appWidgetManager, appWidgetIds)
+        }
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
