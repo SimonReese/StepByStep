@@ -31,7 +31,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var tv_avrSpeedData: TextView
     private lateinit var tv_calorieData: TextView
 
-
+    // TODO: activity sparisce alla rotazione - ritorno al fragment precedente
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -95,8 +95,8 @@ class DetailActivity : AppCompatActivity() {
             tv_distanceData.text = noDecimal.format(trackSession.distance/1000) + "km"
             tv_timeData.text = "" + hours + "h " + minutes + "min " + seconds + "sec"
             //aggiunta modifica per la velocità media in km/h
-            tv_avrSpeedData.text = (trackSession.averageSpeed * 3.6).toString() + "km/h"
-            tv_calorieData.text = (trackSession.kcal).toString() + "Kcal"
+            tv_avrSpeedData.text = DecimalFormat("#.#").format(trackSession.averageSpeed * 3.6) + "km/h"
+            tv_calorieData.text = noDecimal.format(trackSession.kcal) + "Kcal"
 
         }
     }
