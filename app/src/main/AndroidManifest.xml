@@ -91,6 +91,7 @@
             android:label="@string/graph_widget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="database-updated" />
             </intent-filter>
 
             <meta-data
