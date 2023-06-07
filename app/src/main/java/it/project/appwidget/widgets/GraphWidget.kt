@@ -9,8 +9,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import it.project.appwidget.BarChart
+import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.activities.deleteTitlePref
+import it.project.appwidget.util.WeekHelpers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Implementazione GraphWidget, che mostra un grafico rispetto alla proprietà configurata (default: distanza).
@@ -60,19 +65,34 @@ class GraphWidget : AppWidgetProvider() {
 
     // Aggiornamento del singolo widget
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+        Log.d("GrapWidget", "Avvio aggiornamento grafico")
+
+        // Aggiorno i dati in modo asincrono
+        CoroutineScope(Dispatchers.Main).launch {
+            // Ottengo riferimento alle RemoteViews
+            val views = RemoteViews(context.packageName, R.layout.graph_widget)
+
+            // Ottengo dati dal database
+            val weekRange = WeekHelpers().getWeekRange(System.currentTimeMillis())
+            val trackSessions = Datasource(context).getSessionList(weekRange.first,weekRange.second)
+
+            // Ottengo valori e etichette dai dati
+            val values: ArrayList<Double> = WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
+            val labels: ArrayList<String> = WeekHelpers().getDateList(weekRange.first,weekRange.second)
+
+            // Costruisco grafico
+            val chart = BarChart(context, null)
+            chart.days = labels
+            chart.valueArray = values
+            val image: Bitmap = chart.getChartImage()
+
+            // Imposto immagine nella viewImage
+            views.setImageViewBitmap(R.id.graphImageView, image)
+            // Instruct the widget manager to update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
         //val widgetText = loadTitlePref(context, appWidgetId)
 
-        // Ottengo rifetrimento alle RemoteViews
-        val views = RemoteViews(context.packageName, R.layout.graph_widget)
-
-        // Costruisco grafico
-        val chart = BarChart(context, null)
-        val image: Bitmap = chart.getChartImage()
-
-        // Imposto immagine nella viewImage
-        views.setImageViewBitmap(R.id.graphImageView, image)
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 }
 
