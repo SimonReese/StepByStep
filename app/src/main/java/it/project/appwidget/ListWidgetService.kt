@@ -98,7 +98,11 @@ class ListWidgetService : RemoteViewsService() {
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
             val trackSession: TrackSession = trackSessionList[position]
 
-            val itemText = weekHelper.getDate(trackSession.startTime, format) + " | " + DecimalFormat("#.##").format(trackSession.distance/1000) + "km"
+
+            //modificare qui il codice
+            //TODO finire le modifiche del codice
+            val itemText = weekHelper.getDate(trackSession.startTime, format) + " | " + DecimalFormat("#.##").format(trackSession.distance/1000) + "km" +
+                    " | " + DecimalFormat("#.##").format(trackSession.averageSpeed) + "km/h"
             // Imposta il testo dell'elemento corrente nella TextView all'interno dell'elemento della ListView
             remoteViews.setTextViewText(R.id.item_textview, itemText)
 
