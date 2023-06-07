@@ -1,6 +1,7 @@
 package it.project.appwidget.widgets
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_NO_CREATE
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -63,7 +64,7 @@ class NewAppWidget : AppWidgetProvider() {
             val savedCalories = loadText(context, appWidgetId, "calories")
             views.setTextViewText(R.id.tv_value_calories, savedCalories)
 
-            // Creo start intent per il service
+            // Creo intent per il service
             val serviceIntent = Intent(context, LocationService::class.java)
             //StartServiceButton
             val startPendingIntent = PendingIntent.getService(context, appWidgetId,
@@ -72,9 +73,9 @@ class NewAppWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.startServiceButton, startPendingIntent)
 
-            // Creo intent a locationService che passa come azione "STOP-SERVICE"
+            // Creo intent per il service che passa come azione "STOP-SERVICE"
             val stopServiceIntent = Intent(context, LocationService::class.java)
-            stopServiceIntent.action = "STOP-SERVICE";
+            stopServiceIntent.action = "STOP-LOCATION-SERVICE";
             //StopServiceButton
             val stopPendingIntent = PendingIntent.getService(context, appWidgetId,
                 stopServiceIntent,
@@ -82,6 +83,8 @@ class NewAppWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
 
+            views.setBoolean(R.id.startServiceButton, "setEnabled", true)
+            views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
 
 
             // Imposto elementi layout in base a quanto indicato nelle preferences
@@ -130,16 +133,8 @@ class NewAppWidget : AppWidgetProvider() {
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
                 views.setBoolean(R.id.startServiceButton, "setEnabled", false)
-                views.setBoolean(R.id.startServiceButton, "setEnabled", true)
+                views.setBoolean(R.id.stopServiceButton, "setEnabled", true)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
-            }
-        }
-
-        if (intent.action.equals("location-update")) {
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
-            for (appWidgetId in appWidgetIds) {
-                // Aggiorno il testo del widget
                 updateLocationText(context,
                     intent.getDoubleExtra("latitude", 0.0),
                     intent.getDoubleExtra("longitude", 0.0),
@@ -149,6 +144,7 @@ class NewAppWidget : AppWidgetProvider() {
                     intent. getFloatExtra("calories", 0F))
             }
         }
+
     }
 
     // Override del metodo onDeleted per gestire l'eliminazione del widget
@@ -183,6 +179,25 @@ class NewAppWidget : AppWidgetProvider() {
         views.setTextViewText(R.id.tv_value_calories, savedCalories)
 
         println("layoutId: " + context.resources.getResourceEntryName(views.layoutId))
+
+        // Creo intent per il service
+        val serviceIntent = Intent(context, LocationService::class.java)
+        //StartServiceButton
+        val startPendingIntent = PendingIntent.getService(context, appWidgetId,
+            serviceIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        views.setOnClickPendingIntent(R.id.startServiceButton, startPendingIntent)
+
+        // Creo intent per il service che passa come azione "STOP-SERVICE"
+        val stopServiceIntent = Intent(context, LocationService::class.java)
+        stopServiceIntent.action = "STOP-LOCATION-SERVICE";
+        //StopServiceButton
+        val stopPendingIntent = PendingIntent.getService(context, appWidgetId,
+            stopServiceIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
 
 
         /*
@@ -308,8 +323,8 @@ class NewAppWidget : AppWidgetProvider() {
         //Ottiene dimensione attuale widget
         val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
         val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-        println(minWidth)
-        println(minHeight)
+        //println(minWidth)
+        //println(minHeight)
 
 
         //Determina view in base a dimensione
