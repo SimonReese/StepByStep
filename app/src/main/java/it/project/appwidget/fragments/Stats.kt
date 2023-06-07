@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -29,8 +30,8 @@ class Stats : Fragment() {
     // Views del fragment
     private lateinit var barChart: BarChart
     private lateinit var generateButton: Button
-    private lateinit var pastWeekButton: Button
-    private lateinit var nextWeekButton: Button
+    private lateinit var pastWeekButton: ImageButton
+    private lateinit var nextWeekButton: ImageButton
     private lateinit var currentDate: TextView
     private lateinit var recyclerView: RecyclerView
 

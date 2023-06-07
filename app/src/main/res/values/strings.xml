@@ -10,6 +10,10 @@
     <string name="list_widget_label">ListWidget</string>
     <string name="list_widget_description">Descrizione widget ListWidget</string>
 
+    <!-- GraphWidget -->
+    <string name="graph_widget_label">Grafico</string>
+    <string name="graph_widget_description">Mostra un grafico delle sessioni</string>
+
     <!--Fragment Run -->
     <string name="run_fragment_calories_label">Calorie bruciate</string>
     <string name="run_fragment_time_label">Tempo trascorso</string>
@@ -35,6 +39,10 @@
             <enum name="right" value="1" />
         </attr>
     </declare-styleable>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="graphWidgetTitle">Grafico</string>
 
 
 </resources>

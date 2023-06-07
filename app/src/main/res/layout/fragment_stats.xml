@@ -39,12 +39,14 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="16dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/pastWeekButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="8dp"
-            android:text="--" />
+            android:layout_marginTop="5dp"
+            android:src="@drawable/icons8_frecciasinistra"
+            android:background="@drawable/rounded_corners"/>
 
         <Space
             android:layout_width="wrap_content"
@@ -55,19 +57,23 @@
             android:id="@+id/generateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Generate" />
+            android:backgroundTint="@color/lavender"
+            android:text="Settimana corrente"
+            android:textColor="@color/black"/>
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Button
+        <ImageButton
             android:id="@+id/nextWeekButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:text="--" />
+            android:layout_margin="5dp"
+            android:src="@drawable/icons8_freccia_destra_24"
+            android:background="@drawable/rounded_corners"/>
 
     </LinearLayout>
 

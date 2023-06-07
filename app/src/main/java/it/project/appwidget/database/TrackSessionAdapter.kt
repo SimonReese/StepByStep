@@ -26,7 +26,8 @@ class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>,
     class TrackSessionViewHolder(itemView: View, val onClickListener: (TrackSession) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
         // Views associate all'item
-        private val trackSessionIdTextView: TextView = itemView.findViewById(R.id.trackSessionIdTextView)
+        //eliminato l'id della textView
+        //private val trackSessionIdTextView: TextView = itemView.findViewById(R.id.trackSessionIdTextView)
         private val trackSessionDateTextView: TextView = itemView.findViewById(R.id.trackSessionDateTextView)
         private val trackSessionTimeTextView: TextView = itemView.findViewById(R.id.trackSessionTimeTextView)
         private val trackSessionDistanceTextView: TextView = itemView.findViewById(R.id.trackSessionDistanceTextView)
@@ -51,7 +52,7 @@ class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>,
             val hourFormat = SimpleDateFormat("HH:mm")
             val distanceFormat = DecimalFormat("##.#")
 
-            trackSessionIdTextView.text = trackSession.id.toString()
+            //trackSessionIdTextView.text = trackSession.id.toString()
             trackSessionDateTextView.text = dateFormat.format(trackSession.startTime)
             trackSessionTimeTextView.text = hourFormat.format(trackSession.startTime)
             trackSessionDistanceTextView.text = distanceFormat.format(trackSession.distance / 1000) + "km"
