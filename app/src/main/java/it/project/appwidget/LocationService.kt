@@ -20,6 +20,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import it.project.appwidget.activities.MainActivity
+import it.project.appwidget.fragments.Run
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.widgets.NewAppWidget
 
@@ -168,10 +169,10 @@ class LocationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         if (intent != null) {
-            println(intent.action)
-            if (intent.action == "STOP-SERVICE")
+            if (intent.action == "STOP-LOCATION-SERVICE") {
                 stopSelf()
-                onDestroy()
+                return START_NOT_STICKY
+            }
         }
 
         val runFragmentIntent = Intent(this, MainActivity::class.java).apply{
@@ -229,6 +230,8 @@ class LocationService : Service() {
     }
 
     override fun onDestroy() {
+        Log.d("LocationService", "onDestroy called")
+
         // Viene chiamato da Context.stopService() o Service.stopSelf()
 
         // Fermo aggiornamenti
@@ -260,11 +263,14 @@ class LocationService : Service() {
         // Creo intent implicito generico
         val implicitIntent = Intent("stop-service")
         // Copio intent generico e creo intent esplicito
-        val explicitIntent = Intent(implicitIntent)
-        explicitIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
+        val explicitWidgetIntent = Intent(implicitIntent)
+        explicitWidgetIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
+        val explicitRunIntent = Intent(implicitIntent)
+        explicitRunIntent.component = ComponentName(this@LocationService, Run::class.java)
         // Invio intents
         sendBroadcast(implicitIntent)
-        sendBroadcast(explicitIntent)
+        sendBroadcast(explicitWidgetIntent)
+        sendBroadcast(explicitRunIntent)
 
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
         super.onDestroy()

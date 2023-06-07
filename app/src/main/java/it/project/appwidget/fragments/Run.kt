@@ -2,6 +2,7 @@ package it.project.appwidget.fragments
 
 import android.Manifest
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -20,6 +21,7 @@ import androidx.core.content.PermissionChecker
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
+import it.project.appwidget.widgets.NewAppWidget
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
@@ -49,39 +51,54 @@ class Run : Fragment() {
 
     // Classe per ricezione broadcast messages
     private inner class LocationBroadcastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive")
+        override fun onReceive(context: Context?, intent: Intent) {
+            Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive con intent " + intent.action)
 
-            val speedloc = intent?.getFloatExtra("speed", 0f)
-            val accloc = intent?.getFloatExtra("accuracy", 0f)
-            val distloc = intent?.getFloatExtra("distance", 0f)
-            val rate = intent?.getFloatExtra("rate", 0f)
-            val calories = intent?.getFloatExtra("calories", 0f)
+            if (intent.action == "location-update")
+            {
+                val speedloc = intent.getFloatExtra("speed", 0f)
+                val accloc = intent.getFloatExtra("accuracy", 0f)
+                val distloc = intent.getFloatExtra("distance", 0f)
+                val rate = intent.getFloatExtra("rate", 0f)
+                val calories = intent.getFloatExtra("calories", 0f)
 
-            val noDecimalFormat = DecimalFormat("#")
-            val singleDecimal = DecimalFormat("#.#")
-            val doubleDecimal = DecimalFormat("#.##")
+                val noDecimalFormat = DecimalFormat("#")
+                val singleDecimal = DecimalFormat("#.#")
+                val doubleDecimal = DecimalFormat("#.##")
 
-            if (!runningChronometer) {
-                var elapsedloc = intent?.getLongExtra("startTime_elapsedRealtimeNanos",0) // Ottengo lo start time della prima location rispetto al boot di sistema
-                // Converto nanosecondi in millisecondi e imposto base cronometro
-                elapsedloc = TimeUnit.NANOSECONDS.toMillis(elapsedloc!!)
-                sessionChronometer.base = elapsedloc
-                sessionChronometer.start()
-                runningChronometer = true
+                if (!runningChronometer) {
+                    var elapsedloc =
+                        intent.getLongExtra("startTime_elapsedRealtimeNanos",0) // Ottengo lo start time della prima location rispetto al boot di sistema
+                    // Converto nanosecondi in millisecondi e imposto base cronometro
+                    elapsedloc = TimeUnit.NANOSECONDS.toMillis(elapsedloc)
+                    sessionChronometer.base = elapsedloc
+                    sessionChronometer.start()
+                    runningChronometer = true
 
-                // Inoltre devo anche scambiare lo stato dei bottoni
-                startServiceButton.isEnabled = false
-                stopServiceButton.isEnabled = true
+                    // Inoltre devo anche scambiare lo stato dei bottoni
+                    startServiceButton.isEnabled = false
+                    stopServiceButton.isEnabled = true
+                }
+                rateTextView.text = singleDecimal.format(rate)
+                distanceTextView.text = doubleDecimal.format(distloc / 1000)
+                kcalTextView.text = noDecimalFormat.format(calories)
+
+                // Debug
+                speed_debug_textview.text = "speed: " + (doubleDecimal.format(speedloc!! * 3.6)) + "km/h"
+                accuracy_debug_textview.text = "accuracy: " + accloc.toString() + "m"
+                distance_debug_textview.text = "distance: " + distloc.toString() + "m"
             }
-            rateTextView.text = singleDecimal.format(rate)
-            distanceTextView.text = doubleDecimal.format(distloc!! / 1000)
-            kcalTextView.text = noDecimalFormat.format(calories)
 
-            // Debug
-            speed_debug_textview.text = "speed: " + (doubleDecimal.format(speedloc!! * 3.6)) + "km/h"
-            accuracy_debug_textview.text = "accuracy: " + accloc.toString() + "m"
-            distance_debug_textview.text = "distance: " + distloc.toString() + "m"
+            if (intent.action == "stop-service")
+            {
+                sessionChronometer.stop()
+                runningChronometer = false
+
+                // Disattiva il bottone stopServiceButton e attiva il bottone startServiceButton
+                stopServiceButton.isEnabled = false
+                startServiceButton.isEnabled = true
+            }
+
         }
     }
 
@@ -124,7 +141,7 @@ class Run : Fragment() {
 
         // Registro receiver
         requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
-
+        requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("stop-service"))
 
         // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
         if (savedInstanceState != null) {
@@ -181,6 +198,15 @@ class Run : Fragment() {
             // Disattiva il bottone stopServiceButton e attiva il bottone startServiceButton
             stopServiceButton.isEnabled = false
             startServiceButton.isEnabled = true
+
+            // Creo intent implicito generico
+            val implicitIntent = Intent("stop-service")
+            // Copio intent generico e creo intent esplicito
+            val explicitIntent = Intent(implicitIntent)
+            explicitIntent.component = ComponentName(requireContext(), NewAppWidget::class.java)
+            // Invio intents
+            requireActivity().sendBroadcast(implicitIntent)
+            requireActivity().sendBroadcast(explicitIntent)
         }
     }
 
