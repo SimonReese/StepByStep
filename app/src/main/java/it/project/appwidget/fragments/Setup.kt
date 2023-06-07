@@ -55,7 +55,7 @@ class Setup : Fragment() {
                     .setTitle("Inserimento errato")
                     .setMessage("Non hai compilato correttamente i campi")
                     .setIcon(R.drawable.icons8_errore_24)
-                    .setPositiveButton("Ritorna alla pagina inserimento"){_, _ ->
+                    .setPositiveButton("OK"){_, _ ->
 
                     }
                 alert.show()
