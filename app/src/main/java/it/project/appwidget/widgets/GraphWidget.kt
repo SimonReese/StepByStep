@@ -3,14 +3,14 @@ package it.project.appwidget.widgets
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Bundle
 import android.util.Log
-import android.util.SizeF
 import android.widget.RemoteViews
 import it.project.appwidget.BarChart
 import it.project.appwidget.R
 import it.project.appwidget.activities.deleteTitlePref
-import it.project.appwidget.activities.loadTitlePref
 
 /**
  * Implementazione GraphWidget, che mostra un grafico rispetto alla proprietà configurata (default: distanza).
@@ -65,21 +65,12 @@ class GraphWidget : AppWidgetProvider() {
         // Ottengo rifetrimento alle RemoteViews
         val views = RemoteViews(context.packageName, R.layout.graph_widget)
 
-        // Ottengo dimensioni widget
-        val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-        val keys = options.keySet()
-        for (key in keys){
-            println("Ricevute opzioni ${key}")
-        }
-
-
         // Costruisco grafico
         val chart = BarChart(context, null)
         val image: Bitmap = chart.getChartImage()
 
         // Imposto immagine nella viewImage
         views.setImageViewBitmap(R.id.graphImageView, image)
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
