@@ -2,41 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Add in TextView to display flower name   -->
-
-    <TextView
-        android:id="@+id/trackSessionIdTextView"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1.2"
-        android:textSize="32sp"
-        tools:text="99" />
+        app:cardCornerRadius="20dp"
+        app:cardElevation="20dp"
+        android:layout_margin="5dp">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
 
-    <TextView
-        android:id="@+id/trackSessionDateTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="32sp"
-        tools:text="31/12" />
+            <TextView
+                android:id="@+id/trackSessionDateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="32sp"
+                android:layout_marginStart="5dp"
+                tools:text="31/12" />
 
-    <TextView
-        android:id="@+id/trackSessionTimeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="32sp"
-        tools:text="9:21" />
+            <TextView
+                android:id="@+id/trackSessionTimeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="32sp"
+                tools:text="9:21" />
 
-    <TextView
-        android:id="@+id/trackSessionDistanceTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="32sp"
-        tools:text="17km" />
+            <TextView
+                android:id="@+id/trackSessionDistanceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="32sp"
+                tools:text="17km" />
+
+            <ImageButton
+                android:id="@+id/link_session"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:src="@drawable/freccia_dx"
+                android:background="#fff"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
