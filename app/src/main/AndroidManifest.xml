@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--TODO: Pulizia permessi (es. ALERT WINDOW?)-->
+    <!-- TODO: Pulizia permessi (es. ALERT WINDOW?) -->
     <uses-permission android:name="android.permission" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -22,12 +22,14 @@
         android:theme="@style/Theme.AppWidget"
         tools:targetApi="31">
 
+
         <!-- Entry point dei fragment -->
         <activity
             android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -42,12 +44,20 @@
             android:name=".activities.SettingsActivity"
             android:exported="false" />
 
+        <!-- Activity impostazioni GraphWidget -->
+        <activity
+            android:name=".activities.GraphWidgetConfigureActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
 
-        <!-- Widget riepilogo-->
+        <!-- Widget riepilogo -->
         <receiver
             android:name=".widgets.NewAppWidget"
             android:exported="false"
-            android:label="@string/new_appwidget_label" >
+            android:label="@string/new_appwidget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_SIZE_CHANGED" />
@@ -68,13 +78,27 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/list_widget_info" />
         </receiver>
 
+        <!-- Widget grafico-->
+        <receiver
+            android:name=".widgets.GraphWidget"
+            android:exported="false"
+            android:label="@string/graph_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
-        <!-- Servizio registrazione localizzazione utente-->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/graph_widget_info" />
+        </receiver>
+
+        <!-- Servizio registrazione localizzazione utente -->
         <service
             android:name=".LocationService"
             android:enabled="true"
@@ -84,8 +108,8 @@
 
         <service
             android:name=".ListWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false">
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
             <intent-filter>
                 <action android:name="android.widget.RemoteViewsService" />
             </intent-filter>
@@ -95,7 +119,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
 
     </application>
 
