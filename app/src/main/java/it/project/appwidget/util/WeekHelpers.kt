@@ -130,9 +130,9 @@ class WeekHelpers {
     }
 
     /**
-     * Converte lista di [TrackSession] in lista di distanze sommate giorno per giorno
+     * Converte lista di [TrackSession] in lista di distanze (in km) sommate giorno per giorno.
      * @param weekSession Lista di sessioni in una settimana
-     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno. Restituisce
+     * @return Una lista di Double contenente la somma delle distanze sommate in base al giorno in km. Restituisce
      * sempre una lista di dimensione 7.
      */
     fun convertTrackSessionInDistanceArray(weekSession: ArrayList<TrackSession>): ArrayList<Double> {
