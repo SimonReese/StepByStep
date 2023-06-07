@@ -284,25 +284,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_weight="1"
-                    android:text="Padova, 25°C"
-                    android:textAlignment="center"
-                    android:textSize="20dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_weight="1"
+                        android:text="Padova, 25°C"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <ImageView
+                        android:id="@+id/sunImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/icons8_soleggiato_100" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/first_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:text="E' sempre una bella giornata per correre, "
+                            android:textAlignment="center"
+                            android:textSize="20dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+                        <TextView
+                            android:id="@+id/user_name_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            android:text="Utente"
+                            android:textAlignment="center"
+                            android:textSize="20dp"
+                            android:layout_marginStart="150dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/first_text"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                <ImageView
-                    android:id="@+id/sunImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/icons8_soleggiato_100" />
+
+
 
 
             </LinearLayout>

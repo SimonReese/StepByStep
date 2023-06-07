@@ -36,6 +36,7 @@ class Home : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var usernameTextView: TextView
     private lateinit var percentTextView: TextView
+    private lateinit var user_name: TextView
 
 
     // Stato
@@ -112,6 +113,7 @@ class Home : Fragment() {
         progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         usernameTextView = view.findViewById<TextView>(R.id.nome_utente)
         percentTextView = view.findViewById<TextView>(R.id.percent)
+        user_name = view.findViewById<TextView>(R.id.user_name_tv)
 
 
         // Imposto valori default textviews
@@ -121,6 +123,7 @@ class Home : Fragment() {
         progressBar.max = 100
         progressBar.progress = kcal
         usernameTextView.text = username
+        user_name.text = username
 
         // Registro receiver
         requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
@@ -160,6 +163,7 @@ class Home : Fragment() {
             caloriesTextView.text = kcal.toString()
             updateProgressBar(kcalTarget)
             usernameTextView.text = username
+            user_name.text = username
         }
     }
 
