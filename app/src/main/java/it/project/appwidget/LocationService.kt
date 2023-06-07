@@ -166,6 +166,14 @@ class LocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        if (intent != null) {
+            println(intent.action)
+            if (intent.action == "STOP-SERVICE")
+                stopSelf()
+                onDestroy()
+        }
+
         val runFragmentIntent = Intent(this, MainActivity::class.java).apply{
             this.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("fromService", true)
@@ -248,6 +256,15 @@ class LocationService : Service() {
          * https://developer.android.com/guide/components/foreground-services#remove-from-foreground.
          */
         // stopForeground(STOP_FOREGROUND_REMOVE)
+
+        // Creo intent implicito generico
+        val implicitIntent = Intent("stop-service")
+        // Copio intent generico e creo intent esplicito
+        val explicitIntent = Intent(implicitIntent)
+        explicitIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
+        // Invio intents
+        sendBroadcast(implicitIntent)
+        sendBroadcast(explicitIntent)
 
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
         super.onDestroy()

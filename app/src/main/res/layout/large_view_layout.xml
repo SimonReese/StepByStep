@@ -115,17 +115,39 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
 
     </LinearLayout>
 
+
+
 </LinearLayout>
 
-    <ImageView
-        android:id="@+id/img1"
+    <LinearLayout
+        android:id="@+id/buttonView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/innerView"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="26dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/example_appwidget_preview" />
+        android:layout_below="@id/innerView"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/startServiceButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="@string/run_fragment_start_button_label" />
+
+        <Button
+            android:id="@+id/stopServiceButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="Ferma corsa" />
+
+
+        <!-- Add StackView -->
+
+    </LinearLayout>
 
 </RelativeLayout>

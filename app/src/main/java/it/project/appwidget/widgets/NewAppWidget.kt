@@ -6,22 +6,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import it.project.appwidget.BarChart
-import it.project.appwidget.Datasource
+import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
-import it.project.appwidget.database.AppDatabase
-import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 
 
@@ -30,6 +22,8 @@ class NewAppWidget : AppWidgetProvider() {
     companion object {
         const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS" // Azione per il pulsante delle impostazioni
         const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE" // Azione per il pulsante di salvataggio
+        const val ACTION_BTN_START = "ACTION_BTN_START" // Azione per il pulsante di salvataggio
+        const val ACTION_BTN_STOP = "ACTION_BTN_STOP" // Azione per il pulsante di salvataggio
         const val EXTRA_APPWIDGET_ID = 1
     }
 
@@ -69,14 +63,26 @@ class NewAppWidget : AppWidgetProvider() {
             val savedCalories = loadText(context, appWidgetId, "calories")
             views.setTextViewText(R.id.tv_value_calories, savedCalories)
 
+            // Creo start intent per il service
+            val serviceIntent = Intent(context, LocationService::class.java)
+            //StartServiceButton
+            val startPendingIntent = PendingIntent.getService(context, appWidgetId,
+                serviceIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.startServiceButton, startPendingIntent)
 
-            //Se large_view_layout crea nuovo barChart
-            if (context.resources.getResourceEntryName(views.layoutId) == "large_view_layout")
-            {
-                val barChart = BarChart(context, null)
-                val bitmap = barChart.getChartImage()
-                views.setImageViewBitmap(R.id.img1,bitmap)
-            }
+            // Creo intent a locationService che passa come azione "STOP-SERVICE"
+            val stopServiceIntent = Intent(context, LocationService::class.java)
+            stopServiceIntent.action = "STOP-SERVICE";
+            //StopServiceButton
+            val stopPendingIntent = PendingIntent.getService(context, appWidgetId,
+                stopServiceIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
+
+
 
             // Imposto elementi layout in base a quanto indicato nelle preferences
             setNewViewVisibility(context, views)
@@ -101,6 +107,30 @@ class NewAppWidget : AppWidgetProvider() {
                 val views = getWidgetSize(context, appWidgetId)
                 // Chiamo il metodo setNewViewVisibility
                 setNewViewVisibility(context, views)
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+        }
+
+        if (intent.action == "stop-service")
+        {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            for (appWidgetId in appWidgetIds) {
+                val views = getWidgetSize(context, appWidgetId)
+                views.setBoolean(R.id.startServiceButton, "setEnabled", true)
+                views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+        }
+
+        if (intent.action == "location-update")
+        {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            for (appWidgetId in appWidgetIds) {
+                val views = getWidgetSize(context, appWidgetId)
+                views.setBoolean(R.id.startServiceButton, "setEnabled", false)
+                views.setBoolean(R.id.startServiceButton, "setEnabled", true)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
         }
@@ -154,6 +184,9 @@ class NewAppWidget : AppWidgetProvider() {
 
         println("layoutId: " + context.resources.getResourceEntryName(views.layoutId))
 
+
+        /*
+
         //Se large_view_layout crea nuovo barChart
         if (context.resources.getResourceEntryName(views.layoutId) == "large_view_layout")
         {
@@ -161,7 +194,8 @@ class NewAppWidget : AppWidgetProvider() {
             val database = AppDatabase.getInstance(context)
             val trackSessionDao = database.trackSessionDao()
             val selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
-            var values = arrayListOf(0.0,0.0,0.0,0.0,0.0,0.0,0.0,)
+            var values = arrayListOf(0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+
             // Ricerca asincrona
             CoroutineScope(Dispatchers.Main).launch {
                 val trackSessionList = withContext(Dispatchers.IO) {
@@ -178,13 +212,13 @@ class NewAppWidget : AppWidgetProvider() {
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
         }
-        else
-        {
-            // Aggiorno impostazioni
-            setNewViewVisibility(context, views)
-            // Aggiorno widget
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
+
+         */
+
+        // Aggiorno impostazioni
+        setNewViewVisibility(context, views)
+        // Aggiorno widget
+        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     // Metodo chiamato da LocationService ogni volta che riceve un nuovo dato
