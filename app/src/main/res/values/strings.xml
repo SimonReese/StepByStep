@@ -48,6 +48,8 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="graphWidgetTitle">Grafico</string>
+    <string name="filter_session_title">Seleziona un valore su cui filtrare le sessioni</string>
+    <string name="list_view_save_button">Salva</string>
 
 
 </resources>

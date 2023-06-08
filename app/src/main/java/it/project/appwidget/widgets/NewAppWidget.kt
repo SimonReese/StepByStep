@@ -318,6 +318,7 @@ class NewAppWidget : AppWidgetProvider() {
     {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         //Ottieni oggetto Bundle che contiene informazioni aggiuntive sul widget di ID widgetId
+        //Bundle contiene le informazioni sulle dimensioni del widgett
         val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
 
         //Ottiene dimensione attuale widget
