@@ -111,6 +111,7 @@ class NewAppWidget : AppWidgetProvider() {
                 // Chiamo il metodo setNewViewVisibility
                 setNewViewVisibility(context, views)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
+                onUpdate(context, appWidgetManager, appWidgetIds)
             }
         }
 
