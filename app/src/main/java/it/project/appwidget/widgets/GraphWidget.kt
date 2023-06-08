@@ -63,6 +63,9 @@ class GraphWidget : AppWidgetProvider() {
                     else -> chart.getChartImage()
                 }
 
+                // Imposto titolo
+                views.setTextViewText(R.id.graphWidgetTitleTextView, settings)
+
                 // Imposto immagine nella viewImage
                 views.setImageViewBitmap(R.id.graphImageView, image)
                 // Instruct the widget manager to update the widget
