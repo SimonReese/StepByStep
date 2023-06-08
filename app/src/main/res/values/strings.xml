@@ -14,7 +14,7 @@
     <string name="graph_widget_description">Mostra un grafico delle sessioni</string>
     <string name="graph_widget_configure_textview">Scegli il valore di interesse</string>
     <string name="graph_widget_save_button">Salva</string>
-    <string-array name="configure_option">
+    <string-array name="graph_widget_configure_options">
         <item>Distanza</item>
         <item>Durata</item>
         <item>Calorie</item>

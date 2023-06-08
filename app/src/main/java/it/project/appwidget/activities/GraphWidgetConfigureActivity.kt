@@ -7,8 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import it.project.appwidget.R
 import it.project.appwidget.databinding.GraphWidgetConfigureBinding
@@ -18,12 +20,22 @@ import it.project.appwidget.widgets.*
 class GraphWidgetConfigureActivity : AppCompatActivity(){
 
     lateinit var saveButton: Button
+    lateinit var optionSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.graph_widget_configure)
 
+        // Ottengo riferimenti a views
         saveButton = findViewById(R.id.graphWidgetSaveButton)
+        optionSpinner = findViewById(R.id.graphWidgetOption)
+
+        // Imposto dati spinner
+        val spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.graph_widget_configure_options, R.layout.graph_widget_spinner_item)
+        spinnerAdapter.setDropDownViewResource(R.layout.graph_widget_spinner_item)
+        optionSpinner.adapter = spinnerAdapter
+
+
         saveButton.setOnClickListener {
             finish()
         }
