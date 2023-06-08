@@ -12,31 +12,31 @@
             android:id="@+id/cb_speed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show speed"/>
+            android:text="Mostra velocità"/>
 
         <CheckBox
             android:id="@+id/cb_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show position"/>
+            android:text="Mostra posizione"/>
 
         <CheckBox
             android:id="@+id/cb_calories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show calories"/>
+            android:text="Mostra calorie"/>
 
         <CheckBox
             android:id="@+id/cb_session_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show session distance"/>
+            android:text="Mostra distanza sessione"/>
 
         <Button
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save"/>
+            android:text="Salva"/>
 
     </LinearLayout>
 

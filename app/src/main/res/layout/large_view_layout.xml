@@ -65,7 +65,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Calories: "
+            android:text="Calorie: "
             android:textSize="18sp" />
 
         <TextView
@@ -88,7 +88,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Latitude:"
+            android:text="Latitudine:"
             android:textSize="18sp" />
 
         <TextView
@@ -103,7 +103,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Longitude:"
+            android:text="Longitudine:"
             android:textSize="18sp" />
 
         <TextView
