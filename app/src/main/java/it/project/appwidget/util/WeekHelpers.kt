@@ -3,9 +3,7 @@ package it.project.appwidget.util
 
 import it.project.appwidget.database.TrackSession
 import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
+import java.util.Calendar
 
 
 /* TODO: Questa classe di fatto non ha variabili membro, ma fornisce metodi utili per
@@ -166,7 +164,7 @@ class WeekHelpers {
         val durationList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         for (session in weekSession) {
             // Aggiorno le calorie totali giorno per giorno (in km)
-            durationList[getNumberDayOfWeek(session.startTime)] += TimeUnit.MILLISECONDS.toHours(session.duration) as Double
+            durationList[getNumberDayOfWeek(session.startTime)] += (session.duration.toDouble() /(1000 * 60.0 * 60.0))
         }
         return durationList
     }
