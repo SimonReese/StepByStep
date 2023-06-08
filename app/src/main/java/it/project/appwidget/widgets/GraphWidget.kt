@@ -12,7 +12,7 @@ import android.widget.RemoteViews
 import it.project.appwidget.BarChart
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
-import it.project.appwidget.activities.deleteTitlePref
+//import it.project.appwidget.activities.deleteTitlePref
 import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,7 +64,7 @@ class GraphWidget : AppWidgetProvider() {
         Log.d("GraphWidget", "Chiamato onDeleted")
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
-            deleteTitlePref(context, appWidgetId)
+            //deleteTitlePref(context, appWidgetId)
         }
     }
 
