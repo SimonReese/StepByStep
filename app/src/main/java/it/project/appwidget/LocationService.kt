@@ -24,7 +24,6 @@ import it.project.appwidget.fragments.Run
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.widgets.NewAppWidget
 
-// TODO: Valutare se spostare tutto il lavoro del Service in un thread separato (non service in background - service sempre in Foreground ma non su mainThread)
 
 /**
  * Servizio foreground per localizzazione.
@@ -32,7 +31,6 @@ import it.project.appwidget.widgets.NewAppWidget
  * Questo servizio utilizza LocationManager per ricevere aggiornamenti sulla posizione
  * del dispositivo. Rimarrà in esecuzione anche quando l'applicazione è chiusa, tramite una notifica
  * che compare al momento dell'avvio del servizio.
- *
  */
 class LocationService : Service() {
 
@@ -41,9 +39,9 @@ class LocationService : Service() {
     private lateinit var notificationBuilder: NotificationCompat.Builder
     companion object {
         // Id notifica
-        const val SERVICE_NOTIFICATION_ID: Int = 1  //TODO: spostare valore in uno dei file xml?
+        const val SERVICE_NOTIFICATION_ID: Int = 1
         const val NOTIFICATION_CHANNEL_ID: String = "LocationServiceChannel"
-        const val NOTIFICATION_CHANNEL_DESCRIPTION: String = "Canale per notifiche servizio localizzazione" //TODO: Spostare in strings.xml
+        const val NOTIFICATION_CHANNEL_DESCRIPTION: String = "Canale per notifiche servizio localizzazione"
     }
 
     private lateinit var locationManager: LocationManager
@@ -134,7 +132,7 @@ class LocationService : Service() {
             // Invio intents
             sendBroadcast(implicitIntent)
             sendBroadcast(explicitIntent)
-            // TODO: Broadcast o LiveData?
+
 
             Log.d("CustomLocationListener","Inviato messaggio broadcast con: " +
                     "[long: ${currentLocation.longitude}, lat: ${currentLocation.latitude}, acc: ${currentLocation.accuracy}, " +
