@@ -36,6 +36,30 @@ class WeekHelpers {
         return Pair(startOfWeek, endOfWeek)
     }
 
+    fun getMonthRange(timestamp: Long): Pair<Long, Long> {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = timestamp
+        }
+
+        // Imposta la data al primo giorno del mese corrispondente al timestamp
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val startOfMonth = calendar.timeInMillis
+
+        // Imposta la data all'ultimo giorno del mese corrispondente al timestamp
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+
+        val endOfMonth = calendar.timeInMillis
+
+        return Pair(startOfMonth, endOfMonth)
+    }
 
 
     //  Dato un pair in millisecondi mi ritorna l'intervallo della settimana precedente
