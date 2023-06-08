@@ -1,10 +1,10 @@
 package it.project.appwidget.util
 
 
-import android.util.Log
 import it.project.appwidget.database.TrackSession
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -159,6 +159,16 @@ class WeekHelpers {
             kcalList[getNumberDayOfWeek(session.startTime)] += session.kcal
         }
         return kcalList
+    }
+
+    fun convertTrackSessionInDurationArray(weekSession: ArrayList<TrackSession>): ArrayList<Double>{
+        // Inizializzo lista di dimensione 7 con valori azzerati
+        val durationList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        for (session in weekSession) {
+            // Aggiorno le calorie totali giorno per giorno (in km)
+            durationList[getNumberDayOfWeek(session.startTime)] += TimeUnit.MILLISECONDS.toHours(session.duration) as Double
+        }
+        return durationList
     }
 
 }
