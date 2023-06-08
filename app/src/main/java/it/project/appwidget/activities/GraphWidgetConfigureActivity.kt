@@ -6,25 +6,55 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import it.project.appwidget.R
 import it.project.appwidget.databinding.GraphWidgetConfigureBinding
 import it.project.appwidget.widgets.*
+import kotlin.properties.Delegates
 
 
 class GraphWidgetConfigureActivity : AppCompatActivity(){
 
-    lateinit var saveButton: Button
-    lateinit var optionSpinner: Spinner
+    private lateinit var saveButton: Button
+    private lateinit var optionSpinner: Spinner
+
+    // Stato
+    protected lateinit var selectedItem: String
+    private var widgetId = -1
+
+    // Listener
+    private val itemSelectedListener = ItemSelectedListener()
+
+    // Implementazione listener
+    private inner class ItemSelectedListener: AdapterView.OnItemSelectedListener {
+
+        // Viene chiamato anche quando l'activity viene ruotata
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            Log.d("GraphWidgetConfigureActivity", "Selezionato item")
+            selectedItem = parent?.getItemAtPosition(position) as String
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            return
+        }
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.graph_widget_configure)
+
+        // Recupero widgetId
+        widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
         // Ottengo riferimenti a views
         saveButton = findViewById(R.id.graphWidgetSaveButton)
@@ -33,14 +63,18 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
         // Imposto dati spinner
         val spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.graph_widget_configure_options, R.layout.graph_widget_spinner_item)
         spinnerAdapter.setDropDownViewResource(R.layout.graph_widget_spinner_item)
+        // Inizializzo item selezionato
+        selectedItem = spinnerAdapter.getItem(0) as String
+        // Imposto adapter e listener sullo spinner
         optionSpinner.adapter = spinnerAdapter
+        optionSpinner.onItemSelectedListener = itemSelectedListener
 
 
         saveButton.setOnClickListener {
+            Log.d("GraphWidgetConfigureActivity", "Selezionato $selectedItem su $widgetId")
             finish()
         }
     }
-
 
 
 }
