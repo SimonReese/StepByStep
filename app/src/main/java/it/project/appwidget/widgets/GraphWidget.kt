@@ -13,7 +13,6 @@ import android.widget.RemoteViews
 import it.project.appwidget.BarChart
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
-//import it.project.appwidget.activities.deleteTitlePref
 import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +48,7 @@ class GraphWidget : AppWidgetProvider() {
                 // Ottengo valori e etichette dai dati
                 val values: ArrayList<*> = when (settings){
                     "Calorie" -> WeekHelpers().convertTrackSessionInCaloriesArray(trackSessions)
+                    "Durata" -> WeekHelpers().convertTrackSessionInDurationArray(trackSessions)
                     else -> WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
                 }
                 val labels: ArrayList<String> = WeekHelpers().getDateList(weekRange.first,weekRange.second)
@@ -59,8 +59,11 @@ class GraphWidget : AppWidgetProvider() {
                 chart.valueArray = values as ArrayList<Double>
                 val image: Bitmap = when(settings){
                     "Calorie" -> chart.getChartImage(color = Color.RED, label = "kcal")
+                    "Durata" -> chart.getChartImage(color = Color.GREEN, label = "h")
                     else -> chart.getChartImage()
                 }
+
+                Log.d("GraphWidget", "Valori dati: ${values as ArrayList<Double>}")
 
                 // Imposto immagine nella viewImage
                 views.setImageViewBitmap(R.id.graphImageView, image)
