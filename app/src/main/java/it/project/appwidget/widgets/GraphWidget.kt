@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
@@ -46,25 +47,29 @@ class GraphWidget : AppWidgetProvider() {
                 val trackSessions = Datasource(context).getSessionList(weekRange.first,weekRange.second)
 
                 // Ottengo valori e etichette dai dati
-                val values: ArrayList<Double> = WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
+                val values: ArrayList<*> = when (settings){
+                    "Calorie" -> WeekHelpers().convertTrackSessionInCaloriesArray(trackSessions)
+                    else -> WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
+                }
                 val labels: ArrayList<String> = WeekHelpers().getDateList(weekRange.first,weekRange.second)
-
-                Log.d("GraphWidget", "Aggiorno con $settings")
 
                 // Costruisco grafico
                 val chart = BarChart(context, null)
                 chart.days = labels
-                chart.valueArray = values
-                val image: Bitmap = chart.getChartImage()
+                chart.valueArray = values as ArrayList<Double>
+                val image: Bitmap = when(settings){
+                    "Calorie" -> chart.getChartImage(color = Color.RED, label = "kcal")
+                    else -> chart.getChartImage()
+                }
 
                 // Imposto immagine nella viewImage
                 views.setImageViewBitmap(R.id.graphImageView, image)
                 // Instruct the widget manager to update the widget
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
-            //val widgetText = loadTitlePref(context, appWidgetId)
-
         }
+
+
     }
 
 
