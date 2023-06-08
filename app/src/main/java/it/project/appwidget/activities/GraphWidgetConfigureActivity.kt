@@ -10,10 +10,16 @@ import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.ActivityNavigatorExtras
 import it.project.appwidget.R
 import it.project.appwidget.widgets.*
 import kotlinx.coroutines.launch
 
+/**
+ * Classe che gestisce l'activity di configurazione del [GraphWidget].
+ *
+ * Permette all'utente di scegliere un campo da graficare tra distanza, calorie e durata delle sessioni
+ */
 class GraphWidgetConfigureActivity : AppCompatActivity(){
 
     private lateinit var saveButton: Button
@@ -41,10 +47,13 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
 
     }
 
-
+    // Creazione activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.graph_widget_configure)
+
+        // Imposto risultato fallito nel caso in cui l'utente esca senza salvare
+        setResult(RESULT_CANCELED)
 
         // Recupero widgetId
         widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -62,10 +71,11 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
         optionSpinner.adapter = spinnerAdapter
         optionSpinner.onItemSelectedListener = itemSelectedListener
 
-
+        // Imposto listener sul bottone
         saveButton.setOnClickListener {
             Log.d("GraphWidgetConfigureActivity", "Selezionato $selectedItem su $widgetId")
             saveAndUpdate()
+            setResult(RESULT_OK)
             finish()
         }
     }
@@ -88,93 +98,3 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
 
 
 }
-
-
-
-
-
-/**
- * The configuration screen for the [it.project.appwidget.widgets.GraphWidget] AppWidget.
- */
-/*
-class GraphWidgetConfigureActivity : Activity() {
-    private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var appWidgetText: EditText
-    private var onClickListener = View.OnClickListener {
-        val context = this@GraphWidgetConfigureActivity
-
-        // When the button is clicked, store the string locally
-        val widgetText = appWidgetText.text.toString()
-        saveTitlePref(context, appWidgetId, widgetText)
-
-        // It is the responsibility of the configuration activity to update the app widget
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        //updateAppWidget(context, appWidgetManager, appWidgetId)
-
-        // Make sure we pass back the original appWidgetId
-        val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        setResult(RESULT_OK, resultValue)
-        finish()
-    }
-    private lateinit var binding: GraphWidgetConfigureBinding
-
-    public override fun onCreate(icicle: Bundle?) {
-        super.onCreate(icicle)
-
-        // Set the result to CANCELED.  This will cause the widget host to cancel
-        // out of the widget placement if the user presses the back button.
-        setResult(RESULT_CANCELED)
-
-        binding = GraphWidgetConfigureBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        //appWidgetText = binding.appwidgetText
-        binding.addButton.setOnClickListener(onClickListener)
-
-        // Find the widget id from the intent.
-        val intent = intent
-        val extras = intent.extras
-        if (extras != null) {
-            appWidgetId = extras.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID
-            )
-        }
-
-        // If this activity was started with an intent without an app widget ID, finish with an error.
-        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            finish()
-            return
-        }
-
-        appWidgetText.setText(loadTitlePref(this@GraphWidgetConfigureActivity, appWidgetId))
-    }
-
-}
-
-
-// TODO: Capire e rimuovere qua sotto
-private const val PREFS_NAME = "it.project.appwidget.widgets.GraphWidget"
-private const val PREF_PREFIX_KEY = "appwidget_"
-
-// Write the prefix to the SharedPreferences object for this widget
-internal fun saveTitlePref(context: Context, appWidgetId: Int, text: String) {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.putString(PREF_PREFIX_KEY + appWidgetId, text)
-    prefs.apply()
-}
-
-// Read the prefix from the SharedPreferences object for this widget.
-// If there is no preference saved, get the default from a resource
-internal fun loadTitlePref(context: Context, appWidgetId: Int): String {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    val titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null)
-    return titleValue ?: context.getString(R.string.appwidget_text)
-}
-
-internal fun deleteTitlePref(context: Context, appWidgetId: Int) {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.remove(PREF_PREFIX_KEY + appWidgetId)
-    prefs.apply()
-}
-*/
