@@ -1,5 +1,6 @@
 package it.project.appwidget
 
+import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
@@ -95,16 +96,32 @@ class ListWidgetService : RemoteViewsService() {
         // Ottieni la view per un determinato elemento della ListView del widget
         override fun getViewAt(position: Int): RemoteViews {
             Log.d("ListWidgetFactory", "Chiamato getViewAt()")
+
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
             val trackSession: TrackSession = trackSessionList[position]
 
 
-            //modificare qui il codice
+            //Imposto il valore di tutti gli elementi
+            val data_text = weekHelper.getDate(trackSession.startTime, format)
+            val distance_text = DecimalFormat("#.##").format(trackSession.distance/1000) + "km"
+
+            val duration = trackSession.duration/1000
+            val hours = duration / 3600
+            val minutes = (duration % 3600) / 60
+            val seconds = duration % 60
+            val duration_text = "" + hours + "h " + minutes + "min " + seconds + "sec"
+
+            val avg_speed_text = DecimalFormat("#.##").format(trackSession.averageSpeed) + "km/h"
+            val calories_text = DecimalFormat("#").format(trackSession.kcal) + "Kcal"
+
             //TODO finire le modifiche del codice
-            val itemText = weekHelper.getDate(trackSession.startTime, format) + " | " + DecimalFormat("#.##").format(trackSession.distance/1000) + "km" +
-                    " | " + DecimalFormat("#.##").format(trackSession.averageSpeed) + "km/h"
-            // Imposta il testo dell'elemento corrente nella TextView all'interno dell'elemento della ListView
-            remoteViews.setTextViewText(R.id.item_textview, itemText)
+
+            // Imposta il testo degli elementi correnti nella TextView all'interno dell'elemento della ListView
+            remoteViews.setTextViewText(R.id.item_textview, data_text)
+            remoteViews.setTextViewText(R.id.item_distance, distance_text)
+            //remoteViews.setTextViewText(R.id.item_duration, duration_text)
+            remoteViews.setTextViewText(R.id.item_avg_speed, avg_speed_text)
+            //remoteViews.setTextViewText(R.id.item_calories, calories_text)
 
             //Imposta intent sul singolo item della lista
             val fillInIntent = Intent()
