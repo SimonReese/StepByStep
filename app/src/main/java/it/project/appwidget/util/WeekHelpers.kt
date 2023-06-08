@@ -142,8 +142,23 @@ class WeekHelpers {
             // Aggiorno la distanza totale percorsa giorno per giorno (in km)
             distanceList[getNumberDayOfWeek(session.startTime)] += session.distance / 1000
         }
-        Log.d("StatsFragment", "Ho costruito la lista di distanze $distanceList")
         return distanceList
+    }
+
+    /**
+     * Converte lista di [TrackSession] in lista di chilocalorie sommate giorno per giorno.
+     * @param weekSession Lista di sessioni in una settimana
+     * @return Una lista di Int contenente la somma delle calorie sommate in base al giorno in km. Restituisce
+     * sempre una lista di dimensione 7.
+     */
+    fun convertTrackSessionInCaloriesArray(weekSession: ArrayList<TrackSession>): ArrayList<Int> {
+        // Inizializzo lista di dimensione 7 con valori azzerati
+        val kcalList: ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0)
+        for (session in weekSession) {
+            // Aggiorno le calorie totali giorno per giorno (in km)
+            kcalList[getNumberDayOfWeek(session.startTime)] += session.kcal
+        }
+        return kcalList
     }
 
 }
