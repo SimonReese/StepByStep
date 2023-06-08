@@ -5,15 +5,42 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import it.project.appwidget.R
 import it.project.appwidget.databinding.GraphWidgetConfigureBinding
 import it.project.appwidget.widgets.*
 
+
+class GraphWidgetConfigureActivity : AppCompatActivity(){
+
+    lateinit var saveButton: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.graph_widget_configure)
+
+        saveButton = findViewById(R.id.graphWidgetSaveButton)
+        saveButton.setOnClickListener {
+            finish()
+        }
+    }
+
+
+
+}
+
+
+
+
+
 /**
  * The configuration screen for the [it.project.appwidget.widgets.GraphWidget] AppWidget.
  */
+/*
 class GraphWidgetConfigureActivity : Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var appWidgetText: EditText
@@ -46,7 +73,7 @@ class GraphWidgetConfigureActivity : Activity() {
         binding = GraphWidgetConfigureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        appWidgetText = binding.appwidgetText
+        //appWidgetText = binding.appwidgetText
         binding.addButton.setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
@@ -94,3 +121,4 @@ internal fun deleteTitlePref(context: Context, appWidgetId: Int) {
     prefs.remove(PREF_PREFIX_KEY + appWidgetId)
     prefs.apply()
 }
+*/
