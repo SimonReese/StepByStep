@@ -1,25 +1,18 @@
 package it.project.appwidget.activities
 
-import android.app.Activity
 import android.appwidget.AppWidgetManager
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.R
-import it.project.appwidget.databinding.GraphWidgetConfigureBinding
 import it.project.appwidget.widgets.*
-import kotlin.properties.Delegates
-
+import kotlinx.coroutines.launch
 
 class GraphWidgetConfigureActivity : AppCompatActivity(){
 
@@ -27,7 +20,7 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
     private lateinit var optionSpinner: Spinner
 
     // Stato
-    protected lateinit var selectedItem: String
+    private lateinit var selectedItem: String
     private var widgetId = -1
 
     // Listener
@@ -72,7 +65,24 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
 
         saveButton.setOnClickListener {
             Log.d("GraphWidgetConfigureActivity", "Selezionato $selectedItem su $widgetId")
+            saveAndUpdate()
             finish()
+        }
+    }
+
+
+    // Salvo impostazione spinner su Shared Preferences e aggiorno il widget in background
+    private fun saveAndUpdate(){
+        lifecycleScope.launch {
+            // Salvo su sharedprefs
+            val prefs = getSharedPreferences(GraphWidget.SHARED_PREFERENCES_FILE_PREFIX + widgetId, MODE_PRIVATE).edit()
+            prefs.putString(GraphWidget.DATA_SETTINGS, selectedItem)
+            prefs.apply()
+
+            // Aggiorno widget
+            // Ottengo istanza AppWidgetMananger
+            val appWidgetManager = AppWidgetManager.getInstance(this@GraphWidgetConfigureActivity)
+            GraphWidget.updateWidget(this@GraphWidgetConfigureActivity, appWidgetManager, widgetId)
         }
     }
 
