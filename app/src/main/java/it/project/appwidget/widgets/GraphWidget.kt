@@ -114,9 +114,14 @@ class GraphWidget : AppWidgetProvider() {
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         Log.d("GraphWidget", "Chiamato onDeleted")
-        // When the user deletes the widget, delete the preference associated with it.
-        for (appWidgetId in appWidgetIds) {
-            //deleteTitlePref(context, appWidgetId)
+        // Rimuovo preferenze in modo asincrono
+        CoroutineScope(Dispatchers.Main).launch{
+            for (appWidgetId in appWidgetIds) {
+                // Rimuovo preferenze per ciascuno
+                val pref = context.getSharedPreferences(SHARED_PREFERENCES_FILE_PREFIX + appWidgetId, 0).edit()
+                pref.remove(DATA_SETTINGS)
+                pref.apply()
+            }
         }
     }
 
