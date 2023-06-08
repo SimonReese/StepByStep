@@ -10,34 +10,45 @@ import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.ActivityNavigatorExtras
 import it.project.appwidget.R
-import it.project.appwidget.widgets.*
+import it.project.appwidget.widgets.GraphWidget
 import kotlinx.coroutines.launch
+
 
 /**
  * Classe che gestisce l'activity di configurazione del [GraphWidget].
  *
- * Permette all'utente di scegliere un campo da graficare tra distanza, calorie e durata delle sessioni
+ * Permette all'utente di scegliere un campo da graficare tra distanza, calorie e durata delle sessioni.
  */
 class GraphWidgetConfigureActivity : AppCompatActivity(){
 
+    /** Bottone salvataggio configurazione */
     private lateinit var saveButton: Button
+    /** Elemento spinner da cui selezionare il campo di interesse */
     private lateinit var optionSpinner: Spinner
 
     // Stato
+    /** Elemento correntemente selezionato */
     private lateinit var selectedItem: String
+    /** Id widget associato a questa configurazione */
     private var widgetId = -1
 
-    // Listener
+
+    /** Listener per aggiornare [selectedItem] al click di un elemento sullo spinner */
     private val itemSelectedListener = ItemSelectedListener()
 
-    // Implementazione listener
+    /**
+     * Classe che implementa interfaccia [AdapterView.OnItemSelectedListener] per la gestione dei
+     * click sullo spinner [optionSpinner]
+     */
     private inner class ItemSelectedListener: AdapterView.OnItemSelectedListener {
 
-        // Viene chiamato anche quando l'activity viene ruotata
+        /**
+         * Chiamato al click di un elemento sullo spinner [optionSpinner].
+         * Aggiorna il valore di [selectedItem] con l'item cliccato.
+         * Viene chiamato anche alla rotazione della activity.
+         */
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            Log.d("GraphWidgetConfigureActivity", "Selezionato item")
             selectedItem = parent?.getItemAtPosition(position) as String
         }
 
@@ -81,7 +92,10 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
     }
 
 
-    // Salvo impostazione spinner su Shared Preferences e aggiorno il widget in background
+    /**
+     * Salvo impostazione spinner [optionSpinner] su Shared Preferences
+     * tramite [selectedItem] e aggiorno il widget con id [widgetId] in background.
+     */
     private fun saveAndUpdate(){
         lifecycleScope.launch {
             // Salvo su sharedprefs
@@ -89,12 +103,11 @@ class GraphWidgetConfigureActivity : AppCompatActivity(){
             prefs.putString(GraphWidget.DATA_SETTINGS, selectedItem)
             prefs.apply()
 
-            // Aggiorno widget
             // Ottengo istanza AppWidgetMananger
             val appWidgetManager = AppWidgetManager.getInstance(this@GraphWidgetConfigureActivity)
+            // Aggiorno widget
             GraphWidget.updateWidget(this@GraphWidgetConfigureActivity, appWidgetManager, widgetId)
         }
     }
-
 
 }
