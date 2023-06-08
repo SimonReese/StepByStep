@@ -151,24 +151,23 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
      * Metodo che restituisce l'immagine del grafico a barre.
      * @return Bitmap rappresentante il grafico a barre.
      */
-    fun getChartImage(): Bitmap {
-        // Creo una bitmap vuota con le dimensioni della view
-        val w = 900
-        val h = 850
-        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    fun getChartImage(width: Int = 900, height: Int = 850, color: Int = Color.CYAN, label: String = "km"): Bitmap {
+        // Aggiorno painter della classe
+        barPaint.color = color
+        // Creo una bitmap vuota
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         // Creo un canvas sulla bitmap
         val canvas = Canvas(bitmap)
         // Disegno la view sul canvas
-        onDrawBit(canvas, w, h)
+        onDrawBit(canvas, width, height, label)
         // Restituisco la bitmap
         return bitmap
     }
 
-    //TODO: spostare funzione in un'altra classe?
-    private fun onDrawBit(canvas: Canvas?, w: Int, h: Int) {
+
+    private fun onDrawBit(canvas: Canvas, w: Int, h: Int, label: String) {
         val lowerMargin = 50f
         val upperMargin = -700f
-
         //Numero di barre
         val numbars = valueArray.size
         //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
@@ -179,9 +178,8 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         // Bordo inferiore con margine
         val bottom = h - lowerMargin
 
-        println(w)
-        println(h)
-
+        // Formattazione
+        val singleDecimal = DecimalFormat("#.#$label")
 
         //Cerco l'elemento più grande
         val maxValue: Float = valueArray.max().toFloat()
@@ -210,14 +208,13 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
             val top = bottom - (height - upperMargin)*scale
 
-            Log.d("BarChart", "$position: $top, $bottom, $right, $left")
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
-            canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
+            canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
             if (value != 0.0) {
-                canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
+                canvas.drawText(singleDecimal.format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
-            canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
+            canvas.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
         }
 
     }
