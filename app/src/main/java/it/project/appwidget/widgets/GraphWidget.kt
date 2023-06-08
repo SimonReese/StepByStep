@@ -46,8 +46,8 @@ class GraphWidget : AppWidgetProvider() {
                 val trackSessions = Datasource(context).getSessionList(weekRange.first,weekRange.second)
 
                 // Ottengo valori e etichette dai dati
-                val values: ArrayList<*> = when (settings){
-                    "Calorie" -> WeekHelpers().convertTrackSessionInCaloriesArray(trackSessions)
+                val values: ArrayList<Double> = when (settings){
+                    "Calorie" -> WeekHelpers().convertTrackSessionInCaloriesArray(trackSessions).map{ it.toDouble()} as ArrayList<Double>
                     "Durata" -> WeekHelpers().convertTrackSessionInDurationArray(trackSessions)
                     else -> WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
                 }
@@ -56,14 +56,12 @@ class GraphWidget : AppWidgetProvider() {
                 // Costruisco grafico
                 val chart = BarChart(context, null)
                 chart.days = labels
-                chart.valueArray = values as ArrayList<Double>
+                chart.valueArray = values
                 val image: Bitmap = when(settings){
                     "Calorie" -> chart.getChartImage(color = Color.RED, label = "kcal")
                     "Durata" -> chart.getChartImage(color = Color.GREEN, label = "h")
                     else -> chart.getChartImage()
                 }
-
-                Log.d("GraphWidget", "Valori dati: ${values as ArrayList<Double>}")
 
                 // Imposto immagine nella viewImage
                 views.setImageViewBitmap(R.id.graphImageView, image)
