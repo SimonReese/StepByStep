@@ -24,6 +24,49 @@ import kotlinx.coroutines.launch
  * App Widget Configuration implemented in [it.project.appwidget.activities.GraphWidgetConfigureActivity]
  */
 class GraphWidget : AppWidgetProvider() {
+    companion object{
+        const val SHARED_PREFERENCES_FILE_PREFIX = "it.project.appwidget.widgets.GraphWidget"
+        const val DATA_SETTINGS = "data"
+
+        // Aggiornamento del singolo widget
+        fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+            Log.d("GrapWidget", "Avvio aggiornamento grafico")
+
+            // Aggiorno i dati in modo asincrono
+            CoroutineScope(Dispatchers.Main).launch {
+                // Leggo dati dalle preferenze
+                val prefs = context.getSharedPreferences(SHARED_PREFERENCES_FILE_PREFIX + appWidgetId, 0)
+                val settings = prefs.getString(DATA_SETTINGS, "Distanza")
+
+                // Ottengo riferimento alle RemoteViews
+                val views = RemoteViews(context.packageName, R.layout.graph_widget)
+
+                // Ottengo dati dal database
+                val weekRange = WeekHelpers().getWeekRange(System.currentTimeMillis())
+                val trackSessions = Datasource(context).getSessionList(weekRange.first,weekRange.second)
+
+                // Ottengo valori e etichette dai dati
+                val values: ArrayList<Double> = WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
+                val labels: ArrayList<String> = WeekHelpers().getDateList(weekRange.first,weekRange.second)
+
+                Log.d("GraphWidget", "Aggiorno con $settings")
+
+                // Costruisco grafico
+                val chart = BarChart(context, null)
+                chart.days = labels
+                chart.valueArray = values
+                val image: Bitmap = chart.getChartImage()
+
+                // Imposto immagine nella viewImage
+                views.setImageViewBitmap(R.id.graphImageView, image)
+                // Instruct the widget manager to update the widget
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+            //val widgetText = loadTitlePref(context, appWidgetId)
+
+        }
+    }
+
 
     override fun onEnabled(context: Context) {
         Log.d("GraphWidget", "Chiamato onEnabled")
@@ -32,7 +75,7 @@ class GraphWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("GraphWidget", "Chiamato onReceive")
         super.onReceive(context, intent)
-        if(intent?.action == "database-updated"){
+        if(intent.action == "database-updated"){
             Log.d("GraphWidget", "Ricevuto intent database-updated")
             // Ottengo istanza AppWidgetMananger
             val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -72,36 +115,6 @@ class GraphWidget : AppWidgetProvider() {
         Log.d("GraphWidget", "Chiamato onDisabled")
     }
 
-    // Aggiornamento del singolo widget
-    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-        Log.d("GrapWidget", "Avvio aggiornamento grafico")
 
-        // Aggiorno i dati in modo asincrono
-        CoroutineScope(Dispatchers.Main).launch {
-            // Ottengo riferimento alle RemoteViews
-            val views = RemoteViews(context.packageName, R.layout.graph_widget)
-
-            // Ottengo dati dal database
-            val weekRange = WeekHelpers().getWeekRange(System.currentTimeMillis())
-            val trackSessions = Datasource(context).getSessionList(weekRange.first,weekRange.second)
-
-            // Ottengo valori e etichette dai dati
-            val values: ArrayList<Double> = WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
-            val labels: ArrayList<String> = WeekHelpers().getDateList(weekRange.first,weekRange.second)
-
-            // Costruisco grafico
-            val chart = BarChart(context, null)
-            chart.days = labels
-            chart.valueArray = values
-            val image: Bitmap = chart.getChartImage()
-
-            // Imposto immagine nella viewImage
-            views.setImageViewBitmap(R.id.graphImageView, image)
-            // Instruct the widget manager to update the widget
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
-        //val widgetText = loadTitlePref(context, appWidgetId)
-
-    }
 }
 
