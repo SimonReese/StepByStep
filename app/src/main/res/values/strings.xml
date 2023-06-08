@@ -3,7 +3,6 @@
 
     <!-- NewAppWidget -->
     <string name="new_appwidget_label">NewAppWidget</string>
-    <string name="add_widget">Add widget</string>
     <string name="new_appwidget_description">Descrizione widget NewAppWidget</string>
 
     <!--ListWidget -->
@@ -13,6 +12,13 @@
     <!-- GraphWidget -->
     <string name="graph_widget_label">Grafico</string>
     <string name="graph_widget_description">Mostra un grafico delle sessioni</string>
+    <string name="graph_widget_configure_textview">Scegli il valore di interesse</string>
+    <string name="graph_widget_save_button">Salva</string>
+    <string-array name="configure_option">
+        <item>Distanza</item>
+        <item>Durata</item>
+        <item>Calorie</item>
+    </string-array>
 
     <!--Fragment Run -->
     <string name="run_fragment_calories_label">Calorie bruciate</string>
@@ -40,7 +46,6 @@
         </attr>
     </declare-styleable>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="graphWidgetTitle">Grafico</string>
 
