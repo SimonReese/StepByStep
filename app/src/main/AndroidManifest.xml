@@ -53,6 +53,15 @@
             </intent-filter>
         </activity>
 
+        <!-- Activity impostazioni ListWidget -->
+        <activity
+            android:name=".activities.ListWidgetConfigureActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <!-- Widget riepilogo -->
         <receiver
             android:name=".widgets.NewAppWidget"
