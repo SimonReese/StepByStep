@@ -29,6 +29,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:id="@+id/left_layout"
         android:orientation="vertical">
 
         <TextView
@@ -79,7 +80,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -87,7 +88,6 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:id="@+id/tv_latitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:text="Latitudine:"
             android:textSize="18sp" />
 
