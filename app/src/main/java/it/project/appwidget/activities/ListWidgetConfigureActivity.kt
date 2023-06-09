@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.R
 import it.project.appwidget.widgets.GraphWidget
+import it.project.appwidget.widgets.ListWidget
 import kotlinx.coroutines.launch
 
 /**
@@ -91,13 +92,22 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
 
     }
 
-    //TODO - da implementare per salvare le preferenze e comunicarle alla classe ListWidget
+
     private fun saveAndUpdate() {
-        /**
-         * da implementare
-         */
+        lifecycleScope.launch {
+            // Salvo su sharedprefs
+            val preferences = getSharedPreferences(ListWidget.SHARED_PREF + widgetId, MODE_PRIVATE).edit()
+            preferences.putString(ListWidget.SELECTION_DATA, configurationItem)
+            preferences.apply()
+
+            // Ottengo istanza AppWidgetMananger
+            val appWidgetManager = AppWidgetManager.getInstance(this@ListWidgetConfigureActivity)
+            // Aggiorno widget
+            ListWidget.updateWidget(this@ListWidgetConfigureActivity, appWidgetManager, widgetId)
         }
     }
+
+}
 
 
 
