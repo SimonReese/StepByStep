@@ -88,6 +88,7 @@ class DetailActivity : AppCompatActivity() {
             val minutes = (duration % 3600) / 60
             val seconds = duration % 60
 
+            //imposto il testo per tutte le views in base ai dati che ho ricevuto dall'intent
             tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
             tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
             tv_typeData.text = trackSession.activityType
