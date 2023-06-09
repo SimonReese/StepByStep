@@ -67,7 +67,7 @@ class NewAppWidget : AppWidgetProvider() {
             // Creo intent per il service
             val serviceIntent = Intent(context, LocationService::class.java)
             //StartServiceButton
-            val startPendingIntent = PendingIntent.getService(context, appWidgetId,
+            val startPendingIntent = PendingIntent.getForegroundService(context, appWidgetId,
                 serviceIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
@@ -77,7 +77,7 @@ class NewAppWidget : AppWidgetProvider() {
             val stopServiceIntent = Intent(context, LocationService::class.java)
             stopServiceIntent.action = "STOP-LOCATION-SERVICE";
             //StopServiceButton
-            val stopPendingIntent = PendingIntent.getService(context, appWidgetId,
+            val stopPendingIntent = PendingIntent.getForegroundService(context, appWidgetId,
                 stopServiceIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
@@ -184,7 +184,7 @@ class NewAppWidget : AppWidgetProvider() {
         // Creo intent per il service
         val serviceIntent = Intent(context, LocationService::class.java)
         //StartServiceButton
-        val startPendingIntent = PendingIntent.getService(context, appWidgetId,
+        val startPendingIntent = PendingIntent.getForegroundService(context, appWidgetId,
             serviceIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -194,7 +194,7 @@ class NewAppWidget : AppWidgetProvider() {
         val stopServiceIntent = Intent(context, LocationService::class.java)
         stopServiceIntent.action = "STOP-LOCATION-SERVICE";
         //StopServiceButton
-        val stopPendingIntent = PendingIntent.getService(context, appWidgetId,
+        val stopPendingIntent = PendingIntent.getForegroundService(context, appWidgetId,
             stopServiceIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -298,16 +298,25 @@ class NewAppWidget : AppWidgetProvider() {
         val isSessionDistanceChecked = widgetSettingsSharedPrefsHelper.isSessionDistanceChecked()
 
         // Aggiorna la visibilità dei campi nel layout del widget in base allo stato dei checkbox
-        views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_value_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_latitude, if (isPositionChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_value_latitude, if (isPositionChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_value_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_value_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.tv_value_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
+        if (!isSpeedChecked && !isCaloriesChecked && !isSessionDistanceChecked)
+        {
+            views.setViewVisibility(R.id.left_layout, View.GONE)
+        }
+        else
+        {
+            views.setViewVisibility(R.id.left_layout, View.VISIBLE)
+            views.setViewVisibility(R.id.tv_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_value_speed, if (isSpeedChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_latitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_value_latitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_value_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_value_calories, if (isCaloriesChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tv_value_sumDistance, if (isSessionDistanceChecked) View.VISIBLE else View.GONE)
+        }
+
 
         //TODO: fare stessa cosa per tv_sessionDate
         views.setViewVisibility(R.id.tv_sessionDate, View.VISIBLE)
