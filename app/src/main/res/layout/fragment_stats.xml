@@ -41,39 +41,34 @@
 
         <ImageButton
             android:id="@+id/pastWeekButton"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/icons8_frecciasinistra"
-            android:background="@drawable/rounded_corners"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/icons8_frecciasinistra" />
 
         <Button
             android:id="@+id/generateButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeTextType="uniform"
             android:backgroundTint="@color/lavender"
-            android:text="Settimana corrente"
-            android:textColor="@color/black"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:maxLines="1"
+            android:text="Corrente"
+            android:textColor="@color/black" />
 
         <ImageButton
             android:id="@+id/nextWeekButton"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginStart="8dp"
             android:layout_margin="5dp"
-            android:src="@drawable/icons8_freccia_destra_24"
-            android:background="@drawable/rounded_corners"/>
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/icons8_freccia_destra_24" />
 
     </LinearLayout>
 
