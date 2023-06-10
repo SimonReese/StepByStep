@@ -70,7 +70,7 @@ class GraphWidget : AppWidgetProvider() {
                 chart.valueArray = values
                 val image: Bitmap = when(settings){
                     "Calorie" -> chart.getChartImage(color = Color.RED, label = "kcal")
-                    "Durata" -> chart.getChartImage(color = Color.GREEN, label = "h")
+                    "Durata" -> chart.getChartImage(color = Color.GREEN, label = "min")
                     else -> chart.getChartImage()
                 }
 

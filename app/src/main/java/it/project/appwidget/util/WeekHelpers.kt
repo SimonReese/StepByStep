@@ -199,7 +199,7 @@ class WeekHelpers {
         // Inizializzo lista di dimensione 7 con valori azzerati
         val kcalList: ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0)
         for (session in weekSession) {
-            // Aggiorno le calorie totali giorno per giorno (in km)
+            // Aggiorno le calorie totali giorno per giorno (in kcal)
             kcalList[getNumberDayOfWeek(session.startTime)] += session.kcal
         }
         return kcalList
@@ -209,8 +209,8 @@ class WeekHelpers {
         // Inizializzo lista di dimensione 7 con valori azzerati
         val durationList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         for (session in weekSession) {
-            // Aggiorno le calorie totali giorno per giorno (in km)
-            durationList[getNumberDayOfWeek(session.startTime)] += (session.duration.toDouble() /(1000 * 60.0 * 60.0))
+            // Aggiorno la durata totali giorno per giorno (in min)
+            durationList[getNumberDayOfWeek(session.startTime)] += (session.duration.toDouble() /(1000.0 * 60.0))
         }
         return durationList
     }
