@@ -75,7 +75,7 @@ class Stats : Fragment() {
 
 
         // Mostro etichetta settimana corrente
-        currentDate.text = weekHelper.getDate(selectedWeek.first, format) + " - " + weekHelper.getDate(selectedWeek.second, format)
+        currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
 
         // Carico dati in background
         loadRecyclerView()
@@ -86,6 +86,8 @@ class Stats : Fragment() {
         //Bottone settimana corrente
         generateButton.setOnClickListener { generateButton: View ->
             selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
+            // Mostro etichetta settimana corrente
+            currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
         }
@@ -93,6 +95,8 @@ class Stats : Fragment() {
         //Bottone past week
         pastWeekButton.setOnClickListener { pastWeekButton: View ->
             selectedWeek = weekHelper.getPreviousWeekRange(selectedWeek)
+            // Mostro etichetta settimana precedente
+            currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
         }
@@ -100,6 +104,9 @@ class Stats : Fragment() {
         //Bottone next week
         nextWeekButton.setOnClickListener { nextWeekButton: View ->
             selectedWeek = weekHelper.getNextWeekRange(selectedWeek)
+            // Mostro etichetta settimana successiva
+            //currentDate.text = "${weekHelper.getDate(selectedWeek.first, format)} - ${weekHelper.getDate(selectedWeek.second, format)}"
+            currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
         }
@@ -161,33 +168,5 @@ class Stats : Fragment() {
         }
         Log.d("StatsFragment", "Fine impostazione routine caricamento dati.")
     }
-
-/*
-* TODO: rimuovere
-* Questo metodo non è veramente asincrono - commentato a fini di studio
-* *//**
-     * Ottiene lista di sessioni comprese tra due date espresse in Unix time.
-     * @param from: data di partenza
-     * @param to: data limite finale
-     * @return: Una lista di oggetti TrackSession
-     *//*
-    private fun getSessionsList(from: Long, to: Long) : List<TrackSession>?{
-        // Carico dati nel recyclerview in modo asincrono
-        Log.d("StatsFragment", "getSessionsList()")
-        var sessionList: List<TrackSession>? = null
-
-        // Dall' activity scope avvio una nuova coroutine per caricare i dati
-        lifecycleScope.launch {
-            //Sostituito il context this@GraphActivity con requireActivity().applicationContext
-            sessionList = Datasource(requireActivity().applicationContext).getSessionList(from,to)
-            Log.d("AsyncStatsFragment", "Dati salvati")
-        }
-
-        Log.d("StatsFragment", "Ritornati")
-        return sessionList
-    }*/
-
-
-
 
 }
