@@ -1,7 +1,6 @@
 package it.project.appwidget.widgets
 
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_NO_CREATE
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -16,6 +15,7 @@ import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
 import it.project.appwidget.util.WeekHelpers
 import java.text.DecimalFormat
+import kotlin.properties.Delegates
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -34,8 +34,7 @@ class NewAppWidget : AppWidgetProvider() {
     private val format = "hh:mm"
     private val singleDecimal = DecimalFormat("#.#")
     private val doubleDecimal = DecimalFormat("#.##")
-
-
+    private var serviceIsRunningFlag: Boolean = false
 
 
     // Override del metodo onUpdate per aggiornare il widget
@@ -83,8 +82,18 @@ class NewAppWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
 
-            views.setBoolean(R.id.startServiceButton, "setEnabled", true)
-            views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
+            if(serviceIsRunningFlag)
+            {
+                views.setBoolean(R.id.startServiceButton, "setEnabled", false)
+                views.setBoolean(R.id.stopServiceButton, "setEnabled", true)
+            }
+            else
+            {
+                views.setBoolean(R.id.startServiceButton, "setEnabled", true)
+                views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
+            }
+
+
 
 
             // Imposto elementi layout in base a quanto indicato nelle preferences
@@ -124,6 +133,7 @@ class NewAppWidget : AppWidgetProvider() {
                 views.setBoolean(R.id.startServiceButton, "setEnabled", true)
                 views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
+                saveServiceRunningFlag(context, false) // Salva il valore "false" nelle preferenze
             }
         }
 
@@ -133,6 +143,7 @@ class NewAppWidget : AppWidgetProvider() {
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
+                saveServiceRunningFlag(context, true) // Salva il valore "true" nelle preferenze
                 views.setBoolean(R.id.startServiceButton, "setEnabled", false)
                 views.setBoolean(R.id.stopServiceButton, "setEnabled", true)
                 appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -160,6 +171,9 @@ class NewAppWidget : AppWidgetProvider() {
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
         // Ottengo nuova view in base alle nuove dimensioni
         val views = getWidgetSize(context, appWidgetId)
+
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        serviceIsRunningFlag = sharedPreferences.getBoolean("serviceIsRunningFlag", false)
 
         // Carica il testo salvato esistente precedentemente al resize e impostalo sul TextView
         val savedPosition = loadText(context, appWidgetId, "position")
@@ -200,36 +214,16 @@ class NewAppWidget : AppWidgetProvider() {
         )
         views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
 
-
-        /*
-
-        //Se large_view_layout crea nuovo barChart
-        if (context.resources.getResourceEntryName(views.layoutId) == "large_view_layout")
+        if(serviceIsRunningFlag)
         {
-            val barChart = BarChart(context, null)
-            val database = AppDatabase.getInstance(context)
-            val trackSessionDao = database.trackSessionDao()
-            val selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
-            var values = arrayListOf(0.0,0.0,0.0,0.0,0.0,0.0,0.0)
-
-            // Ricerca asincrona
-            CoroutineScope(Dispatchers.Main).launch {
-                val trackSessionList = withContext(Dispatchers.IO) {
-                    trackSessionDao.getTrackSessionsBetweenDates(selectedWeek.first, selectedWeek.second)
-                }
-                values = weekHelper.convertTrackSessionInDistanceArray(trackSessionList as ArrayList<TrackSession>)
-                println("Valori: " + values)
-                barChart.valueArray = values
-                val bitmap = barChart.getChartImage()
-                views.setImageViewBitmap(R.id.img1,bitmap)
-                // Aggiorno impostazioni
-                setNewViewVisibility(context, views)
-                // Aggiorno widget
-                appWidgetManager.updateAppWidget(appWidgetId, views)
-            }
+            views.setBoolean(R.id.startServiceButton, "setEnabled", false)
+            views.setBoolean(R.id.stopServiceButton, "setEnabled", true)
         }
-
-         */
+        else
+        {
+            views.setBoolean(R.id.startServiceButton, "setEnabled", true)
+            views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
+        }
 
         // Aggiorno impostazioni
         setNewViewVisibility(context, views)
@@ -359,13 +353,6 @@ class NewAppWidget : AppWidgetProvider() {
         return views
     }
 
-    // Restituisce un PendingIntent per l'intent specificato
-    private fun getPendingSelfIntent(context: Context, action: String): PendingIntent{
-        val intent = Intent(context, NewAppWidget::class.java)
-        intent.action = action
-        return PendingIntent.getBroadcast(context,
-            EXTRA_APPWIDGET_ID, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
 
     // Salva il testo del TextView distanza nel file delle preferenze condivise
     private fun saveText(context: Context, appWidgetId: Int, fieldName: String, text: String) {
@@ -386,5 +373,14 @@ class NewAppWidget : AppWidgetProvider() {
         }
         return prefs.getString("$appWidgetId-$fieldName", "") ?: ""
     }
+
+    // Salva lo stato del service, utilizzato poi per salvare lo stato dei bottoni al resize del widget
+    private fun saveServiceRunningFlag(context: Context, flag: Boolean) {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("serviceIsRunningFlag", flag)
+        editor.apply()
+    }
+
 
 }
