@@ -20,6 +20,12 @@
         <item>Calorie</item>
     </string-array>
 
+    <string-array name="list_widget_configure_options">
+        <item>Giorno</item>
+        <item>Settimana</item>
+        <item>Mese</item>
+    </string-array>
+
     <!--Fragment Run -->
     <string name="run_fragment_calories_label">Calorie bruciate</string>
     <string name="run_fragment_time_label">Tempo trascorso</string>
