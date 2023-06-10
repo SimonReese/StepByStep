@@ -11,6 +11,28 @@ import java.util.Calendar
  */
 class WeekHelpers {
 
+    fun getDayRange(timestamp: Long): Pair<Long, Long> {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = timestamp
+        }
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val startOfDay = calendar.timeInMillis
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+
+        val endOfDay = calendar.timeInMillis
+
+        return Pair(startOfDay, endOfDay)
+    }
+
     //  Dato un time in millisecondi fornisce intervallo settimanale in cui esso si trova, ovvero da Lunedì 00:00 a Domenica 23:59 di quella settimana
     fun getWeekRange(timestamp: Long): Pair<Long, Long> {
         val calendar = Calendar.getInstance().apply {
