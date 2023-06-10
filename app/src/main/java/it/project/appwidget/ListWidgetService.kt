@@ -32,9 +32,11 @@ class ListWidgetService : RemoteViewsService() {
     }
 
 
+
     /* Classe interna ListWidgetFactory implementa l'interfaccia RemoteViewsService.RemoteViewsFactory
         e gestisce il caricamento dei dati per la ListView del widget. */
     class ListWidgetFactory(private val context: Context, private val intent: Intent) : RemoteViewsFactory {
+
 
         private val weekHelper = WeekHelpers()
         private val format = "yyyy-dd-MM hh:mm"
@@ -44,7 +46,7 @@ class ListWidgetService : RemoteViewsService() {
         // Id widget di riferimento
         private var appWidgetId: Int = -1
         // Range della settimana di riferimento
-        private lateinit var weekRange: Pair<Long, Long>
+        private lateinit var range: Pair<Long, Long>
 
 
         override fun onCreate() {
@@ -61,20 +63,37 @@ class ListWidgetService : RemoteViewsService() {
         override fun onDataSetChanged() {
             Log.d("ListWidgetFactory", "Chiamato onDatasetChanged()")
             // Recupero sharedPreferences
-            val preferencesFileName = "it.project.appwidget.listwidget." + appWidgetId
+            val preferencesFileName = "it.project.appwidget.listwidget.$appWidgetId"
             val sharedPreferences = context.getSharedPreferences(preferencesFileName, Context.MODE_PRIVATE)
             // Cerco il primo valore di weekRange eventualmente salvato
-            var startRange =  sharedPreferences.getLong("range.first", -1L)
+            val rangeLength =  sharedPreferences.getString("range.length", "Settimana")
+            val startRange = System.currentTimeMillis()
+            println(rangeLength)
 
-            if (startRange == -1L){
-                Log.d("ListWidgetFactory", "Range non trovato. Imposto range settimana corrente.")
-                startRange = System.currentTimeMillis()
+            if (rangeLength.equals("Giorno"))
+            {
+                // Aggiorno valore weekRange
+                println("Invocato getDayRange")
+                range = weekHelper.getDayRange(startRange)
             }
-            // Aggiorno valore weekRange
-            weekRange = weekHelper.getWeekRange(startRange)
+            if (rangeLength.equals("Settimana"))
+            {
+                // Aggiorno valore weekRange
+                println("Invocato getWeekRange")
+                range = weekHelper.getWeekRange(startRange)
+            }
+            if (rangeLength.equals("Mese"))
+            {
+                // Aggiorno valore weekRange
+                println("Invocato getMonthRange")
+                range = weekHelper.getMonthRange(startRange)
+            }
+
+
+
 
             // Leggo entries dal database in base alla settimana selezionata e aggiorno dati
-            trackSessionList = Datasource(context).getSessionList(weekRange.first, weekRange.second)
+            trackSessionList = Datasource(context).getSessionList(range.first, range.second)
         }
 
         // Restituisce il numero di elementi nella ListView del widget

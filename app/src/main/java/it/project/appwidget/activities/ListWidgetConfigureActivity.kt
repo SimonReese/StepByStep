@@ -73,7 +73,7 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
         filterSpinner = findViewById(R.id.ListViewSelection)
 
         // Imposto dati spinner
-        val spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.graph_widget_configure_options, R.layout.graph_widget_spinner_item)
+        val spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.list_widget_configure_options, R.layout.graph_widget_spinner_item)
         spinnerAdapter.setDropDownViewResource(R.layout.graph_widget_spinner_item)
         // Inizializzo item selezionato
         configurationItem = spinnerAdapter.getItem(0) as String
@@ -96,14 +96,19 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
     private fun saveAndUpdate() {
         lifecycleScope.launch {
             // Salvo su sharedprefs
-            val preferences = getSharedPreferences(ListWidget.SHARED_PREF + widgetId, MODE_PRIVATE).edit()
-            preferences.putString(ListWidget.SELECTION_DATA, configurationItem)
+            val preferencesFileName = "it.project.appwidget.listwidget.$widgetId"
+            val preferences = getSharedPreferences(preferencesFileName, MODE_PRIVATE).edit()
+            preferences.putString("range.length", configurationItem)
             preferences.apply()
+            println(configurationItem)
 
+            /*
             // Ottengo istanza AppWidgetMananger
             val appWidgetManager = AppWidgetManager.getInstance(this@ListWidgetConfigureActivity)
             // Aggiorno widget
             ListWidget.updateWidget(this@ListWidgetConfigureActivity, appWidgetManager, widgetId)
+
+             */
         }
     }
 
