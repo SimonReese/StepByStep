@@ -39,7 +39,7 @@ class ListWidgetService : RemoteViewsService() {
 
 
         private val weekHelper = WeekHelpers()
-        private val format = "yyyy-dd-MM hh:mm"
+        private val format = "yyyy-dd-MM HH:mm"
 
         // Lista degli elementi da visualizzare nella ListView del widget
         private lateinit var trackSessionList: ArrayList<TrackSession>
