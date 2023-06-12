@@ -153,31 +153,16 @@
                     android:orientation="horizontal">
 
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/sesso"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:helperText="Inserire M(aschio) oppure F(emmina)"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="1"
-                        android:hint="Sesso"
-                        app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/icons8_sesso_24"
-                        app:boxBackgroundMode="outline"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:textSize="18sp"
-                        android:textStyle="bold">
 
-                        <com.google.android.material.textfield.TextInputEditText
+
+                        <Spinner
+                            android:id="@+id/gender_Spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textCapCharacters"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/poppins_semibold"/>
+                            android:layout_height="50dp"
+
+                            />
 
 
-                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
