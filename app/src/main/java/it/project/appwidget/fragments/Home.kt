@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,7 +14,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.Datasource
-import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import it.project.appwidget.UserPreferencesHelper
 import it.project.appwidget.util.WeekHelpers
