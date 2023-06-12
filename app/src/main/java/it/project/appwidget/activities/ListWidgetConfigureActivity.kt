@@ -18,12 +18,11 @@ import kotlinx.coroutines.launch
 /**
  * Gestire la configurazione di ListView
  * Possibilità di filtrare le sessioni di corsa per:
- * [Giorno] --> vengono visualizzate le sessioni del giorno corrente
- * [Settimana] --> vengon visualizzate le sessioni della settimana corrente
- * [Mese] --> vengono visualizzate le sessioni del mese corrente
- * [Anno] --> vengono visualizzate le sessioni dell'anno corrente
+ * - Giorno --> vengono visualizzate le sessioni del giorno corrente
+ * - Settimana --> vengon visualizzate le sessioni della settimana corrente
+ * - Mese --> vengono visualizzate le sessioni del mese corrente
+ * - Anno --> vengono visualizzate le sessioni dell'anno corrente
  */
-
 class ListWidgetConfigureActivity: AppCompatActivity() {
 
     //Bottone per salvare
@@ -88,8 +87,6 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
             finish()
         }
 
-
-
     }
 
 
@@ -102,13 +99,12 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
             preferences.apply()
             println(configurationItem)
 
-            /*
             // Ottengo istanza AppWidgetMananger
             val appWidgetManager = AppWidgetManager.getInstance(this@ListWidgetConfigureActivity)
-            // Aggiorno widget
-            ListWidget.updateWidget(this@ListWidgetConfigureActivity, appWidgetManager, widgetId)
+            // Notifico ListWidgetFactory delle modifiche
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.widget_listview)
 
-             */
+
         }
     }
 

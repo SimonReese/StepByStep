@@ -65,31 +65,25 @@ class ListWidgetService : RemoteViewsService() {
             val preferencesFileName = "it.project.appwidget.listwidget.$appWidgetId"
             val sharedPreferences = context.getSharedPreferences(preferencesFileName, Context.MODE_PRIVATE)
             // Cerco il primo valore di weekRange eventualmente salvato
-            val rangeLength =  sharedPreferences.getString("range.length", "Settimana")
+            val rangeLength = sharedPreferences.getString("range.length", "Settimana")
             val startRange = System.currentTimeMillis()
             println(rangeLength)
 
-            if (rangeLength.equals("Giorno"))
-            {
+            if (rangeLength.equals("Giorno")) {
                 // Aggiorno valore weekRange
                 println("Invocato getDayRange")
                 range = weekHelper.getDayRange(startRange)
             }
-            if (rangeLength.equals("Settimana"))
-            {
+            else if (rangeLength.equals("Settimana")) {
                 // Aggiorno valore weekRange
                 println("Invocato getWeekRange")
                 range = weekHelper.getWeekRange(startRange)
             }
-            if (rangeLength.equals("Mese"))
-            {
+            else if (rangeLength.equals("Mese")) {
                 // Aggiorno valore weekRange
                 println("Invocato getMonthRange")
                 range = weekHelper.getMonthRange(startRange)
             }
-
-
-
 
             // Leggo entries dal database in base alla settimana selezionata e aggiorno dati
             trackSessionList = Datasource(context).getSessionList(range.first, range.second)
@@ -155,7 +149,6 @@ class ListWidgetService : RemoteViewsService() {
 
             return remoteViews
         }
-
 
         // Restituisce l'ID dell'elemento nella posizione specificata
         override fun getItemId(position: Int): Long {

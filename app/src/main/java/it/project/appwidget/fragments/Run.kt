@@ -206,6 +206,7 @@ class Run : Fragment() {
             explicitIntent.component = ComponentName(requireContext(), NewAppWidget::class.java)
             // Invio intents
             requireActivity().sendBroadcast(implicitIntent)
+            // TODO: Rivedere quante volte vengono inviati intent
             requireActivity().sendBroadcast(explicitIntent)
         }
     }
