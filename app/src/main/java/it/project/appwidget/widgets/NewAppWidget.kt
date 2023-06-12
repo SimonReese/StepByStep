@@ -31,7 +31,7 @@ class NewAppWidget : AppWidgetProvider() {
     private val SHARED_PREFS_NAME = "NewAppWidget"
     private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper // Oggetto helper per le preferenze condivise
     private val weekHelper = WeekHelpers()
-    private val format = "hh:mm"
+    private val format = "HH:mm"
     private val singleDecimal = DecimalFormat("#.#")
     private val doubleDecimal = DecimalFormat("#.##")
     private var serviceIsRunningFlag: Boolean = false

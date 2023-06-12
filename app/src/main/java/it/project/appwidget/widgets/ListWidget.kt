@@ -55,50 +55,42 @@ class ListWidget : AppWidgetProvider() {
     }
 
     //quando il widget viene ridimensionato si entra in questo metodo
-    override fun onAppWidgetOptionsChanged(context: Context?, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
+    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("entro nel metodo ridimensionamento", "Ridimensione")
+        val views = getWidgetSize(context, appWidgetId)
+        appWidgetManager?.updateAppWidget(appWidgetId, views)
 
-        // Quando viene aggiornata la dimensione, mostro/nascondo i TextViews a seconda
-
-        //recupero dimensioni da Bundle
-        val minWidth = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val minHeight = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-
-        val views = RemoteViews(context?.packageName, R.id.list_item_widget)
-
-
-        //stampo i valori di dimensione
-        Log.d("dimensione minWeight", "$minWidth")
-        Log.d("dimensione minHeight", "$minHeight")
-
-        if (minWidth != null && minHeight != null) {
-            if(minWidth <= 255 && minHeight < 188){
-                //mostro solo la scritta con la data
-                //TODO View.GONE non funziona, mostra lo stesso le views
-                Log.d("Widget piccolo - mostro solo data", "Show data")
-                views.setViewVisibility(R.id.item_textview, View.VISIBLE)
-                Log.d("Show text views", "Show tv")
-                views.setViewVisibility(R.id.item_distance, View.GONE)
-                Log.d("don't show distance", "don't show distance")
-                views.setViewVisibility(R.id.item_duration, View.GONE)
-                views.setViewVisibility(R.id.item_avg_speed, View.GONE)
-
-            }
-
-            if(minWidth > 255 && minHeight > 121){
-                //mostro tutto
-                Log.d("Widget larghezza grande - mostro tutto", "Show all")
-                views.setViewVisibility(R.id.item_textview, View.VISIBLE)
-                views.setViewVisibility(R.id.item_distance, View.VISIBLE)
-                views.setViewVisibility(R.id.item_duration, View.VISIBLE)
-                views.setViewVisibility(R.id.item_avg_speed, View.VISIBLE)
-
-            }
+        //devo recuperare i dati
 
 
 
+    }
+
+    private fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
+    {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        //Ottieni oggetto Bundle che contiene informazioni aggiuntive sul widget di ID widgetId
+        //Bundle contiene le informazioni sulle dimensioni del widgett
+        val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
+
+        //Ottiene dimensione attuale widget
+        val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+        val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+
+
+        //Determina view in base a dimensione
+        val views = when {
+            minWidth <= 255 && minHeight < 188 ->
+            {RemoteViews(context.packageName, R.layout.list_view_small_layout)}
+
+            (minWidth > 255 && minHeight > 121) || (minWidth > 190 && minHeight > 190) ->
+            {RemoteViews(context.packageName, R.layout.list_item_widget)}
+
+            else -> {RemoteViews(context.packageName, R.layout.list_view_medium_layout)}
         }
+
+        return views
     }
 
 }
