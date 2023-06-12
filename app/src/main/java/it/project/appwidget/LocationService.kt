@@ -264,6 +264,7 @@ class LocationService : Service() {
         val explicitWidgetIntent = Intent(implicitIntent)
         explicitWidgetIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
         val explicitRunIntent = Intent(implicitIntent)
+        // TODO: Perchè serve esplicito anche per il fragment??
         explicitRunIntent.component = ComponentName(this@LocationService, Run::class.java)
         // Invio intents
         sendBroadcast(implicitIntent)
