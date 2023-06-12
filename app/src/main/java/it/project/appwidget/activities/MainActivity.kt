@@ -12,19 +12,25 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.project.appwidget.R
 
-
+/**
+ * Entry point dell'applicazione.
+ * Il layout di questa activity si compone semplicemente di un [NavHostFragment], per ospitare i
+ * vari fragment che verranno caricati, e di una [BottomNavigationView] che permette la
+ * navigazione tra i fragment.
+ * L'activity inoltre prova a chiedere i permessi all'utente.
+ */
 class MainActivity : AppCompatActivity() {
 
-    // Variabile per gestione dei permessi
+    /** Variabile per controllo permessi */
     private var hasPermissions: Boolean = false
 
-    // Il riferimento alla view che ospiterà i vari fragment
+    /** Riferimento al [NavHostFragment] che ospiterà i vari fragment */
     private lateinit var navigationHostFragment: NavHostFragment
 
-    // Il riferiemento al controllore che si occupa della navigazione in questa activity
+    /** Riferiemento al [NavController] che si occupa della navigazione in questa activity */
     private lateinit var navigationController: NavController
 
-    // Il riferimento alla bottomNavigationBar
+    /** Riferimento alla [BottomNavigationView] che riceve i click della navigazione */
     private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,37 +48,36 @@ class MainActivity : AppCompatActivity() {
 
         /* Aggangio le action della bottom navigation view al controller che si occupa della navigation.
          Poichè gli id del menù sono gli stessi id dei vari fragments nel grafo di navigazione, il controller
-         collega autmaticamente i click sugli elementi della barra (definiti nel menù) al fragment corrispondente*/
+         collega autmaticamente i click sugli elementi della barra (definiti nel menù) al fragment corrispondente */
         bottomNavigationView.setupWithNavController(navigationController)
 
-        // Controllo permessi
-        hasPermissions = true // Devo supporla vera, perchè non è detto che onRequestPermissionsResult() sia stato chiamato
-        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 33){
-            //TODO: analizzare permesso POST_NOTIFICATION (pare che sia introdotto da android 13, cosa fare nel 12)?
-            hasPermissions = false
-            Log.w("ServiceMonitorActivity", "Permesso {POST_NOTIFICATIONS} non concesso")
-        }
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED){
-            hasPermissions = false
-            Log.w("ServiceMonitorActivity", "Permesso {ACCESS_COARSE_LOCATION} non concesso")
-        }
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
-            hasPermissions = false
-            Log.w("ServiceMonitorActivity", "Permesso {ACCESS_FINE_LOCATION} non concesso")
-        }
 
-        if (!hasPermissions){
-            // Chiedo tutti i permessi un una volta sola
-            //TODO testare cosa succede se un permesso viene negato dalle impostazioni (i permessi concessi vengono chiesti nuovamente?)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Manifest.permission.POST_NOTIFICATIONS
-            }
-            Manifest.permission.ACCESS_COARSE_LOCATION
-            Manifest.permission.ACCESS_FINE_LOCATION
+        // Controllo e chiedo permessi
+        // Creo lista di permessi da chiedere
+        val permissionList = arrayListOf<String>()
 
-            Log.d("ServiceMonitorActivity", "Non sono stati concessi tutti i permessi necessari")
-            return
-        }
+        // Notifiche (a partire da Android 13)
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.POST_NOTIFICATIONS)
+
+        // Location approssimata
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        // Location esatta
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        // Location in background
+        if (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+
+        // Chiedo permessi
+        if (permissionList.size > 0){
+            // Mancano alcuni permessi, provo a chiederli
+            hasPermissions = false
+            requestPermissions(permissionList.toTypedArray(), 1)
+        } // Ricevo aggiornamenti in onRequestPermissionResult()
     }
 
 
@@ -81,12 +86,25 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "Chiamato onSaveInstanceState")
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.d("MainActivity", "Chiamato onRequestPermissionsResult")
+        Log.wtf("a", "a")
+        // Controllo ogni permesso
+        for ((index, result) in grantResults.withIndex()){
+            if (result == PackageManager.PERMISSION_DENIED){
+                Log.d("MainActivity", "C'è almeno un permesso negato: ${permissions[index]}")
+                hasPermissions = false
+                return
+            }
+        }
+        // Se non sono stati negati permessi, sono a posto
+        hasPermissions = true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Log.d("MainActivity", "Chiamato onDestroy")
     }
-
-
-
 
 }
