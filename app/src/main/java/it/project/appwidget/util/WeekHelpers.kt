@@ -145,7 +145,7 @@ class WeekHelpers {
         return formatter.format(calendar.time)
     }
 
-    // TODO: Aggiungere documentazione a tutti i metodi
+    //TODO: Aggiungere documentazione a tutti i metodi
     /**
      * Restituisce una lista di stringhe contenente la rappresentazione dei giorni compresi tra i valori
      * from e to nel formato gg/mm
