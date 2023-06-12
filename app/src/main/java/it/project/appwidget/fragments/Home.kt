@@ -5,14 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.SystemClock
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Chronometer
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -23,8 +21,6 @@ import it.project.appwidget.UserPreferencesHelper
 import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 /**
@@ -54,13 +50,13 @@ class Home : Fragment() {
 
 
     // Stato interno
-    /** Distanza giornaliera */
+    /** Distanza giornaliera (in metri) */
     private var distance: Double = 0.0
     /** Passi giornalieri */
     private var steps: Int = 0
     /** Chilocalorie giornaliere */
     private var kcal: Int = 0
-    /** Chilocalorie obiettivo */
+    /** Obiettivo calorico */
     private var kcalTarget: Int = 0
     /** Nome utente */
     private var username: String = "Utente"
@@ -72,25 +68,26 @@ class Home : Fragment() {
     // Classe per ricezione broadcast messages TODO: REIMPLEMENTARE!
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-
+            // TODO: Al termine del work, aggiornare il fragment con i dati aggiunti
+            /*
             val preferencesHelper = UserPreferencesHelper(requireActivity())
 
             Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
             val distloc = intent?.getFloatExtra("distance", 0f)
             val kcalloc = intent?.getFloatExtra("calories", 0f)
 
-            /*
+
             kcal += (kcalloc!!)
             distance = distloc!!
             steps = (distloc!! *3/2).roundToInt()
             distanceTextView.text = (DecimalFormat("#.#").format(distance))
             caloriesTextView.text = DecimalFormat("#.#").format(kcalloc/1000).toString() + "Kcal"
-            */
+
 
             //TODO: progress = SommaCalorieOdierne + CalorieSessioneCorrente
             //progressBar.progress = progress
             println(preferencesHelper.nome)
-
+            */
         }
     }
 
@@ -100,17 +97,12 @@ class Home : Fragment() {
         locationBroadcastReceiver = LocationBroadcastReceiver()
         // Leggo valori stato
         if (savedInstanceState == null){
-            // TODO: salvare stato
+            // TODO: salvare stato?
         }
-
-
         Log.d("HomeFragment", "Chiamato onCreate")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d("HomeFragment", "Chiamato onCreateView")
         // Inflate del layout
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -120,12 +112,7 @@ class Home : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("HomeFragment", "Chiamato onViewCreated")
 
-        distance = 0.0
-        steps = 0
-        kcal = 0
-
-
-        // Riferiementi alle Views
+        // Ottengo riferimenti alle Views
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
         passiTextView = view.findViewById<TextView>(R.id.counterPassi)
         caloriesTextView = view.findViewById<TextView>(R.id.counterCalories)
@@ -135,10 +122,10 @@ class Home : Fragment() {
         user_name = view.findViewById<TextView>(R.id.user_name_tv)
 
 
-        // Imposto valori default textviews
-        distanceTextView.text = DecimalFormat("#.#").format(distance)
+        // Imposto valori default alle Views
+        distanceTextView.text = DecimalFormat("#.##m").format(distance/1000) // TODO: Che unità di misura?
         passiTextView.text = steps.toString()
-        caloriesTextView.text = DecimalFormat("#.#").format(kcal/1000).toString() + "Kcal"
+        caloriesTextView.text = DecimalFormat("#.#Kcal").format(kcal/1000).toString()
         progressBar.max = 100
         progressBar.progress = kcal
         usernameTextView.text = username
@@ -152,31 +139,31 @@ class Home : Fragment() {
             restoreState(savedInstanceState)
         }
 
-        // Creo intent per il LocationService
-        val serviceIntent = Intent(requireActivity(), LocationService::class.java)
-
         // Avvio coroutine impostazione valori
         lifecycleScope.launch {
             // Leggo da sharedpreferences
             val userPreferencesHelper = UserPreferencesHelper(requireActivity())
+            // Recupero nome utente e obiettivo giornaliero calorie
             username = userPreferencesHelper.nome
             kcalTarget = userPreferencesHelper.kcalTarget
 
-            // Leggo da database
-            val weekRange = weekHelper.getWeekRange(System.currentTimeMillis())
-            val from = weekRange.first
-            val to = weekRange.second
+            // Calcolo range tempo giornaliero
+            val dayRange = weekHelper.getDayRange(System.currentTimeMillis())
+            val from = dayRange.first
+            val to = dayRange.second
 
+            // Ottengo lista di tracksessions
             val trackSessionList = Datasource(requireActivity()).getSessionList(from, to)
 
+            // Calcolo la somma delle distanze, delle calorie e dei passi totali
             for (trackSession in trackSessionList){
-                distance += trackSession.distance.roundToInt()
+                distance += trackSession.distance
                 kcal += trackSession.kcal
                 steps += (trackSession.distance * 3/2).roundToInt()
             }
 
 
-            // Modifico valori views
+            // Aggiorno le Views
             distanceTextView.text = distance.toString()
             passiTextView.text = steps.toString()
             caloriesTextView.text = kcal.toString()
@@ -186,9 +173,18 @@ class Home : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // TODO: Al resume aggiornare lo stato
+        // Leggo da sharedpreferences
+        val userPreferencesHelper = UserPreferencesHelper(requireActivity())
+        kcalTarget = userPreferencesHelper.kcalTarget
+        updateProgressBar(kcalTarget)
+    }
+
     override fun onDestroyView() {
         Log.d("HomeFragment", "Chiamato onDestroyView")
-        // Tolgo registrazione receiver
+        // Disabilito receiver
         requireActivity().unregisterReceiver(locationBroadcastReceiver)
         super.onDestroyView()
     }
@@ -203,25 +199,22 @@ class Home : Fragment() {
         super.onDestroy()
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Leggo da sharedpreferences
-        val userPreferencesHelper = UserPreferencesHelper(requireActivity())
-        kcalTarget = userPreferencesHelper.kcalTarget
-        updateProgressBar(kcalTarget)
-    }
-
     // Recupero stato del fragment
     private fun restoreState(inState: Bundle) {
         Log.d("HomeFragment", "Chiamato restoreState")
+        // TODO: Implementare?
     }
 
+    /**
+     * Questo metodo aggiorna il progresso della [progressBar] e la percentuale [percentTextView]
+     * inserita al suo interno in base al rapporto sul nuovo obiettivo calorico [kcalTarget]
+     */
     private fun updateProgressBar(newKcalTarget: Int) {
         kcalTarget = newKcalTarget
         progressBar.max = 100
         val progress = if (kcalTarget == 0) 100.0 else kcal.toDouble() / kcalTarget.toDouble() * 100
         progressBar.progress = progress.roundToInt()
-        percentTextView.text = progress.roundToInt().toString() + "%"
-        println("percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
+        percentTextView.text = "${progress.roundToInt()}%" //TODO: Decidere come sistemare questo warning
+        Log.d("HomeFragment", "Nuova percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
     }
 }
