@@ -32,10 +32,12 @@ class ListWidget : AppWidgetProvider() {
             clickIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
             // Creazione di un PendingIntent che apre una Activity
+            //MUTABILI E IMMUTABILI -> inviati più volte o inviato una volta (per la sicurezza)
             val clickPendingIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_MUTABLE)
 
             // Imposta il PendingIntent come template per gli elementi della ListView del widget
             // https://developer.android.com/reference/android/widget/RemoteViews#setPendingIntentTemplate(int,%20android.app.PendingIntent)
+            //necessario per avere un template predefinito per ogni tipo di ListView
             remoteViews.setPendingIntentTemplate(R.id.widget_listview, clickPendingIntent)
 
             // Richiedo aggiornamento del widget con le nuove views

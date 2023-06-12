@@ -7,7 +7,6 @@ import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.lifecycle.LifecycleCoroutineScope
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelpers
 import kotlinx.coroutines.CoroutineScope
@@ -113,6 +112,7 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         // Ottieni la view per un determinato elemento della ListView del widget
+        //Serve per riempire con gli elementi della trackSession corrispondente
         override fun getViewAt(position: Int): RemoteViews {
             Log.d("ListWidgetFactory", "Chiamato getViewAt()")
 
@@ -142,7 +142,11 @@ class ListWidgetService : RemoteViewsService() {
             remoteViews.setTextViewText(R.id.item_avg_speed, avg_speed_text)
             //remoteViews.setTextViewText(R.id.item_calories, calories_text)
 
+
+            //RIEMPIO I TEMPLATE CON I PARAMETRI CHE MI SERVONO
+            //clickIntent + fillIntent = in una riga
             //Imposta intent sul singolo item della lista
+            //(da clickIntent prende component e da fillIntent prende il parametro specifico)
             val fillInIntent = Intent()
             // Inserisco Id sessione nell'intent
             fillInIntent.putExtra("session:id", trackSession.id)
