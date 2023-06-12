@@ -88,8 +88,6 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
             finish()
         }
 
-
-
     }
 
 
@@ -102,13 +100,12 @@ class ListWidgetConfigureActivity: AppCompatActivity() {
             preferences.apply()
             println(configurationItem)
 
-            /*
             // Ottengo istanza AppWidgetMananger
             val appWidgetManager = AppWidgetManager.getInstance(this@ListWidgetConfigureActivity)
-            // Aggiorno widget
-            ListWidget.updateWidget(this@ListWidgetConfigureActivity, appWidgetManager, widgetId)
+            // Notifico ListWidgetFactory delle modifiche
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.widget_listview)
 
-             */
+
         }
     }
 
