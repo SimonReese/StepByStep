@@ -26,6 +26,12 @@
         <item>Mese</item>
     </string-array>
 
+    <string-array name="gender_configure_options">
+        <item>M</item>
+        <item>F</item>
+    </string-array>
+
+
     <!--Fragment Run -->
     <string name="run_fragment_calories_label">Calorie bruciate</string>
     <string name="run_fragment_time_label">Tempo trascorso</string>
