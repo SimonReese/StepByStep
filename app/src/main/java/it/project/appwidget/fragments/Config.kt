@@ -43,12 +43,18 @@ class Config : Fragment() {
         val eta = preferencesHelper.eta
         val sesso = preferencesHelper.sesso
         val kcalTarget = preferencesHelper.kcalTarget
+        val position_gender = preferencesHelper.spinnerPosition
+
+        //seleziono valore da prelevare
+        when(position_gender){
+            0 -> view.findViewById<TextView>(R.id.valore_sesso).text = "M"
+            1 -> view.findViewById<TextView>(R.id.valore_sesso).text = "F"
+        }
 
         // Imposta i valori nei TextView corrispondenti
         view.findViewById<TextView>(R.id.valore_nome).text = nomeUtente
         view.findViewById<TextView>(R.id.valore_peso).text = peso
         view.findViewById<TextView>(R.id.valore_eta).text = eta
-        view.findViewById<TextView>(R.id.valore_sesso).text = sesso
         view.findViewById<TextView>(R.id.valore_kcal).text = kcalTarget.toString()
     }
 
