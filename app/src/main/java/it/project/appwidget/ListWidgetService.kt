@@ -1,6 +1,5 @@
 package it.project.appwidget
 
-import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
@@ -8,12 +7,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import it.project.appwidget.database.TrackSession
-import it.project.appwidget.util.WeekHelpers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import it.project.appwidget.util.WeekHelper
 import java.text.DecimalFormat
 
 // La classe ListWidgetService è responsabile di fornire una fabbrica di visualizzatori per il widget
@@ -37,7 +31,6 @@ class ListWidgetService : RemoteViewsService() {
     class ListWidgetFactory(private val context: Context, private val intent: Intent) : RemoteViewsFactory {
 
 
-        private val weekHelper = WeekHelpers()
         private val format = "yyyy-dd-MM HH:mm"
 
         // Lista degli elementi da visualizzare nella ListView del widget
@@ -72,17 +65,17 @@ class ListWidgetService : RemoteViewsService() {
             if (rangeLength.equals("Giorno")) {
                 // Aggiorno valore weekRange
                 println("Invocato getDayRange")
-                range = weekHelper.getDayRange(startRange)
+                range = WeekHelper.getDayRange(startRange)
             }
             else if (rangeLength.equals("Settimana")) {
                 // Aggiorno valore weekRange
                 println("Invocato getWeekRange")
-                range = weekHelper.getWeekRange(startRange)
+                range = WeekHelper.getWeekRange(startRange)
             }
             else if (rangeLength.equals("Mese")) {
                 // Aggiorno valore weekRange
                 println("Invocato getMonthRange")
-                range = weekHelper.getMonthRange(startRange)
+                range = WeekHelper.getMonthRange(startRange)
             }
 
             // Leggo entries dal database in base alla settimana selezionata e aggiorno dati
@@ -115,7 +108,7 @@ class ListWidgetService : RemoteViewsService() {
 
 
             //Imposto il valore di tutti gli elementi
-            val data_text = weekHelper.getDate(trackSession.startTime, format)
+            val data_text = WeekHelper.getDate(trackSession.startTime, format)
             val distance_text = DecimalFormat("#.##").format(trackSession.distance/1000) + "km"
 
             val duration = trackSession.duration/1000

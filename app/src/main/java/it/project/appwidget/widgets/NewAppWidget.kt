@@ -13,9 +13,8 @@ import android.widget.RemoteViews
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
-import it.project.appwidget.util.WeekHelpers
+import it.project.appwidget.util.WeekHelper
 import java.text.DecimalFormat
-import kotlin.properties.Delegates
 
 
 class NewAppWidget : AppWidgetProvider() {
@@ -30,7 +29,6 @@ class NewAppWidget : AppWidgetProvider() {
 
     private val SHARED_PREFS_NAME = "NewAppWidget"
     private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper // Oggetto helper per le preferenze condivise
-    private val weekHelper = WeekHelpers()
     private val format = "HH:mm"
     private val singleDecimal = DecimalFormat("#.#")
     private val doubleDecimal = DecimalFormat("#.##")
@@ -256,7 +254,7 @@ class NewAppWidget : AppWidgetProvider() {
             }
             val updatedSumDistance = doubleDecimal.format(sumDistance/1000).toString() + "km"
             val updatedSpeed = doubleDecimal.format(speed).toString()
-            val sessionDate = weekHelper.getDate(startTime, format)
+            val sessionDate = WeekHelper.getDate(startTime, format)
             val updateCalories = singleDecimal.format(calories).toString()
 
 

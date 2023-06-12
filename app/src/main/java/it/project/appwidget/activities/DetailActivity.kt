@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.R
 import it.project.appwidget.database.AppDatabase
-import it.project.appwidget.util.WeekHelpers
+import it.project.appwidget.util.WeekHelper
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
@@ -17,7 +17,6 @@ class DetailActivity : AppCompatActivity() {
 
     // Tag for Log messages
     private val mTAG = this::class.simpleName
-    private val weekHelper = WeekHelpers()
 
     companion object {
         const val ARG_SESSION_ID = "session:id"
@@ -89,8 +88,8 @@ class DetailActivity : AppCompatActivity() {
             val seconds = duration % 60
 
             //imposto il testo per tutte le views in base ai dati che ho ricevuto dall'intent
-            tv_startData.text = weekHelper.getDate(trackSession.startTime, format)
-            tv_endData.text = weekHelper.getDate(trackSession.endTime, format)
+            tv_startData.text = WeekHelper.getDate(trackSession.startTime, format)
+            tv_endData.text = WeekHelper.getDate(trackSession.endTime, format)
             tv_typeData.text = trackSession.activityType
             //aggiunta modifica per la distanza in km
             tv_distanceData.text = noDecimal.format(trackSession.distance/1000) + "km"
