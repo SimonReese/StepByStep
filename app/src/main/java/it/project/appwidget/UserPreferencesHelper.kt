@@ -19,6 +19,7 @@ class UserPreferencesHelper(context: Context) {
         private const val KEY_ETA = "eta"
         private const val KEY_SESSO = "sesso"
         private const val KEY_KCAL_TARGET = "kcal"
+        private const val POSITION_SPINNER = "spinner_position"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
@@ -57,4 +58,11 @@ class UserPreferencesHelper(context: Context) {
     var kcalTarget: Int
         get() = sharedPreferences.getInt(KEY_KCAL_TARGET, 100)
         set(value) = sharedPreferences.edit().putInt(KEY_KCAL_TARGET, value).apply()
+
+    /**
+     * Posizione spinner
+     */
+    var spinnerPosition: Int
+        get() = sharedPreferences.getInt(POSITION_SPINNER, 0)
+        set(value) = sharedPreferences.edit().putInt(POSITION_SPINNER, value).apply()
 }
