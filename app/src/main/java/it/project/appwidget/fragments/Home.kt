@@ -27,30 +27,49 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
+/**
+ * Fragment della schermata Home.
+ * Nel file [R.navigation.main_navigation_graph] è specificato come fragment primario.
+ *
+ * Si occupa di mostrare una schermata di benvenuto all'utente, e mostra dei pannelli
+ * con i progressi giornalieri di passi, distanza e calorie.
+ */
 class Home : Fragment() {
 
     // Views
-    private lateinit var distanceTextView: TextView
-    private lateinit var passiTextView: TextView
-    private lateinit var caloriesTextView: TextView
-    private lateinit var progressBar: ProgressBar
+    /** [TextView] relativa al nome utente (superiore) */
     private lateinit var usernameTextView: TextView
+    /** [TextView] relativa ai passi giornalieri */
+    private lateinit var passiTextView: TextView
+    /** [TextView] relativa alla distanza giornaliera */
+    private lateinit var distanceTextView: TextView
+    /** [TextView] relativa alle calorie giornaliere */
+    private lateinit var caloriesTextView: TextView
+    /** [ProgressBar] relativa alle calorie giornaliere rispetto a quelle di obiettivo */
+    private lateinit var progressBar: ProgressBar
+    /** [TextView] relativa alla percentuale di calorie giornaliere bruciate */
     private lateinit var percentTextView: TextView
+    /** [TextView] relativa al nome utente (inferiore) */
     private lateinit var user_name: TextView
 
 
-    // Stato
+    // Stato interno
+    /** Distanza giornaliera */
     private var distance: Double = 0.0
+    /** Passi giornalieri */
     private var steps: Int = 0
+    /** Chilocalorie giornaliere */
     private var kcal: Int = 0
+    /** Chilocalorie obiettivo */
     private var kcalTarget: Int = 0
+    /** Nome utente */
     private var username: String = "Utente"
-
+    // TODO: rendere statico
     private val weekHelper = WeekHelpers()
 
-
+    /** [BroadcastReceiver] che riceve aggiornamenti alla fine delle registrazioni delle sessioni */
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
-    // Classe per ricezione broadcast messages
+    // Classe per ricezione broadcast messages TODO: REIMPLEMENTARE!
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
 
