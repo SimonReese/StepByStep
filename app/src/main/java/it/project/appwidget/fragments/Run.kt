@@ -191,6 +191,7 @@ class Run : Fragment() {
         }
 
         stopServiceButton.setOnClickListener {
+            // Ferma il servizio
             requireActivity().stopService(serviceIntent)
             sessionChronometer.stop()
             runningChronometer = false
@@ -198,16 +199,6 @@ class Run : Fragment() {
             // Disattiva il bottone stopServiceButton e attiva il bottone startServiceButton
             stopServiceButton.isEnabled = false
             startServiceButton.isEnabled = true
-
-            // Creo intent implicito generico
-            val implicitIntent = Intent("stop-service")
-            // Copio intent generico e creo intent esplicito
-            val explicitIntent = Intent(implicitIntent)
-            explicitIntent.component = ComponentName(requireContext(), NewAppWidget::class.java)
-            // Invio intents
-            requireActivity().sendBroadcast(implicitIntent)
-            // TODO: Rivedere quante volte vengono inviati intent
-            requireActivity().sendBroadcast(explicitIntent)
         }
     }
 
