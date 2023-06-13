@@ -161,7 +161,7 @@ class Run : Fragment() {
         sessionChronometer = view.findViewById(R.id.sessionChronometer)
         startServiceButton = view.findViewById(R.id.startServiceButton)
         stopServiceButton = view.findViewById(R.id.stopServiceButton)
-        // Views di DEBUG TODO: nascondere
+        // Views di DEBUG
         accuracy_debug_textview = view.findViewById(R.id.debug_accuracy_textview)
         speed_debug_textview = view.findViewById(R.id.debug_speed_textview)
         distance_debug_textview = view.findViewById(R.id.debug_distance_textview)

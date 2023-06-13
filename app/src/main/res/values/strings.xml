@@ -37,7 +37,7 @@
     <string name="run_fragment_time_label">Tempo trascorso</string>
     <string name="run_fragment_distance_label">Distanza percorsa (km)</string>
     <string name="run_fragment_rate_default_value">0:00</string>
-    <string name="run_fragment_rate_label">Tempo al km</string>
+    <string name="run_fragment_rate_label">Minuti a km</string>
     <string name="run_fragment_kcal_default_value">000</string>
     <string name="run_fragment_start_button_label">Avvia corsa</string>
     <string name="run_fragment_stop_button_label">Termina corsa</string>
