@@ -33,7 +33,8 @@ class ListWidgetService : RemoteViewsService() {
     class ListWidgetFactory(private val context: Context, private val intent: Intent) : RemoteViewsFactory {
 
 
-        private val format = "yyyy-dd-MM HH:mm"
+        private val dateFormat = "dd-MM-yyyy"
+        private val hourFormat = "HH:mm"
 
         // Lista degli elementi da visualizzare nella ListView del widget
         private lateinit var trackSessionList: ArrayList<TrackSession>
@@ -110,24 +111,23 @@ class ListWidgetService : RemoteViewsService() {
 
 
             //Imposto il valore di tutti gli elementi
-            val data_text = WeekHelper.getDate(trackSession.startTime, format)
+            val data_text = WeekHelper.getDate(trackSession.startTime, dateFormat)
+            val time_text = WeekHelper.getDate(trackSession.startTime, hourFormat)
+
             val distance_text = DecimalFormat("#.##").format(trackSession.distance/1000) + "km"
 
             val duration = trackSession.duration/1000
             val hours = duration / 3600
             val minutes = (duration % 3600) / 60
-            val seconds = duration % 60
-            val duration_text = "" + hours + "h " + minutes + "min " + seconds + "sec"
+            val duration_text = "${hours}:${minutes}h"
 
-            val avg_speed_text = DecimalFormat("#.##").format(trackSession.averageSpeed) + "km/h"
-            //val calories_text = DecimalFormat("#").format(trackSession.kcal) + "Kcal"
 
 
             // Imposta il testo degli elementi correnti nella TextView all'interno dell'elemento della ListView
-            remoteViews.setTextViewText(R.id.item_textview, data_text)
+            remoteViews.setTextViewText(R.id.item_date, data_text)
+            remoteViews.setTextViewText(R.id.item_time, time_text)
             remoteViews.setTextViewText(R.id.item_distance, distance_text)
             remoteViews.setTextViewText(R.id.item_duration, duration_text)
-            remoteViews.setTextViewText(R.id.item_avg_speed, avg_speed_text)
 
 
             //RIEMPIO I TEMPLATE CON I PARAMETRI CHE MI SERVONO
@@ -158,20 +158,30 @@ class ListWidgetService : RemoteViewsService() {
              */
             Log.d("ListWidgetFactory", "Dimensione è $minWidth")
             when (minWidth) {
-                in 0..200 -> {
+                in 0..150 -> {
+                    remoteViews.setViewVisibility(R.id.item_time, View.GONE)
                     remoteViews.setViewVisibility(R.id.item_distance, View.GONE)
                     remoteViews.setViewVisibility(R.id.item_duration, View.GONE)
-                    remoteViews.setViewVisibility(R.id.item_avg_speed, View.GONE)
+                }
+                in 150..200 -> {
+                    remoteViews.setViewVisibility(R.id.item_time, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.item_distance, View.GONE)
+                    remoteViews.setViewVisibility(R.id.item_duration, View.GONE)
                 }
                 in 200 .. 250 -> {
+                    remoteViews.setViewVisibility(R.id.item_time, View.GONE)
                     remoteViews.setViewVisibility(R.id.item_distance, View.VISIBLE)
                     remoteViews.setViewVisibility(R.id.item_duration, View.GONE)
-                    remoteViews.setViewVisibility(R.id.item_avg_speed, View.GONE)
                 }
                 in 250..300 -> {
+                    remoteViews.setViewVisibility(R.id.item_time, View.GONE)
                     remoteViews.setViewVisibility(R.id.item_distance, View.VISIBLE)
                     remoteViews.setViewVisibility(R.id.item_duration, View.VISIBLE)
-                    remoteViews.setViewVisibility(R.id.item_avg_speed, View.GONE)
+                }
+                in 300..1000 -> {
+                    remoteViews.setViewVisibility(R.id.item_time, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.item_distance, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.item_duration, View.VISIBLE)
                 }
             }
 
