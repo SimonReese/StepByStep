@@ -152,6 +152,11 @@ class Home : Fragment() {
             // Ottengo lista di tracksessions
             val trackSessionList = Datasource(requireActivity()).getSessionList(from, to)
 
+            //Imposto dati a zero
+            distance = 0.0
+            kcal = 0
+            steps = 0
+
             // Calcolo la somma delle distanze, delle calorie e dei passi totali
             for (trackSession in trackSessionList){
                 distance += trackSession.distance
@@ -161,7 +166,7 @@ class Home : Fragment() {
 
 
             // Aggiorno le Views
-            distanceTextView.text = distance.toString()
+            distanceTextView.text = distance.toInt().toString()
             passiTextView.text = steps.toString()
             caloriesTextView.text = kcal.toString()
             updateProgressBar(kcalTarget)
