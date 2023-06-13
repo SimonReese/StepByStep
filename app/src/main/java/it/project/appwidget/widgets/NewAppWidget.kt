@@ -20,11 +20,7 @@ import java.text.DecimalFormat
 class NewAppWidget : AppWidgetProvider() {
 
     companion object {
-        const val ACTION_BTN_SETTINGS = "ACTION_BTN_SETTINGS" // Azione per il pulsante delle impostazioni
         const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE" // Azione per il pulsante di salvataggio
-        const val ACTION_BTN_START = "ACTION_BTN_START" // Azione per il pulsante di salvataggio
-        const val ACTION_BTN_STOP = "ACTION_BTN_STOP" // Azione per il pulsante di salvataggio
-        const val EXTRA_APPWIDGET_ID = 1
     }
 
     private val SHARED_PREFS_NAME = "NewAppWidget"
@@ -72,7 +68,7 @@ class NewAppWidget : AppWidgetProvider() {
 
             // Creo intent per il service che passa come azione "STOP-SERVICE"
             val stopServiceIntent = Intent(context, LocationService::class.java)
-            stopServiceIntent.action = "STOP-LOCATION-SERVICE";
+            stopServiceIntent.action = "STOP-LOCATION-SERVICE"
             //StopServiceButton
             val stopPendingIntent = PendingIntent.getForegroundService(context, appWidgetId,
                 stopServiceIntent,
@@ -204,7 +200,7 @@ class NewAppWidget : AppWidgetProvider() {
 
         // Creo intent per il service che passa come azione "STOP-SERVICE"
         val stopServiceIntent = Intent(context, LocationService::class.java)
-        stopServiceIntent.action = "STOP-LOCATION-SERVICE";
+        stopServiceIntent.action = "STOP-LOCATION-SERVICE"
         //StopServiceButton
         val stopPendingIntent = PendingIntent.getForegroundService(context, appWidgetId,
             stopServiceIntent,

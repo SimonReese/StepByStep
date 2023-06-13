@@ -126,7 +126,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
             //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
             val right = abs_center + space/4
 
-            var scale: Double = 0.0
+            var scale = 0.0
             if(maxValue != 0f) {
                 //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
                 scale = value / maxValue
