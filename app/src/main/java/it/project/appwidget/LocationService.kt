@@ -20,7 +20,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import it.project.appwidget.activities.MainActivity
-import it.project.appwidget.fragments.Run
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.widgets.NewAppWidget
 
@@ -143,7 +142,6 @@ class LocationService : Service() {
             if(System.currentTimeMillis() - locationList.last().time >= 600000) {
                 // Resetto i valori per creare una nuova sessione
                 Log.d("CustomLocationListener", "Sessione resettata")
-                //TODO: Mandare broadcast a Run per fermare timer e disattivare bottone?
                 //Oppure togliamo tutto questo codice?
                 stopSelf()
             }
@@ -221,7 +219,6 @@ class LocationService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        // TODO: restituire null se bind non supportata.
         // TODO("Return the communication channel to the service.")
         Log.d("LocationService", "Servizio collegato (onBind)")
         return null
@@ -263,13 +260,9 @@ class LocationService : Service() {
         // Copio intent generico e creo intent esplicito
         val explicitWidgetIntent = Intent(implicitIntent)
         explicitWidgetIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
-        val explicitRunIntent = Intent(implicitIntent)
-        // TODO: Perchè serve esplicito anche per il fragment??
-        explicitRunIntent.component = ComponentName(this@LocationService, Run::class.java)
         // Invio intents
         sendBroadcast(implicitIntent)
         sendBroadcast(explicitWidgetIntent)
-        sendBroadcast(explicitRunIntent)
 
         Log.d("LocationService", "Servizio distrutto (onDestroy)")
         super.onDestroy()
