@@ -3,6 +3,7 @@ package it.project.appwidget.widgets
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -50,8 +51,16 @@ class ListWidget : AppWidgetProvider() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d("ListWidget", "Chiamato onReceive")
         super.onReceive(context, intent)
-        Log.d("ListWidget", "Chiamato onReceive con intent:  $intent" )
+        if(intent.action == "database-updated"){
+            Log.d("ListWidget", "Ricevuto intent database-updated")
+            // Ottengo istanza AppWidgetMananger
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, ListWidget::class.java))
+            // Notifico aggiornamento dati di tutti i widget di questo provider
+            onUpdate(context, appWidgetManager, appWidgetIds)
+        }
     }
 
     // Questo metodo viene chiamato quando il widget viene ridimensionato
@@ -70,13 +79,6 @@ class ListWidget : AppWidgetProvider() {
         basterebbe semplicemente che venisse chiamato getViewAt(), se Android lo permettesse ...
          */
         appWidgetManager?.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_listview)
-        //val views = getWidgetSize(context, appWidgetId)
-        //appWidgetManager?.updateAppWidget(appWidgetId, views)
-
-        //devo recuperare i dati
-
-
-
     }
 
 }
