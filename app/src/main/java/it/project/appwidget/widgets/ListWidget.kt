@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.RemoteViews
 import it.project.appwidget.R
 import it.project.appwidget.ListWidgetService
@@ -79,34 +78,6 @@ class ListWidget : AppWidgetProvider() {
 
 
     }
-
-    /**
-    private fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
-    {
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        //Ottieni oggetto Bundle che contiene informazioni aggiuntive sul widget di ID widgetId
-        //Bundle contiene le informazioni sulle dimensioni del widgett
-        val options: Bundle = appWidgetManager.getAppWidgetOptions(widgetId)
-
-        //Ottiene dimensione attuale widget
-        val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-
-
-        //Determina view in base a dimensione
-        val views = when {
-            minWidth <= 255 && minHeight < 188 ->
-            {RemoteViews(context.packageName, R.layout.list_view_small_layout)}
-
-            (minWidth > 255 && minHeight > 121) || (minWidth > 190 && minHeight > 190) ->
-            {RemoteViews(context.packageName, R.layout.list_item_widget)}
-
-            else -> {RemoteViews(context.packageName, R.layout.list_view_medium_layout)}
-        }
-
-        return views
-    }
-    */
 
 }
 

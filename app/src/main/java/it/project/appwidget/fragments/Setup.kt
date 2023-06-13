@@ -11,7 +11,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import it.project.appwidget.R

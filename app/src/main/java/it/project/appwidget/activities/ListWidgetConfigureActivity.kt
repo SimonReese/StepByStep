@@ -2,7 +2,6 @@ package it.project.appwidget.activities
 
 import android.appwidget.AppWidgetManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -11,8 +10,6 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.R
-import it.project.appwidget.widgets.GraphWidget
-import it.project.appwidget.widgets.ListWidget
 import kotlinx.coroutines.launch
 
 /**
