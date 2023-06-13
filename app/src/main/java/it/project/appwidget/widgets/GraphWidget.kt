@@ -14,7 +14,7 @@ import android.widget.RemoteViews
 import it.project.appwidget.BarChart
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
-import it.project.appwidget.util.WeekHelpers
+import it.project.appwidget.util.WeekHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,16 +53,16 @@ class GraphWidget : AppWidgetProvider() {
                 val views = RemoteViews(context.packageName, R.layout.graph_widget)
 
                 // Ottengo dati dal database
-                val weekRange = WeekHelpers().getWeekRange(System.currentTimeMillis())
+                val weekRange = WeekHelper.getWeekRange(System.currentTimeMillis())
                 val trackSessions = Datasource(context).getSessionList(weekRange.first,weekRange.second)
 
                 // Ottengo valori e etichette dai dati
                 val values: ArrayList<Double> = when (settings){
-                    "Calorie" -> WeekHelpers().convertTrackSessionInCaloriesArray(trackSessions).map{ it.toDouble()} as ArrayList<Double>
-                    "Durata" -> WeekHelpers().convertTrackSessionInDurationArray(trackSessions)
-                    else -> WeekHelpers().convertTrackSessionInDistanceArray(trackSessions)
+                    "Calorie" -> WeekHelper.convertTrackSessionInCaloriesArray(trackSessions).map{ it.toDouble()} as ArrayList<Double>
+                    "Durata" -> WeekHelper.convertTrackSessionInDurationArray(trackSessions)
+                    else -> WeekHelper.convertTrackSessionInDistanceArray(trackSessions)
                 }
-                val labels: ArrayList<String> = WeekHelpers().getDateList(weekRange.first,weekRange.second)
+                val labels: ArrayList<String> = WeekHelper.getDateList(weekRange.first,weekRange.second)
 
                 // Costruisco grafico
                 val chart = BarChart(context, null)

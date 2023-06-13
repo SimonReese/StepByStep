@@ -3,13 +3,12 @@ package it.project.appwidget
 import android.content.Context
 import it.project.appwidget.database.AppDatabase
 import it.project.appwidget.database.TrackSession
-import it.project.appwidget.util.WeekHelpers
+import it.project.appwidget.util.WeekHelper
 import java.util.ArrayList
 
 //Crea e restituisce l'array contentente le varie sessioni visualizzabili dall'utente
 class Datasource(private val context: Context) {
 
-    private val weekHelper = WeekHelpers()
 
 
     // Crea e ritorna array contenente il risultato della query getSessionIdsAndStartTimes
@@ -21,9 +20,9 @@ class Datasource(private val context: Context) {
         for (sessionIdStartTime in sessionIdStartTimes) {
             val sessionId: Int = sessionIdStartTime.id
             val startTime: Long = sessionIdStartTime.startTime
-            val dayStr = weekHelper.getStringDayOfWeek(startTime)
+            val dayStr = WeekHelper.getStringDayOfWeek(startTime)
             val format = "HH:mm"
-            val date = weekHelper.getDate(startTime, format)
+            val date = WeekHelper.getDate(startTime, format)
 
             val pair = Pair(sessionId, "$dayStr: $date")
             pairArray.add(pair)

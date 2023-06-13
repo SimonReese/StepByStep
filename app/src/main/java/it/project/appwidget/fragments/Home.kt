@@ -16,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.UserPreferencesHelper
-import it.project.appwidget.util.WeekHelpers
+import it.project.appwidget.util.WeekHelper
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -58,8 +58,7 @@ class Home : Fragment() {
     private var kcalTarget: Int = 0
     /** Nome utente */
     private var username: String = "Utente"
-    // TODO: rendere statico
-    private val weekHelper = WeekHelpers()
+
 
     /** [BroadcastReceiver] che riceve aggiornamenti alla fine delle registrazioni delle sessioni */
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
@@ -146,7 +145,7 @@ class Home : Fragment() {
             kcalTarget = userPreferencesHelper.kcalTarget
 
             // Calcolo range tempo giornaliero
-            val dayRange = weekHelper.getDayRange(System.currentTimeMillis())
+            val dayRange = WeekHelper.getDayRange(System.currentTimeMillis())
             val from = dayRange.first
             val to = dayRange.second
 

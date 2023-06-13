@@ -16,7 +16,7 @@ import it.project.appwidget.BarChart
 import it.project.appwidget.Datasource
 import it.project.appwidget.R
 import it.project.appwidget.activities.DetailActivity
-import it.project.appwidget.util.WeekHelpers
+import it.project.appwidget.util.WeekHelper
 import it.project.appwidget.database.TrackSession
 import it.project.appwidget.database.TrackSessionAdapter
 import kotlinx.coroutines.launch
@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 class Stats : Fragment() {
 
     // Variabili di istanza
-    private val weekHelper = WeekHelpers()
     val format = "yyyy-dd-MM"
 
     // Views del fragment
@@ -46,7 +45,7 @@ class Stats : Fragment() {
             restoreState(savedInstanceState)
         } else {
             // Inizializzo settimana corrente
-            selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
+            selectedWeek = WeekHelper.getWeekRange(System.currentTimeMillis())
         }
         Log.d("StatsFragment", "Chiamato onCreate")
     }
@@ -75,7 +74,7 @@ class Stats : Fragment() {
 
 
         // Mostro etichetta settimana corrente
-        currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
+        currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
 
         // Carico dati in background
         loadRecyclerView()
@@ -85,28 +84,28 @@ class Stats : Fragment() {
 
         //Bottone settimana corrente
         generateButton.setOnClickListener { generateButton: View ->
-            selectedWeek = weekHelper.getWeekRange(System.currentTimeMillis())
+            selectedWeek = WeekHelper.getWeekRange(System.currentTimeMillis())
             // Mostro etichetta settimana corrente
-            currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
+            currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
         }
 
         //Bottone past week
         pastWeekButton.setOnClickListener { pastWeekButton: View ->
-            selectedWeek = weekHelper.getPreviousWeekRange(selectedWeek)
+            selectedWeek = WeekHelper.getPreviousWeekRange(selectedWeek)
             // Mostro etichetta settimana precedente
-            currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
+            currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
         }
 
         //Bottone next week
         nextWeekButton.setOnClickListener { nextWeekButton: View ->
-            selectedWeek = weekHelper.getNextWeekRange(selectedWeek)
+            selectedWeek = WeekHelper.getNextWeekRange(selectedWeek)
             // Mostro etichetta settimana successiva
             //currentDate.text = "${weekHelper.getDate(selectedWeek.first, format)} - ${weekHelper.getDate(selectedWeek.second, format)}"
-            currentDate.text = String.format("%s - %s", weekHelper.getDate(selectedWeek.first, format), weekHelper.getDate(selectedWeek.second, format))
+            currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
         }
@@ -138,8 +137,8 @@ class Stats : Fragment() {
         // Lancio coroutine per caricare dati e etichette nel grafico
         lifecycleScope.launch {
             val trackSessionList = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
-            val values = weekHelper.convertTrackSessionInDistanceArray(trackSessionList)
-            barChart.days = weekHelper.getDateList(selectedWeek.first, selectedWeek.second)
+            val values = WeekHelper.convertTrackSessionInDistanceArray(trackSessionList)
+            barChart.days = WeekHelper.getDateList(selectedWeek.first, selectedWeek.second)
             barChart.valueArray = values
         }
     }
