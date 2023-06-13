@@ -68,17 +68,12 @@ class MainActivity : AppCompatActivity() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
             permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION)
 
-        // Il permesso ACCESS_BACKGROUND_LOCATION deve essere richiesto separatamente. Viene richiesto nel RunFragment.
-
-        Log.d("MainActivity", "Chiedo permessi: ${permissionList.toString()}")
         // Chiedo permessi
         if (permissionList.size > 0){
             // Mancano alcuni permessi, provo a chiederli
-            Log.d("MainActivity", "Chiedo permessi")
             hasPermissions = false
             requestPermissions(permissionList.toTypedArray(), 1)
         } // Ricevo aggiornamenti in onRequestPermissionResult()
-
     }
 
 
