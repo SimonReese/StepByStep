@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 class Stats : Fragment() {
 
     /* Specifica il formato data */
-    val format = "yyyy-dd-MM"   // TODO: cambiare formato in dd-MM-yyyy
+    val format = "dd-MM-yyyy"
 
     // Views
     /** Grafico [BarChart] relativo alla settimana selezionata */
