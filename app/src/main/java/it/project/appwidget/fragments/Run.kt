@@ -184,8 +184,7 @@ class Run : Fragment() {
         // Controllo i permessi. La main activity li ha richiesti all'utente
         if((Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PermissionChecker.PERMISSION_DENIED)
             || checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_DENIED
-            || checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_DENIED
-            || checkSelfPermission(requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PermissionChecker.PERMISSION_DENIED){
+            || checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_DENIED){
 
             // Se uno di questi permessi manca, non è possibile registrare la posizione in modo consistente
             hasPermissions = false
