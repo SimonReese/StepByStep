@@ -3,7 +3,9 @@ package it.project.appwidget
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import it.project.appwidget.database.TrackSession
@@ -125,7 +127,7 @@ class ListWidgetService : RemoteViewsService() {
             // Imposta il testo degli elementi correnti nella TextView all'interno dell'elemento della ListView
             remoteViews.setTextViewText(R.id.item_textview, data_text)
             remoteViews.setTextViewText(R.id.item_distance, distance_text)
-            //remoteViews.setTextViewText(R.id.item_duration, duration_text)
+            remoteViews.setTextViewText(R.id.item_duration, duration_text)
             remoteViews.setTextViewText(R.id.item_avg_speed, avg_speed_text)
             //remoteViews.setTextViewText(R.id.item_calories, calories_text)
 
@@ -139,6 +141,35 @@ class ListWidgetService : RemoteViewsService() {
             fillInIntent.putExtra("session:id", trackSession.id)
             //https://developer.android.com/reference/android/widget/RemoteViews#setOnClickFillInIntent(int,%20android.content.Intent)
             remoteViews.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent)
+
+            /*
+            Impostare la visibilità delle varie TextViews nella ListView è possibile solo tramite questo adapter.
+            Pertanto dobbiamo recuperare qui le dimensioni del Widget e mostrare in modo ottimale solo quello che ci stà.
+             */
+
+            // Ottengo la larghezza minima del widget e imposto visibilità elementi
+            val options: Bundle = AppWidgetManager.getInstance(context).getAppWidgetOptions(appWidgetId)
+            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+
+            // Nascondo elementi che potrebbero non starci
+            Log.d("ListWidgetFactory", "Dimensione è $minWidth")
+            when (minWidth) {
+                in 0..200 -> {
+                    remoteViews.setViewVisibility(R.id.item_distance, View.GONE)
+                    remoteViews.setViewVisibility(R.id.item_duration, View.GONE)
+                    remoteViews.setViewVisibility(R.id.item_avg_speed, View.GONE)
+                }
+                in 200 .. 250 -> {
+                    remoteViews.setViewVisibility(R.id.item_distance, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.item_duration, View.GONE)
+                    remoteViews.setViewVisibility(R.id.item_avg_speed, View.GONE)
+                }
+                in 250..300 -> {
+                    remoteViews.setViewVisibility(R.id.item_distance, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.item_duration, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.item_avg_speed, View.GONE)
+                }
+            }
 
             return remoteViews
         }

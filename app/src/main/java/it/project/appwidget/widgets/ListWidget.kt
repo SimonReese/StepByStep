@@ -17,11 +17,12 @@ import it.project.appwidget.activities.DetailActivity
 class ListWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        Log.d("ListWidget", "Chiamato onUpdate")
 
         // Per ogni widget associato a questo provider
         for (appWidgetId in appWidgetIds) {
+            // Creo il layout di RemoteViews
             val remoteViews = RemoteViews(context.packageName, R.layout.list_widget)
-
             // Creazione dell'intent per avvio servizio di gestione caricamento dei dati nella ListView
             val remoteAdaperIntent = Intent(context, ListWidgetService::class.java)
             remoteAdaperIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId) // Invio id widget al service
@@ -54,12 +55,24 @@ class ListWidget : AppWidgetProvider() {
         Log.d("ListWidget", "Chiamato onReceive con intent:  $intent" )
     }
 
-    //quando il widget viene ridimensionato si entra in questo metodo
+    // Questo metodo viene chiamato quando il widget viene ridimensionato
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        Log.d("entro nel metodo ridimensionamento", "Ridimensione")
-        val views = getWidgetSize(context, appWidgetId)
-        appWidgetManager?.updateAppWidget(appWidgetId, views)
+        Log.d("ListWidget", "Chiamato onAppWidgetOptionsChanged")
+
+        /* Quando il widget viene ridimensionato, alcune RemoteViews all'interno della
+        ListView remota dovrebbero mostrarsi o nascondersi. Non è possibile mostrare o nascondere
+        le TextView della ListView direttamente da questa classe, perchè è ListWidgetFactory che si
+        occupa di crearle e mostrarle. Bisogna quindi forzare ListWidgetFactory a ricostruire
+        tutte le righe e per ogni riga nascondere o mostrare le TextView. Tecnicamente quindi basterebbe
+        dire a ListWidgetFactory di ri-generare le Views in ogni riga, ma questo non è direttamente possibile.
+        Quindi chiamiamo notifyAppWidgetViewDataChanged() che a sua volta farà eseguire i metodi
+        onDataSetChanged() e getViewAt() di ListWidgetFactory, quindi i dati verranno ricaricati, anche se in realtà
+        basterebbe semplicemente che venisse chiamato getViewAt(), se Android lo permettesse ...
+         */
+        appWidgetManager?.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_listview)
+        //val views = getWidgetSize(context, appWidgetId)
+        //appWidgetManager?.updateAppWidget(appWidgetId, views)
 
         //devo recuperare i dati
 

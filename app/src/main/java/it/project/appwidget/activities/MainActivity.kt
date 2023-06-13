@@ -68,10 +68,6 @@ class MainActivity : AppCompatActivity() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
             permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION)
 
-        // Location in background
-        if (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_DENIED)
-            permissionList.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-
         // Chiedo permessi
         if (permissionList.size > 0){
             // Mancano alcuni permessi, provo a chiederli
@@ -89,7 +85,6 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         Log.d("MainActivity", "Chiamato onRequestPermissionsResult")
-        Log.wtf("a", "a")
         // Controllo ogni permesso
         for ((index, result) in grantResults.withIndex()){
             if (result == PackageManager.PERMISSION_DENIED){
