@@ -75,7 +75,6 @@ class DetailActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.v(mTAG, "onStop() called")
-        finish()
     }
 
     override fun onPause() {
