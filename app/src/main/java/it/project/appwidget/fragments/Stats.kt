@@ -37,7 +37,7 @@ class Stats : Fragment() {
     /** Grafico [BarChart] relativo alla settimana selezionata */
     private lateinit var barChart: BarChart
     /** [Button] per selezionare la settimana corrente*/
-    private lateinit var currentWeekButton: Button //TODO: cambiare nome
+    private lateinit var currentWeekButton: Button
     /** [ImageButton] per selezionare la settimana precedente */
     private lateinit var pastWeekButton: ImageButton
     /** [ImageButton] per selezionare la settimana successiva */
