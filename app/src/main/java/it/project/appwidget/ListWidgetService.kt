@@ -127,9 +127,8 @@ class ListWidgetService : RemoteViewsService() {
             val duration_text = "" + hours + "h " + minutes + "min " + seconds + "sec"
 
             val avg_speed_text = DecimalFormat("#.##").format(trackSession.averageSpeed) + "km/h"
-            val calories_text = DecimalFormat("#").format(trackSession.kcal) + "Kcal"
+            //val calories_text = DecimalFormat("#").format(trackSession.kcal) + "Kcal"
 
-            //TODO finire le modifiche del codice
 
             // Imposta il testo degli elementi correnti nella TextView all'interno dell'elemento della ListView
             remoteViews.setTextViewText(R.id.item_textview, data_text)
@@ -159,6 +158,12 @@ class ListWidgetService : RemoteViewsService() {
             val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
 
             // Nascondo elementi che potrebbero non starci
+            /**
+             * Schema di dimensionamento
+             * Widget piccolo [minWidth 0 - 200] -> mostro solo la data
+             * Widget medio [minWidth 200 - 250] -> mostro data e distanza
+             * Widget grande [minWidth 250-300] -> mostro data, distanza e durata
+             */
             Log.d("ListWidgetFactory", "Dimensione è $minWidth")
             when (minWidth) {
                 in 0..200 -> {
