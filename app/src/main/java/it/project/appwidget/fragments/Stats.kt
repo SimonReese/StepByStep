@@ -21,20 +21,34 @@ import it.project.appwidget.database.TrackSession
 import it.project.appwidget.database.TrackSessionAdapter
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment della schermata Stats, che mostra un riepilogo delle sessioni registrate dall'utente
+ * di settimana in settimana. Nella parte superiore è mostrato un grafico [BarChart] che visualizza i
+ * chilometri percorsi giorno per giorno durante la settimana. Nella parte inferiore, un [RecyclerView]
+ * mostra tutte le sessioni registrate nella settimana e permette all'utente di cliccare su ciascun elemento
+ * per accedere ai dettagli di quella specifica [TrackSession].
+ */
 class Stats : Fragment() {
 
-    // Variabili di istanza
-    val format = "yyyy-dd-MM"
+    /* Specifica il formato data */
+    val format = "yyyy-dd-MM"   // TODO: cambiare formato in dd-MM-yyyy
 
-    // Views del fragment
+    // Views
+    /** Grafico [BarChart] relativo alla settimana selezionata */
     private lateinit var barChart: BarChart
-    private lateinit var generateButton: Button
+    /** [Button] per selezionare la settimana corrente*/
+    private lateinit var generateButton: Button //TODO: cambiare nome
+    /** [ImageButton] per selezionare la settimana precedente */
     private lateinit var pastWeekButton: ImageButton
+    /** [ImageButton] per selezionare la settimana successiva */
     private lateinit var nextWeekButton: ImageButton
+    /** [TextView] che mostra la settimana corrente */
     private lateinit var currentDate: TextView
+    /** [RecyclerView] che visualizza le sessioni salvate nella settimana selezionata */
     private lateinit var recyclerView: RecyclerView
 
-    // Stato del fragment
+    // Stato
+    /** Coppia [Pair] di valori che memorizza l'inizio e la fine della settimana in Unix time */
     private lateinit var selectedWeek: Pair<Long, Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,15 +77,13 @@ class Stats : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("StatsFragment", "Chiamato onViewCreated")
 
-        // Imposto RecyclerView
-        recyclerView = view.findViewById(R.id.recyclerView)
         // Riferimenti a elementi del layout
         barChart = view.findViewById(R.id.barChart)
         generateButton= view.findViewById(R.id.generateButton)
         pastWeekButton= view.findViewById(R.id.pastWeekButton)
         nextWeekButton= view.findViewById(R.id.nextWeekButton)
         currentDate= view.findViewById(R.id.tv_date)
-
+        recyclerView = view.findViewById(R.id.recyclerView)
 
         // Mostro etichetta settimana corrente
         currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
@@ -79,13 +91,13 @@ class Stats : Fragment() {
         // Carico dati in background
         loadRecyclerView()
 
-        //Carica dati settimana selezionata
+        // Carica dati settimana selezionata
         loadBarChart()
 
-        //Bottone settimana corrente
+        // Bottone settimana corrente
         generateButton.setOnClickListener { generateButton: View ->
             selectedWeek = WeekHelper.getWeekRange(System.currentTimeMillis())
-            // Mostro etichetta settimana corrente
+            // Aggiorno etichetta settimana corrente
             currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
@@ -94,7 +106,7 @@ class Stats : Fragment() {
         //Bottone past week
         pastWeekButton.setOnClickListener { pastWeekButton: View ->
             selectedWeek = WeekHelper.getPreviousWeekRange(selectedWeek)
-            // Mostro etichetta settimana precedente
+            // Aggiorno etichetta settimana precedente
             currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
@@ -103,8 +115,7 @@ class Stats : Fragment() {
         //Bottone next week
         nextWeekButton.setOnClickListener { nextWeekButton: View ->
             selectedWeek = WeekHelper.getNextWeekRange(selectedWeek)
-            // Mostro etichetta settimana successiva
-            //currentDate.text = "${weekHelper.getDate(selectedWeek.first, format)} - ${weekHelper.getDate(selectedWeek.second, format)}"
+            // Aggiorno etichetta settimana successiva
             currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
             loadBarChart()
             loadRecyclerView()
@@ -112,6 +123,7 @@ class Stats : Fragment() {
 
     }
 
+    // Salvo selezione della settimana
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("StatsFragment", "Chiamato onSaveInstanceState")
         outState.putLongArray("selectedWeek", longArrayOf(selectedWeek.first, selectedWeek.second))
