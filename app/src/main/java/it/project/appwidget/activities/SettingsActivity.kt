@@ -1,7 +1,6 @@
 package it.project.appwidget.activities
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,8 +9,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import it.project.appwidget.widgets.NewAppWidget
 import it.project.appwidget.R
@@ -20,9 +17,7 @@ import it.project.appwidget.WidgetSettingsSharedPrefsHelper
 
 class SettingsActivity : AppCompatActivity() {
 
-    companion object {
-        const val MY_PERMISSIONS_REQUEST_LOCATION = 123
-    }
+
     private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper
     private lateinit var cbSpeed: CheckBox
     private lateinit var cbDistance: CheckBox
@@ -77,38 +72,27 @@ class SettingsActivity : AppCompatActivity() {
         cbSessionDistance.isChecked = widgetSettingsSharedPrefsHelper.isSessionDistanceChecked()
 
         //RICHIEDO PERMESSI GPS
-        hasPermissions = true // Devo supporla vera, perchè non è detto che onRequestPermissionsResult() sia stato chiamato
-        if (PermissionChecker.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PermissionChecker.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 33){
-            //TODO: analizzare permesso POST_NOTIFICATION (pare che sia introdotto da android 13, cosa fare nel 12)?
-            hasPermissions = false
-            Log.w("ServiceMonitorActivity", "Permesso {POST_NOTIFICATIONS} non concesso")
-        }
-        if (PermissionChecker.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PermissionChecker.PERMISSION_DENIED){
-            hasPermissions = false
-            Log.w("ServiceMonitorActivity", "Permesso {ACCESS_COARSE_LOCATION} non concesso")
-        }
-        if (PermissionChecker.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PermissionChecker.PERMISSION_DENIED){
-            hasPermissions = false
-            Log.w("ServiceMonitorActivity", "Permesso {ACCESS_FINE_LOCATION} non concesso")
-        }
+        // Creo lista di permessi da chiedere
+        val permissionList = arrayListOf<String>()
 
-        if (!hasPermissions){
-            // Chiedo tutti i permessi un una volta sola
-            requestPermissions(arrayOf(
-                Manifest.permission.POST_NOTIFICATIONS,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            Log.d("ServiceMonitorActivity", "Non sono stati concessi tutti i permessi necessari")
-        }
+        // Notifiche (a partire da Android 13)
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.POST_NOTIFICATIONS)
+
+        // Location approssimata
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        // Location esatta
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        // Chiedo permessi
+        if (permissionList.size > 0){
+            // Mancano alcuni permessi, provo a chiederli
+            hasPermissions = false
+            requestPermissions(permissionList.toTypedArray(), 1)
+        } // Ricevo aggiornamenti in onRequestPermissionResult()
 
     }
 
