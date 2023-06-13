@@ -37,7 +37,7 @@ class Stats : Fragment() {
     /** Grafico [BarChart] relativo alla settimana selezionata */
     private lateinit var barChart: BarChart
     /** [Button] per selezionare la settimana corrente*/
-    private lateinit var generateButton: Button //TODO: cambiare nome
+    private lateinit var currentWeekButton: Button //TODO: cambiare nome
     /** [ImageButton] per selezionare la settimana precedente */
     private lateinit var pastWeekButton: ImageButton
     /** [ImageButton] per selezionare la settimana successiva */
@@ -79,7 +79,7 @@ class Stats : Fragment() {
 
         // Riferimenti a elementi del layout
         barChart = view.findViewById(R.id.barChart)
-        generateButton= view.findViewById(R.id.generateButton)
+        currentWeekButton= view.findViewById(R.id.generateButton)
         pastWeekButton= view.findViewById(R.id.pastWeekButton)
         nextWeekButton= view.findViewById(R.id.nextWeekButton)
         currentDate= view.findViewById(R.id.tv_date)
@@ -95,7 +95,7 @@ class Stats : Fragment() {
         loadBarChart()
 
         // Bottone settimana corrente
-        generateButton.setOnClickListener { generateButton: View ->
+        currentWeekButton.setOnClickListener { generateButton: View ->
             selectedWeek = WeekHelper.getWeekRange(System.currentTimeMillis())
             // Aggiorno etichetta settimana corrente
             currentDate.text = String.format("%s - %s", WeekHelper.getDate(selectedWeek.first, format), WeekHelper.getDate(selectedWeek.second, format))
