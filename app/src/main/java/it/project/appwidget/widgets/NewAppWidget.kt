@@ -310,8 +310,6 @@ class NewAppWidget : AppWidgetProvider() {
         views.setViewVisibility(R.id.tv_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
         views.setViewVisibility(R.id.tv_value_longitude, if (isPositionChecked) View.VISIBLE else View.GONE)
 
-
-        //TODO: fare stessa cosa per tv_sessionDate
         views.setViewVisibility(R.id.tv_sessionDate, View.VISIBLE)
     }
 

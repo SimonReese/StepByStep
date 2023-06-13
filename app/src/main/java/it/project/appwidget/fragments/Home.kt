@@ -65,7 +65,6 @@ class Home : Fragment() {
     // Classe per ricezione broadcast messages TODO: REIMPLEMENTARE!
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // TODO: Al termine del work, aggiornare il fragment con i dati aggiunti
             /*
             val preferencesHelper = UserPreferencesHelper(requireActivity())
 
@@ -120,7 +119,7 @@ class Home : Fragment() {
 
 
         // Imposto valori default alle Views
-        distanceTextView.text = DecimalFormat("#.##m").format(distance/1000) // TODO: Che unità di misura?
+        distanceTextView.text = DecimalFormat("#.##m").format(distance/1000)
         passiTextView.text = steps.toString()
         caloriesTextView.text = DecimalFormat("#.#Kcal").format(kcal/1000).toString()
         progressBar.max = 100

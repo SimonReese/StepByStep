@@ -156,7 +156,7 @@
                         android:layout_below="@+id/distanceImage"
                         android:layout_weight="1"
                         android:autoSizeTextType="uniform"
-                        android:text="Distanza"
+                        android:text="Distanza (m)"
                         android:textAlignment="center"
                         android:textSize="20sp" />
 
