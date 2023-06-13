@@ -80,6 +80,7 @@ class ListWidget : AppWidgetProvider() {
 
     }
 
+    /**
     private fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
     {
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -105,6 +106,7 @@ class ListWidget : AppWidgetProvider() {
 
         return views
     }
+    */
 
 }
 
