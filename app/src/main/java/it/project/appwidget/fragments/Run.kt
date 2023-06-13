@@ -11,6 +11,8 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Chronometer
@@ -52,7 +54,6 @@ class Run : Fragment() {
     /** [Button] che fa fermare [LocationService] e interrompe la sessione in corso */
     private lateinit var stopServiceButton: Button
 
-    // TextViews di debug TODO: Nascondere ma non eliminare
     /** [TextView] di debug per accuratezza */
     private lateinit var accuracy_debug_textview: TextView
     /** [TextView] di debug per velocità */
@@ -164,6 +165,10 @@ class Run : Fragment() {
         accuracy_debug_textview = view.findViewById(R.id.debug_accuracy_textview)
         speed_debug_textview = view.findViewById(R.id.debug_speed_textview)
         distance_debug_textview = view.findViewById(R.id.debug_distance_textview)
+        //Rendiamo invisibili le VIews di DEBUG
+        accuracy_debug_textview.visibility = INVISIBLE
+        speed_debug_textview.visibility = INVISIBLE
+        distance_debug_textview.visibility = INVISIBLE
 
         // Disabilito bottone di STOP
         stopServiceButton.isEnabled = false

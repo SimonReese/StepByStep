@@ -33,22 +33,25 @@ data class TrackSession(
     var distance: Double,
 
     /**
-     * TODO
+     * Velocità media della sessione della sessione ottenuta sommando la velocità media tra le varie location
+     * e dividendo poi per il numero di location totali
+     * NOTA: Il valore della speed non viene calcolato dall'emulatore e funziona soltanto su dispositivo fisico
      */
     var averageSpeed: Double,
 
     /**
-     * TODO
+     * Velocità più elevata tra tutte le location della sessione
+     * NOTA: Il valore della speed non viene calcolato dall'emulatore e funziona soltanto su dispositivo fisico
      */
     var maxSpeed: Double,
 
     /**
-     * TODO
+     * Tipologia di attività (camminata o corsa) che dipende dalla velocità media totale della sessione
      */
     var activityType: String,
 
     /**
-     * TODO
+     * Kcalorie bruciate al termine della sessione. Il valore dipende dalla distanza percorsa e dal peso dell'utente
      */
     var kcal: Int
 )

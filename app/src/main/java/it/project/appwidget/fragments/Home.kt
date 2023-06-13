@@ -65,7 +65,6 @@ class Home : Fragment() {
     // Classe per ricezione broadcast messages TODO: REIMPLEMENTARE!
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // TODO: Al termine del work, aggiornare il fragment con i dati aggiunti
             /*
             val preferencesHelper = UserPreferencesHelper(requireActivity())
 
@@ -120,7 +119,7 @@ class Home : Fragment() {
 
 
         // Imposto valori default alle Views
-        distanceTextView.text = DecimalFormat("#.##m").format(distance/1000) // TODO: Che unità di misura?
+        distanceTextView.text = DecimalFormat("#.##m").format(distance/1000)
         passiTextView.text = steps.toString()
         caloriesTextView.text = DecimalFormat("#.#Kcal").format(kcal/1000).toString()
         progressBar.max = 100
@@ -152,6 +151,11 @@ class Home : Fragment() {
             // Ottengo lista di tracksessions
             val trackSessionList = Datasource(requireActivity()).getSessionList(from, to)
 
+            //Imposto dati a zero
+            distance = 0.0
+            kcal = 0
+            steps = 0
+
             // Calcolo la somma delle distanze, delle calorie e dei passi totali
             for (trackSession in trackSessionList){
                 distance += trackSession.distance
@@ -161,7 +165,7 @@ class Home : Fragment() {
 
 
             // Aggiorno le Views
-            distanceTextView.text = distance.toString()
+            distanceTextView.text = distance.toInt().toString()
             passiTextView.text = steps.toString()
             caloriesTextView.text = kcal.toString()
             updateProgressBar(kcalTarget)
