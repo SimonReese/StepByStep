@@ -128,7 +128,6 @@ class ListWidgetService : RemoteViewsService() {
             remoteViews.setTextViewText(R.id.item_distance, distance_text)
             remoteViews.setTextViewText(R.id.item_duration, duration_text)
             remoteViews.setTextViewText(R.id.item_avg_speed, avg_speed_text)
-            //remoteViews.setTextViewText(R.id.item_calories, calories_text)
 
 
             //RIEMPIO I TEMPLATE CON I PARAMETRI CHE MI SERVONO
