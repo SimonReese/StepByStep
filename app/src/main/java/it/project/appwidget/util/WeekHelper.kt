@@ -6,12 +6,14 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 
-/* TODO: Questa classe di fatto non ha variabili membro, ma fornisce metodi utili per
-    ricevere i riferimenti alle varie settimane. Probabilmente sarebbe opportuno renderla statica.
- */
 class WeekHelper {
     companion object {
 
+        /**
+         * Dato un time in millisecondi fornisce l'intervallo giornaliero in cui esso si trova, ovvero dalle 00:00 alle 23:59 del giorno selezionato
+         * @param timestamp in millisecondi
+         * @return Una coppia di valori startOfDay e endOfDay che indicano il range corrispondente
+         */
         fun getDayRange(timestamp: Long): Pair<Long, Long> {
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = timestamp
@@ -34,7 +36,11 @@ class WeekHelper {
             return Pair(startOfDay, endOfDay)
         }
 
-        //  Dato un time in millisecondi fornisce intervallo settimanale in cui esso si trova, ovvero da Lunedì 00:00 a Domenica 23:59 di quella settimana
+        /**
+         * Dato un time in millisecondi fornisce l'intervallo settimanale in cui esso si trova, ovvero da Lunedì 00:00 a Domenica 23:59 di quella settimana
+         * @param timestamp in millisecondi
+         * @return Una coppia di valori startOfWeek e endOfWeek che indicano il range corrispondente
+         */
         fun getWeekRange(timestamp: Long): Pair<Long, Long> {
             val calendar = Calendar.getInstance().apply {
                 firstDayOfWeek = Calendar.MONDAY
@@ -59,6 +65,12 @@ class WeekHelper {
             return Pair(startOfWeek, endOfWeek)
         }
 
+        /**
+         * Dato un time in millisecondi fornisce l'intervallo mensile in cui esso si trova, ovvero dal primo giorno del mese
+         * alle 00:00 all'ultimo giorno del mese alle 23:59
+         * @param timestamp in millisecondi
+         * @return Una coppia di valori startOfMonth e endOfMonth che indicano il range corrispondente
+         */
         fun getMonthRange(timestamp: Long): Pair<Long, Long> {
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = timestamp
@@ -85,7 +97,11 @@ class WeekHelper {
         }
 
 
-        //  Dato un pair in millisecondi mi ritorna l'intervallo della settimana precedente
+        /**
+         * Dato un range settimanale in millisecondi ritorna l'intervallo della settimana precedente
+         * @param weekRange: coppia di Long in millisecondi che indicano il range
+         * @return Una coppia di valori startOfPreviousWeek e endOfPreviousWeek che indicano la settimana precedente
+         */
         fun getPreviousWeekRange(weekRange: Pair<Long, Long>): Pair<Long, Long> {
             val (startOfWeek, endOfWeek) = weekRange
 
@@ -97,16 +113,20 @@ class WeekHelper {
             return Pair(startOfPreviousWeek, endOfPreviousWeek)
         }
 
-        //  Dato un pair in millisecondi mi ritorna l'intervallo della settimana successiva
+        /**
+         * Dato un range settimanale in millisecondi ritorna l'intervallo della settimana successiva
+         * @param weekRange: coppia di Long in millisecondi che indicano il range
+         * @return Una coppia di valori long startOfNextWeek e endOfNextWeek che indicano la settimana successiva
+         */
         fun getNextWeekRange(weekRange: Pair<Long, Long>): Pair<Long, Long> {
             val (startOfWeek, endOfWeek) = weekRange
 
-            val startOfPreviousWeek =
+            val startOfNextWeek =
                 startOfWeek + 7 * 24 * 60 * 60 * 1000 // Somma una settimana in millisecondi
-            val endOfPreviousWeek =
+            val endOfNextWeek =
                 endOfWeek + 7 * 24 * 60 * 60 * 1000 // Somma una settimana in millisecondi
 
-            return Pair(startOfPreviousWeek, endOfPreviousWeek)
+            return Pair(startOfNextWeek, endOfNextWeek)
         }
 
         /**
@@ -117,7 +137,8 @@ class WeekHelper {
         fun getNumberDayOfWeek(timestamp: Long): Int {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = timestamp
-            //TODO: spiegare il procedimento
+            // Calendar.DAY_OF_WEEK ritorna un intero da 1 a 7 prendendo come giorno di partenza Domenica.
+            // Per l'utilizzo che ne facciamo è meglio una rappresentazione da 0 a 6 partendo da Lunedì
             var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2
             if (dayOfWeek < 0) {
                 dayOfWeek += 7
@@ -139,7 +160,12 @@ class WeekHelper {
             }
         }
 
-        //Ritorna data nel formato indicato
+        /**
+         * Dato un time in millisecondi e un formato ritorna la data sotto forma di stringa
+         * @param milliSeconds: indica il time da convertire in data.
+         * @param dateFormat: indica il formato da utilizzare nella conversione
+         * @return: un intero tra 0 (Lunedì) e 6 (Domenica)
+         */
         fun getDate(milliSeconds: Long, dateFormat: String?): String {
             // Create a DateFormatter object for displaying date in specified format.
             val formatter = SimpleDateFormat(dateFormat)
@@ -150,7 +176,6 @@ class WeekHelper {
             return formatter.format(calendar.time)
         }
 
-        //TODO: Aggiungere documentazione a tutti i metodi
         /**
          * Restituisce una lista di stringhe contenente la rappresentazione dei giorni compresi tra i valori
          * from e to nel formato gg/mm
@@ -198,7 +223,7 @@ class WeekHelper {
         /**
          * Converte lista di [TrackSession] in lista di chilocalorie sommate giorno per giorno.
          * @param weekSession Lista di sessioni in una settimana
-         * @return Una lista di Int contenente la somma delle calorie sommate in base al giorno in km. Restituisce
+         * @return Una lista di Int contenente la somma delle calorie sommate in base al giorno in kcal. Restituisce
          * sempre una lista di dimensione 7.
          */
         fun convertTrackSessionInCaloriesArray(weekSession: ArrayList<TrackSession>): ArrayList<Int> {
@@ -211,6 +236,12 @@ class WeekHelper {
             return kcalList
         }
 
+        /**
+         * Converte lista di [TrackSession] in lista di minuti sommate giorno per giorno.
+         * @param weekSession Lista di sessioni in una settimana
+         * @return Una lista di Int contenente la somma dei minuti sommate in base al giorno in min. Restituisce
+         * sempre una lista di dimensione 7.
+         */
         fun convertTrackSessionInDurationArray(weekSession: ArrayList<TrackSession>): ArrayList<Double> {
             // Inizializzo lista di dimensione 7 con valori azzerati
             val durationList: ArrayList<Double> = arrayListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
