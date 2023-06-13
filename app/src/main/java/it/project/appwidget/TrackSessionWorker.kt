@@ -12,6 +12,7 @@ import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.LocationParser
 import it.project.appwidget.util.SessionDataProcessor
 import it.project.appwidget.widgets.GraphWidget
+import it.project.appwidget.widgets.ListWidget
 
 class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
@@ -73,9 +74,14 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
         db.trackSessionDao().insertSession(trackSession)
         Log.d("TrackSessionWorker", "Salvataggio sessione $trackSession")
 
-        // Lancio broadcast aggiornamento GraphWidget
-        val  graphWidgetIntent = Intent("database-updated")
+        // Lancio broadcast aggiornamento GraphWidget e ListWidget
+        val  updateIntent = Intent("database-updated")
+        val graphWidgetIntent = Intent(updateIntent)
+        val listWidgetIntent = Intent(updateIntent)
         graphWidgetIntent.component = ComponentName(applicationContext, GraphWidget::class.java)
+        listWidgetIntent.component = ComponentName(applicationContext, ListWidget::class.java)
+        applicationContext.sendBroadcast(graphWidgetIntent)
+        applicationContext.sendBroadcast(listWidgetIntent)
 
         Log.d("TrackSessionWorker", "Fine worker.")
         return Result.success()
