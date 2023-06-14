@@ -15,6 +15,7 @@
         android:text="@string/graphWidgetTitle"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:textStyle="bold"
         tools:text="Titolo" />
 
     <ImageView
