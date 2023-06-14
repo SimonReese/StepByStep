@@ -62,6 +62,8 @@
     <string name="graphWidgetTitle">Grafico</string>
     <string name="filter_session_title">Seleziona un valore su cui filtrare le sessioni</string>
     <string name="list_view_save_button">Salva</string>
+    <string name="past_week_description">Bottone per visualizzare la settimana passata</string>
+    <string name="next_week_description">Bottone per visualizzare la prossima settimana</string>
 
 
 </resources>
