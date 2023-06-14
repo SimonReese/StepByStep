@@ -32,7 +32,6 @@ class ListWidget : AppWidgetProvider() {
 
             // Creazione di un intent per la gestione dei click sugli elementi della ListView
             val clickIntent = Intent(context, DetailActivity::class.java)
-            clickIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
 
             // Creazione di un PendingIntent che apre una Activity
             //MUTABILI E IMMUTABILI -> inviati più volte o inviato una volta (per la sicurezza)
