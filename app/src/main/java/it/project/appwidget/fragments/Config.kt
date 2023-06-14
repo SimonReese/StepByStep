@@ -1,52 +1,62 @@
 package it.project.appwidget.fragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import it.project.appwidget.R
 import it.project.appwidget.UserPreferencesHelper
 
-
+/**
+ * Questo fragment mostra la configurazione per l'utente impostato nell'app.
+ * In particolare visualizza parametri quali nome, peso, età,
+ * sesso e target calorico giornaliero dell'utente,
+ * recuperandoli dalle [SharedPreferences].
+ */
 class Config : Fragment() {
 
-    private lateinit var modifiedDataButton: Button
+    /** Pulsante per passare al fragment di modifca dati */
+    private lateinit var modifyDataButton: Button
+
+    /** Inizializza [UserPreferencesHelper] per la lettura delle preferenze */
+    private val preferencesHelper = UserPreferencesHelper(requireContext())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_config, container, false)
-
-        modifiedDataButton = view.findViewById(R.id.modified_data_btn)
-        modifiedDataButton.setOnClickListener {
-            // Apri il fragment "setup"
-            navigateToSetupFragment()
-        }
-
-        return view
+        return inflater.inflate(R.layout.fragment_config, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("ConfigFragment", "Chiamato onViewCreated()")
 
-        // Inizializza preferencesHelper
-        val preferencesHelper = UserPreferencesHelper(requireContext())
+        modifyDataButton = view.findViewById(R.id.modified_data_btn)
 
-        // Ottieni i dati di setup
+        // Ottiengo i dati di setup
         val nomeUtente = preferencesHelper.nome
         val peso = preferencesHelper.peso
         val eta = preferencesHelper.eta
-        val sesso = preferencesHelper.sesso
         val kcalTarget = preferencesHelper.kcalTarget
-        val position_gender = preferencesHelper.spinnerPosition
+        val genderId = preferencesHelper.spinnerPosition
 
-        //seleziono valore da prelevare
-        when(position_gender){
+        // Imposta listener sul bottone
+        modifyDataButton.setOnClickListener {
+            // Apri il fragment "setup"
+            navigateToSetupFragment()
+        }
+
+
+        // Seleziono etichetta da mostrare
+        when(genderId){
             0 -> view.findViewById<TextView>(R.id.valore_sesso).text = "M"
             1 -> view.findViewById<TextView>(R.id.valore_sesso).text = "F"
         }
@@ -59,12 +69,12 @@ class Config : Fragment() {
     }
 
 
-
+    /**
+     * Cerca il [NavController] e naviga al fragment [Setup]
+     */
     private fun navigateToSetupFragment() {
-        // Ottieni il riferimento al controllore della navigazione dall'activity
-        val navController = activity?.run {
-            findNavController(R.id.navigationHostFragment)
-        }
+        // Ottieni il riferimento al controllore della navigazione dall'Activity
+        val navController = activity?.findNavController(R.id.navigationHostFragment)
 
         // Effettua la navigazione verso il fragment "setup"
         navController?.navigate(R.id.setup)
