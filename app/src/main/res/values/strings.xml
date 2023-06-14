@@ -3,15 +3,15 @@
 
     <!-- RunWidget -->
     <string name="new_appwidget_label">RunWidget</string>
-    <string name="new_appwidget_description">Descrizione widget RunWidget</string>
+    <string name="new_appwidget_description">Imposta una nuova corsa e visualizzane i parametri</string>
 
     <!--ListWidget -->
     <string name="list_widget_label">ListWidget</string>
-    <string name="list_widget_description">Descrizione widget ListWidget</string>
+    <string name="list_widget_description">Visualizza tutte le sessioni di corsa</string>
 
     <!-- GraphWidget -->
     <string name="graph_widget_label">Grafico</string>
-    <string name="graph_widget_description">Mostra un grafico delle sessioni</string>
+    <string name="graph_widget_description">Visualizza un grafico delle sessioni di corsa</string>
     <string name="graph_widget_configure_textview">Scegli il valore di interesse</string>
     <string name="graph_widget_save_button">Salva</string>
     <string-array name="graph_widget_configure_options">
