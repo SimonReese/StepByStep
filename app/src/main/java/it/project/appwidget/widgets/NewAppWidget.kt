@@ -360,7 +360,7 @@ class NewAppWidget : AppWidgetProvider() {
         val prefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         if (fieldName == "startTime")
         {
-            return prefs.getString("$appWidgetId-$fieldName", "00:00") ?: "Data"
+            return prefs.getString("$appWidgetId-$fieldName", "00:00") ?: "00:00"
 
         }
         return prefs.getString("$appWidgetId-$fieldName", "") ?: ""
