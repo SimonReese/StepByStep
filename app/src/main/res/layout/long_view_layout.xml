@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
@@ -16,10 +17,10 @@
             android:id="@+id/tv_sessionDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="00:00"
-            android:textStyle="bold"
+            android:text="16:15"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,9 +46,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Valore"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:text="17km"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
