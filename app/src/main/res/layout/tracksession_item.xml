@@ -22,37 +22,31 @@
                 android:id="@+id/trackSessionDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="28sp"
                 android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textSize="28sp"
                 tools:text="31/12" />
 
             <TextView
                 android:id="@+id/trackSessionTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="28sp"
                 android:layout_marginStart="7dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textSize="28sp"
                 tools:text="9:21" />
 
             <TextView
                 android:id="@+id/trackSessionDistanceTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="28sp"
                 android:layout_marginStart="5dp"
-                tools:text="17km" />
-
-            <ImageButton
-                android:id="@+id/link_session"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="7dp"
                 android:layout_weight="1"
-                android:src="@drawable/freccia_dx"
-                android:background="#fff"/>
+                android:textAlignment="center"
+                android:textSize="28sp"
+                tools:text="17km" />
 
         </LinearLayout>
 

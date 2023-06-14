@@ -64,6 +64,7 @@
     <string name="list_view_save_button">Salva</string>
     <string name="past_week_description">Bottone per visualizzare la settimana passata</string>
     <string name="next_week_description">Bottone per visualizzare la prossima settimana</string>
+    <string name="stats_fragment_hint_text">Clicca sugli elementi per i dettagli</string>
 
 
 </resources>
