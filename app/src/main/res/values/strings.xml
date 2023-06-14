@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">AppWidget</string>
+    <string name="app_name">StepByStep</string>
 
-    <!-- NewAppWidget -->
-    <string name="new_appwidget_label">NewAppWidget</string>
-    <string name="new_appwidget_description">Descrizione widget NewAppWidget</string>
+    <!-- RunWidget -->
+    <string name="new_appwidget_label">RunWidget</string>
+    <string name="new_appwidget_description">Descrizione widget RunWidget</string>
 
     <!--ListWidget -->
     <string name="list_widget_label">ListWidget</string>
