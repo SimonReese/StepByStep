@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="Data"
+        android:text="00:00"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:textSize="18sp" />
 
@@ -29,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:background="@drawable/rounded_corners"
             android:text="@string/run_fragment_start_button_label" />
 
         <Button
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_corners"
             android:text="Ferma corsa" />
 
 

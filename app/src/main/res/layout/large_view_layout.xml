@@ -11,7 +11,8 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="25dp"
-    android:text="Data"
+    android:text="00:00"
+    android:textStyle="bold"
     android:textSize="18sp" />
 
 <LinearLayout
@@ -25,6 +26,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
     android:layout_marginEnd="16dp"
     android:orientation="horizontal">
 
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,6 +39,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Distanza: "
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <TextView
@@ -52,6 +55,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Velocità: "
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <TextView
@@ -67,6 +71,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Calorie: "
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <TextView
@@ -89,6 +94,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Latitudine:"
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <TextView
@@ -104,6 +110,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Longitudine:"
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <TextView
@@ -134,7 +141,7 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:background="@drawable/rounded_corners"
             android:text="@string/run_fragment_start_button_label" />
 
         <Button
@@ -142,12 +149,15 @@ android:theme="@style/Theme.Material3.DynamicColors.DayNight">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:background="@drawable/rounded_corners"
             android:text="Ferma corsa" />
 
 
         <!-- Add StackView -->
 
+
     </LinearLayout>
+
+
 
 </RelativeLayout>
