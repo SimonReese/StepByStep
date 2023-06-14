@@ -42,17 +42,18 @@
         <ImageButton
             android:id="@+id/pastWeekButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_corners"
-            android:src="@drawable/icons8_frecciasinistra" />
+            android:src="@drawable/icons8_frecciasinistra"
+            android:contentDescription="@string/past_week_description" />
 
         <Button
             android:id="@+id/generateButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
             android:backgroundTint="@color/lavender"
@@ -63,12 +64,13 @@
         <ImageButton
             android:id="@+id/nextWeekButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_margin="5dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_corners"
-            android:src="@drawable/icons8_freccia_destra_24" />
+            android:src="@drawable/icons8_freccia_destra_24"
+            android:contentDescription="@string/next_week_description" />
 
     </LinearLayout>
 
