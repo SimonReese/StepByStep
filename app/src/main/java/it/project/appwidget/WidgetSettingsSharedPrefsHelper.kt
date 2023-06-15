@@ -3,8 +3,10 @@ package it.project.appwidget
 import android.content.Context
 import android.content.SharedPreferences
 
-// Classe helper separata per gestire le operazioni relative alle preferenze condivise.
-// Ha lo scopo di poter aver accesso alle preferences sia in RunWidgetConfigureActivity che RunWidget
+/**
+ * Classe helper separata per gestire le operazioni relative alle preferenze condivise.
+ * Ha lo scopo di poter aver accesso alle preferences sia in RunWidgetConfigureActivity che RunWidget in modo più semplice e centralizzato
+ */
 class WidgetSettingsSharedPrefsHelper(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 

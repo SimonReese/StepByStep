@@ -5,7 +5,9 @@ import it.project.appwidget.database.TrackSession
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-
+/**
+ * Classe statica che offre metodi utili per calcolare archi temporali a partire dal tempo fornito in millisecondi
+ */
 class WeekHelper {
     companion object {
 

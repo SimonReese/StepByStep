@@ -375,7 +375,6 @@ class RunWidget : AppWidgetProvider() {
         return prefs.getString("$appWidgetId-$fieldNameKey", "") ?: ""
     }
 
-    // Salva lo stato del service, utilizzato poi per salvare lo stato dei bottoni al resize del widget
     /** Funzione che salva lo stato del service in una sharedPreference*/
     private fun saveServiceRunningFlag(context: Context, flag: Boolean) {
         val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
