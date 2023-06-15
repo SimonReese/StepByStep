@@ -25,9 +25,6 @@ class Config : Fragment() {
     /** Pulsante per passare al fragment di modifca dati */
     private lateinit var modifyDataButton: Button
 
-    /** Inizializza [UserPreferencesHelper] per la lettura delle preferenze */
-    private val preferencesHelper = UserPreferencesHelper(requireContext())
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +35,9 @@ class Config : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("ConfigFragment", "Chiamato onViewCreated()")
+
+        /** Inizializza [UserPreferencesHelper] per la lettura delle preferenze */
+        val preferencesHelper = UserPreferencesHelper(requireContext())
 
         modifyDataButton = view.findViewById(R.id.modified_data_btn)
 
