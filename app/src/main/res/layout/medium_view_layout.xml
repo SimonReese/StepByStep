@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Valore"
+                android:text="0km"
                 android:textStyle="bold"
                 android:textSize="18sp" />
 

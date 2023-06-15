@@ -132,8 +132,15 @@ class RunWidget : AppWidgetProvider() {
                 val views = getWidgetSize(context, appWidgetId)
                 views.setBoolean(R.id.startServiceButton, "setEnabled", true)
                 views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
-                appWidgetManager.updateAppWidget(appWidgetId, views)
+                appWidgetManager.updateAppWidget(appWidgetId, views) //Aggiorna stato bottoni
                 saveServiceRunningFlag(context, false) // Salva il valore "false" nelle preferenze
+                updateLocationText(context,
+                    0.0,
+                    0.0,
+                    0F,
+                    0F,
+                    0,
+                    0F)
             }
         }
 
@@ -144,10 +151,10 @@ class RunWidget : AppWidgetProvider() {
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, RunWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
-                saveServiceRunningFlag(context, true) // Salva il valore "true" nelle preferenze
                 views.setBoolean(R.id.startServiceButton, "setEnabled", false)
                 views.setBoolean(R.id.stopServiceButton, "setEnabled", true)
-                appWidgetManager.updateAppWidget(appWidgetId, views)
+                appWidgetManager.updateAppWidget(appWidgetId, views) //Aggiorna stato bottoni
+                saveServiceRunningFlag(context, true) // Salva il valore "true" nelle preferenze
                 updateLocationText(context,
                     intent.getDoubleExtra("latitude", 0.0),
                     intent.getDoubleExtra("longitude", 0.0),
