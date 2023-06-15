@@ -35,6 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ciao"
+                    android:textColor="#fff"
                     android:textSize="40sp" />
 
                 <TextView
@@ -42,6 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="utente"
+                    android:textColor="#fff"
                     android:textSize="40dp" />
             </LinearLayout>
 
