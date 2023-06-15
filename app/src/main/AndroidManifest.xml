@@ -41,7 +41,7 @@
 
         <!-- Activity impostazioni widget -->
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.RunWidgetConfigureActivity"
             android:exported="false" />
 
         <!-- Activity impostazioni GraphWidget -->
@@ -64,7 +64,7 @@
 
         <!-- Widget riepilogo -->
         <receiver
-            android:name=".widgets.NewAppWidget"
+            android:name=".widgets.RunWidget"
             android:exported="false"
             android:label="@string/new_appwidget_label">
             <intent-filter>

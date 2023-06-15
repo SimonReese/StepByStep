@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import it.project.appwidget.database.TrackSession
-import it.project.appwidget.widgets.NewAppWidget
+import it.project.appwidget.widgets.RunWidget
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit
  * tempo di attività, velocità (in minuti al kilometro), distanza percorsa, calorie bruciate.
  * Il [LocationService] invia una notifica che gli consente di funzionare anche se il fragment non è attivo.
  * Grazie ai messaggi broadcast lanciati dal servizio, il fragment è in grado di recuperare le informazioni
- * sulla sessione in corso anche se è stato distrutto e ricreato. A questo fragment corrisponde il widget [NewAppWidget].
+ * sulla sessione in corso anche se è stato distrutto e ricreato. A questo fragment corrisponde il widget [RunWidget].
  */
 class Run : Fragment() {
 

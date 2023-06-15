@@ -13,21 +13,28 @@ import android.widget.RemoteViews
 import it.project.appwidget.LocationService
 import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
+import it.project.appwidget.activities.RunWidgetConfigureActivity
 import it.project.appwidget.util.WeekHelper
 import java.text.DecimalFormat
 
-
-class NewAppWidget : AppWidgetProvider() {
+/**
+ * Implementazione RunWidget, widget personalizzabile che fornisce informazioni sulla sessione di
+ * camminata/corsa in tempo reale e permette all'utente di avviare e fermare la sessione direttamente dal widget stesso
+ * App Widget Configuration implemented in [it.project.appwidget.activities.RunWidgetConfigureActivity]
+ */
+class RunWidget : AppWidgetProvider() {
 
     companion object {
         const val ACTION_BTN_SAVE = "ACTION_BTN_SAVE" // Azione per il pulsante di salvataggio
     }
 
-    private val SHARED_PREFS_NAME = "NewAppWidget"
-    private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper // Oggetto helper per le preferenze condivise
+    private val SHARED_PREFS_NAME = "RunWidget"
+    /** Oggetto della classe WidgetSettingsSharedPrefsHelper utilizzato per salvare le impostazioni di visualizzione degli elementi del widget */
+    private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper
     private val format = "HH:mm"
     private val singleDecimal = DecimalFormat("#.#")
     private val doubleDecimal = DecimalFormat("#.##")
+    /** Variabile booleana che indica lo stato del LocationService */
     private var serviceIsRunningFlag: Boolean = false
 
 
@@ -41,7 +48,7 @@ class NewAppWidget : AppWidgetProvider() {
             // Ottengo la view in base alla dimensione
             val views = getWidgetSize(context, appWidgetId)
 
-            // Carica il testo precedentemente salvato e impostalo sul TextView
+            // Carica il testo presente nella SharedPreference all'interno delle TextView del widget
             val savedText = loadText(context, appWidgetId, "position")
             var locationArray = savedText.split(",").toTypedArray()
             if (locationArray.size != 2)
@@ -76,6 +83,7 @@ class NewAppWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
 
+            //Imposta lo stato dei pulsanti in base all'esecuzione o meno del servizio
             if(serviceIsRunningFlag)
             {
                 views.setBoolean(R.id.startServiceButton, "setEnabled", false)
@@ -86,9 +94,6 @@ class NewAppWidget : AppWidgetProvider() {
                 views.setBoolean(R.id.startServiceButton, "setEnabled", true)
                 views.setBoolean(R.id.stopServiceButton, "setEnabled", false)
             }
-
-
-
 
             // Imposto elementi layout in base a quanto indicato nelle preferences
             setNewViewVisibility(context, views)
@@ -102,13 +107,13 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        Log.d("NewAppWidget", "Intent " + intent.action + " ricevuto")
+        Log.d("RunWidget", "Intent " + intent.action + " ricevuto")
 
-        // Controllo se è stato mandato l'intent dal bottone save nell'activity impostazioni
+        // Controllo se è stato ricevuto l'intent mandato dal bottone save nell'activity RunWidgetConfigureActivity
         if (intent.action == ACTION_BTN_SAVE) {
             Log.d("onReceive", ACTION_BTN_SAVE)
             val appWidgetManager = AppWidgetManager.getInstance(context)
-            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, RunWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
                 // Chiamo il metodo setNewViewVisibility
@@ -118,10 +123,11 @@ class NewAppWidget : AppWidgetProvider() {
             }
         }
 
+        // Controllo se è stato ricevuto l'intent esplicito mandato in seguito alla chiamata di onDestroy() di LocationService
         if (intent.action == "stop-service")
         {
             val appWidgetManager = AppWidgetManager.getInstance(context)
-            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, RunWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
                 views.setBoolean(R.id.startServiceButton, "setEnabled", true)
@@ -131,10 +137,11 @@ class NewAppWidget : AppWidgetProvider() {
             }
         }
 
+        // Controllo se è stato ricevuto l'intent esplicito mandato in seguito all'esecuzione del metodo onLocationChanged() di LocationService
         if (intent.action == "location-update")
         {
             val appWidgetManager = AppWidgetManager.getInstance(context)
-            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, NewAppWidget::class.java))
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, RunWidget::class.java))
             for (appWidgetId in appWidgetIds) {
                 val views = getWidgetSize(context, appWidgetId)
                 saveServiceRunningFlag(context, true) // Salva il valore "true" nelle preferenze
@@ -163,13 +170,14 @@ class NewAppWidget : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d("onAppWidgetOptionsChanged", "Widget ridimensionato")
-        // Ottengo nuova view in base alle nuove dimensioni
+        // Ottengo nuova view in base alle dimensioni del widget dopo il ridimensionamento
         val views = getWidgetSize(context, appWidgetId)
 
+        //Ottieni stato servizio
         val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         serviceIsRunningFlag = sharedPreferences.getBoolean("serviceIsRunningFlag", false)
 
-        // Carica il testo salvato esistente precedentemente al resize e impostalo sul TextView
+        // Carica nel widget ridimensionato il testo salvato esistente precedentemente al resize e impostalo nel TextView
         val savedPosition = loadText(context, appWidgetId, "position")
         var locationArray = savedPosition.split(",").toTypedArray()
         if (locationArray.size != 2)
@@ -187,7 +195,9 @@ class NewAppWidget : AppWidgetProvider() {
         val savedCalories = loadText(context, appWidgetId, "calories")
         views.setTextViewText(R.id.tv_value_calories, savedCalories)
 
-        println("layoutId: " + context.resources.getResourceEntryName(views.layoutId))
+        //println("layoutId: " + context.resources.getResourceEntryName(views.layoutId))
+
+        // Reimposto intent per i bottoni del widget:
 
         // Creo intent per il service
         val serviceIntent = Intent(context, LocationService::class.java)
@@ -208,6 +218,7 @@ class NewAppWidget : AppWidgetProvider() {
         )
         views.setOnClickPendingIntent(R.id.stopServiceButton, stopPendingIntent)
 
+        //Imposta lo stato dei pulsanti in base all'esecuzione o meno del servizio
         if(serviceIsRunningFlag)
         {
             views.setBoolean(R.id.startServiceButton, "setEnabled", false)
@@ -225,7 +236,9 @@ class NewAppWidget : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    // Metodo chiamato da LocationService ogni volta che riceve un nuovo dato
+    /**Funzione che aggiorna i TextView con i dati della sessione attuale, passati come parametro.
+     * Salva inoltre il testo aggiornato all'interno di una SharedPreference
+     * */
     private fun updateLocationText(
         context: Context,
         latitude: Double,
@@ -262,9 +275,6 @@ class NewAppWidget : AppWidgetProvider() {
             views.setTextViewText(R.id.tv_sessionDate, sessionDate)
             views.setTextViewText(R.id.tv_value_calories, updateCalories)
 
-
-
-
             // Salva il testo aggiornato
             saveText(context, appWidgetId, "position", updatedDistance)
             saveText(context, appWidgetId, "sumDistance", updatedSumDistance)
@@ -276,7 +286,7 @@ class NewAppWidget : AppWidgetProvider() {
         }
     }
 
-    // Determina cosa mostrare sull'UI del widget in base a quanto salvato in sharedPrefsHelper
+    /**Funzione che aggiorna la visibilità degli elementi della UI del widget in base a quanto selezionato nelle impostazioni dello stesso */
     private fun setNewViewVisibility(context: Context, views: RemoteViews) {
         widgetSettingsSharedPrefsHelper = WidgetSettingsSharedPrefsHelper(context)
         // Ottiene stati sharedPrefsHelper
@@ -309,8 +319,7 @@ class NewAppWidget : AppWidgetProvider() {
         views.setViewVisibility(R.id.tv_sessionDate, View.VISIBLE)
     }
 
-    // Restituisce una RemoteViews in base alle dimensioni del widget
-    //ritorna layout in base alle dimensioni del widget
+    /** Funzione che restituisce una RemoteViews associata ad un diverso layout in base alle dimensioni del widget */
     private fun getWidgetSize(context: Context, widgetId: Int) :RemoteViews
     {
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -347,26 +356,27 @@ class NewAppWidget : AppWidgetProvider() {
 
 
     // Salva il testo del TextView distanza nel file delle preferenze condivise
-    private fun saveText(context: Context, appWidgetId: Int, fieldName: String, text: String) {
+    /** Funzione che, dato l'Id del widget e una chiave, salva il valore corrispondente in una sharedPreference */
+    private fun saveText(context: Context, appWidgetId: Int, fieldNameKey: String, textValue: String) {
         val prefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val editor = prefs.edit()
-        editor.putString("$appWidgetId-$fieldName", text)
+        editor.putString("$appWidgetId-$fieldNameKey", textValue)
         editor.apply()
     }
 
-    // Carica il testo del TextView distanza dal file delle preferenze condivise
-
-    private fun loadText(context: Context, appWidgetId: Int, fieldName: String): String {
+    /** Funzione che, dato l'Id del widget e una chiave, restituisce il valore corrispondente presente in una sharedPreference */
+    private fun loadText(context: Context, appWidgetId: Int, fieldNameKey: String): String {
         val prefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        if (fieldName == "startTime")
+        if (fieldNameKey == "startTime")
         {
-            return prefs.getString("$appWidgetId-$fieldName", "00:00") ?: "00:00"
+            return prefs.getString("$appWidgetId-$fieldNameKey", "00:00") ?: "00:00"
 
         }
-        return prefs.getString("$appWidgetId-$fieldName", "") ?: ""
+        return prefs.getString("$appWidgetId-$fieldNameKey", "") ?: ""
     }
 
     // Salva lo stato del service, utilizzato poi per salvare lo stato dei bottoni al resize del widget
+    /** Funzione che salva lo stato del service in una sharedPreference*/
     private fun saveServiceRunningFlag(context: Context, flag: Boolean) {
         val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
