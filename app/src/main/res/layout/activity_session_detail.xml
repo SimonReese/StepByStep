@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@drawable/background"
     tools:context=".fragments.Config">
 
     <LinearLayout
@@ -20,6 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Riepilogo sessione"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textAlignment="center"
             android:textSize="40sp" />
 
         <LinearLayout
