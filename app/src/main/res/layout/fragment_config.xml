@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".fragments.Config">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,10 +19,13 @@
             android:id="@+id/datiText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="70dp"
             android:text="Riepilogo dati"
             android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="#fff"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/infoCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -233,6 +237,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="Modifica dati"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/lavender"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/infoCard"
