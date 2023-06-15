@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView2"
     android:layout_width="match_parent"
+    android:background="@drawable/background"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -21,6 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAlignment="center"
+                android:textColor="#fff"
+                android:textStyle="bold"
                 android:textSize="100sp" />
         </LinearLayout>
 
@@ -35,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/run_fragment_time_label"
                 android:textAlignment="center"
+                android:textColor="#fff"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -50,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_marginTop="15dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -65,6 +69,8 @@
                 android:text="@string/run_fragment_distance_default_value"
                 android:textAlignment="center"
                 android:textSize="100sp"
+                android:textStyle="bold"
+                android:textColor="#fff"
                 tools:text="1.54" />
         </LinearLayout>
 
@@ -79,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/run_fragment_distance_label"
                 android:textAlignment="center"
+                android:textColor="#fff"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -94,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_marginTop="15dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,6 +123,8 @@
                     android:text="@string/run_fragment_rate_default_value"
                     android:textAlignment="center"
                     android:textSize="80sp"
+                    android:textStyle="bold"
+                    android:textColor="#fff"
                     tools:text="7:42" />
 
                 <TextView
@@ -125,14 +134,15 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/run_fragment_rate_label"
                     android:textAlignment="center"
+                    android:textColor="#fff"
                     android:textSize="20sp" />
             </LinearLayout>
 
             <View
                 android:id="@+id/mezza"
-                android:layout_width="1dp"
+                android:layout_width="5dp"
                 android:layout_height="180dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,6 +157,8 @@
                     android:text="@string/run_fragment_kcal_default_value"
                     android:textAlignment="center"
                     android:textSize="80sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
                     tools:text="123" />
 
                 <TextView
@@ -156,6 +168,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/run_fragment_calories_label"
                     android:textAlignment="center"
+                    android:textColor="#fff"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
@@ -173,7 +186,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:backgroundTint="@color/lavender"
                 android:text="@string/run_fragment_start_button_label" />
 
             <Space
@@ -186,7 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:backgroundTint="@color/lavender"
                 android:text="@string/run_fragment_stop_button_label" />
         </LinearLayout>
 
