@@ -123,11 +123,12 @@ class Setup : Fragment() {
      * Controlla che tutti i campi siano riempiti
      */
     private fun areAllFieldsFilled(view: View): Boolean {
-        val nomeUtente: String = (view.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.text ?: "").toString()
-        val peso: String = (view.findViewById<TextInputLayout>(R.id.peso)?.editText?.text ?: "").toString()
-        val eta: String = (view.findViewById<TextInputLayout>(R.id.eta)?.editText?.text ?: "").toString()
-        val kcalTarget: String = (view.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.text ?: "").toString()
-
+        // Recupero testo (se esiste) dalle views
+        val nomeUtente: String = (view.findViewById<TextInputLayout>(R.id.nome_utente).editText?.text ?: "").toString()
+        val peso: String = (view.findViewById<TextInputLayout>(R.id.peso).editText?.text ?: "").toString()
+        val eta: String = (view.findViewById<TextInputLayout>(R.id.eta).editText?.text ?: "").toString()
+        val kcalTarget: String = (view.findViewById<TextInputLayout>(R.id.kcalTarget).editText?.text ?: "").toString()
+        // Controllo che il testo non sia nullo
         return nomeUtente.isNotEmpty() && peso.isNotEmpty() && eta.isNotEmpty() && kcalTarget.isNotEmpty()
     }
 
@@ -162,7 +163,6 @@ class Setup : Fragment() {
         navController?.navigate(R.id.config)
         navController?.popBackStack(R.id.setup, true)
     }
-
 
 }
 
