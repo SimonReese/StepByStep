@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAlignment="center"
-                android:textColor="#fff"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="100sp" />
         </LinearLayout>
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/run_fragment_time_label"
                 android:textAlignment="center"
-                android:textColor="#fff"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
                 android:textAlignment="center"
                 android:textSize="100sp"
                 android:textStyle="bold"
-                android:textColor="#fff"
+                android:textColor="@color/black"
                 tools:text="1.54" />
         </LinearLayout>
 
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/run_fragment_distance_label"
                 android:textAlignment="center"
-                android:textColor="#fff"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -124,7 +124,7 @@
                     android:textAlignment="center"
                     android:textSize="80sp"
                     android:textStyle="bold"
-                    android:textColor="#fff"
+                    android:textColor="@color/black"
                     tools:text="7:42" />
 
                 <TextView
@@ -134,7 +134,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/run_fragment_rate_label"
                     android:textAlignment="center"
-                    android:textColor="#fff"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -157,7 +157,7 @@
                     android:text="@string/run_fragment_kcal_default_value"
                     android:textAlignment="center"
                     android:textSize="80sp"
-                    android:textColor="#fff"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     tools:text="123" />
 
@@ -168,7 +168,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/run_fragment_calories_label"
                     android:textAlignment="center"
-                    android:textColor="#fff"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
