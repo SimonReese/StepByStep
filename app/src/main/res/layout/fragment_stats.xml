@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background"
     tools:context=".fragments.Stats">
 
     <it.project.appwidget.BarChart
@@ -21,6 +22,7 @@
         android:text="@string/stats_fragment_hint_text"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:textColor="@color/black"
         tools:text="Clicca sugli elementi per i dettagli" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -39,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textColor="@color/black"
         android:textAlignment="center" />
 
     <LinearLayout
