@@ -5,17 +5,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.PermissionChecker
-import it.project.appwidget.widgets.NewAppWidget
+import it.project.appwidget.widgets.RunWidget
 import it.project.appwidget.R
 import it.project.appwidget.WidgetSettingsSharedPrefsHelper
 
 
-class SettingsActivity : AppCompatActivity() {
+class RunWidgetConfigureActivity : AppCompatActivity() {
 
 
     private lateinit var widgetSettingsSharedPrefsHelper: WidgetSettingsSharedPrefsHelper
@@ -47,8 +45,8 @@ class SettingsActivity : AppCompatActivity() {
             widgetSettingsSharedPrefsHelper.setCaloriesChecked(cbCalories.isChecked)
             widgetSettingsSharedPrefsHelper.setSessionDistanceChecked(cbSessionDistance.isChecked)
             //Lancio intent
-            val intent = Intent(this, NewAppWidget::class.java)
-            intent.action = NewAppWidget.ACTION_BTN_SAVE
+            val intent = Intent(this, RunWidget::class.java)
+            intent.action = RunWidget.ACTION_BTN_SAVE
             sendBroadcast(intent)
             setResult(RESULT_OK)
             finish()

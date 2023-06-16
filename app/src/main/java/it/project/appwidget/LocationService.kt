@@ -21,7 +21,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import it.project.appwidget.activities.MainActivity
 import it.project.appwidget.util.LocationParser
-import it.project.appwidget.widgets.NewAppWidget
+import it.project.appwidget.widgets.RunWidget
 
 
 /**
@@ -127,7 +127,7 @@ class LocationService : Service() {
 
             // Copio intent generico e creo intent esplicito
             val explicitIntent = Intent(implicitIntent)
-            explicitIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
+            explicitIntent.component = ComponentName(this@LocationService, RunWidget::class.java)
             // Invio intents
             sendBroadcast(implicitIntent)
             sendBroadcast(explicitIntent)
@@ -259,7 +259,7 @@ class LocationService : Service() {
         val implicitIntent = Intent("stop-service")
         // Copio intent generico e creo intent esplicito
         val explicitWidgetIntent = Intent(implicitIntent)
-        explicitWidgetIntent.component = ComponentName(this@LocationService, NewAppWidget::class.java)
+        explicitWidgetIntent.component = ComponentName(this@LocationService, RunWidget::class.java)
         // Invio intents
         sendBroadcast(implicitIntent)
         sendBroadcast(explicitWidgetIntent)

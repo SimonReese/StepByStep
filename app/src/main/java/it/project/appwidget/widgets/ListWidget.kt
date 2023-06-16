@@ -14,6 +14,10 @@ import it.project.appwidget.ListWidgetService
 import it.project.appwidget.activities.DetailActivity
 
 //TODO: refactor nome in ListWidgetProvider
+/**
+ * Implementazione ListWidget, widget che fornisce una lista contenente tutte le sessioni nell'arco temporale indicato nelle impostazioni dello stesso
+ * App Widget Configuration implemented in [it.project.appwidget.activities.ListWidgetConfigureActivity]
+ */
 class ListWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
