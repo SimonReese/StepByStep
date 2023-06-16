@@ -14,7 +14,7 @@ import java.text.DecimalFormat
 /**
  * Classe che implementa un basilare grafico a barre. Viene utilizzato un [Canvas] per disegnare
  * rettangoli sullo schermo, scalati rispetto ad un certo valore massimo.
- * @property labels Lista di etichette da applicare alla barra orizziontale del grafico.
+ * @property labels Lista di etichette da applicare alla barra orizzontale del grafico.
  * @property values Lista di valori da graficare tramite barre.
  */
 class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
@@ -47,12 +47,13 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         // Ottengo configurazione tema scuro dispositivo
         val nightModeFlags = getContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
-        //Impostazioni oggetto paint
+        // Impostazioni painter per le barre
         barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         barPaint.apply {
             color = Color.CYAN
         }
 
+        // Impostazioni painter per il testo
         textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         textPaint.apply {
             // Colore testo in base a tema dispositivo
@@ -68,43 +69,45 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         }
     }
 
+    /**
+     * Disegno tutte le barre in ordine, scalandole rispetto alla barra più alta (con il valore massimo)
+     * Ogni barra è disegnata utilizzando i riferimenti top, bottom left e right.
+     * Bottom è costante, definito da height - margine inferiore
+     * (nel canvas il sistema di riferimento parte dall'angolo superiore sinistro)
+     * Top parte da bottom e viene spostato in alto fino a (height - margine superiore) con un fattore di scalamento (valore/massimo)
+     * Left e Right sono rispettivamente a sinistra e a destra del centro di un quarto dello spazio a disposizione
+     */
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+        // Margini inferiore e superiore
         val lowerMargin = 50f
         val upperMargin = 100f
 
-        //Numero di barre
+        // Numero di barre
         val numbars = values.size
-        //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
+        // Spazio a disposizione per disegnare ogni barra (comprende la spaziatura)
         val space = width / numbars
-        //Distanza del centro della barra dall'inizio dello spazio
+        // Posizione del punto centrale della barra nel suo spazio relativo
         val relative_center = space / 2
 
         // Bordo inferiore con margine
         val bottom = height - lowerMargin
 
-        println(width)
-        println(height)
+        Log.d("BarCharView", "Disegno in uno spazio di $width x $height")
 
-
-        //Cerco l'elemento più grande
+        // Cerco l'elemento più grande
         val maxValue: Float = values.max().toFloat()
 
-        // 623.0, 723.0, 6159, 5873
-        //$top, $bottom, $right, $left
-        //canvas?.drawRect(0 + 20F, 0 + 20F, width -20F, height -20F, paint)
-
-        //return
-
-        //Per ogni barra
+        // Per ogni barra
         for ((position, value) in values.withIndex()){
-            //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
+            // Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
             val abs_center = relative_center + (position * space)
-            //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
+            // Coordinata del bordo sinistro (un quarto a sinistra del centro)
             val left = abs_center - space/4
-            //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
+            //Coordinata del bordo destro della barra (un quarto a destra del centro)
             val right = abs_center + space/4
 
+            // Calcolo lo scalamento del dato rispetto al massimo
             var scale = 0.0
             if(maxValue != 0f) {
                 //Calcolo il rapporto tra il valore e l'elemento più grande del vettore
@@ -114,13 +117,16 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
             // Per calcolare l'altezza, parto da bottom e sottraggo height*scale
             val top = bottom - (height - upperMargin)*scale
 
-            Log.d("BarChart", "$position: $top, $bottom, $right, $left")
+            Log.d("BarChartView", "Disegno barra $position con coordinate (left, top, right, bottom): $left, $top, $right, $bottom")
+
             //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
             canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
+            // Evito di scrivere il testo se il valore è nullo
             if (value != 0.0) {
                 canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
+            // Applico le etichette
             canvas?.drawText(labels[position], left.toFloat(), bottom + 50, textPaint)
         }
 
