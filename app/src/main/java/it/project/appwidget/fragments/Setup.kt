@@ -61,7 +61,13 @@ class Setup : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_setup, container, false)
+        return inflater.inflate(R.layout.fragment_setup, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Imposto valori nei vari campi
+        populateFields()
 
         // Recupero lo spinner
         val genderSpinner = view.findViewById<Spinner>(R.id.gender_Spinner)
@@ -110,13 +116,6 @@ class Setup : Fragment() {
             // Apri il fragment "config"
             navigateToSetupFragment()
         }
-
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        populateFields()
     }
 
 
