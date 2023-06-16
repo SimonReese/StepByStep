@@ -50,13 +50,6 @@
         <item>boh</item>
     </string-array>
 
-    <declare-styleable name="PieChart">
-        <attr name="showText" format="boolean" />
-        <attr name="labelPosition" format="enum">
-            <enum name="left" value="0" />
-            <enum name="right" value="1" />
-        </attr>
-    </declare-styleable>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="graphWidgetTitle">Grafico</string>
