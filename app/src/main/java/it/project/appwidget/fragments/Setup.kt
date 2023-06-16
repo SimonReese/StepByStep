@@ -67,7 +67,7 @@ class Setup : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Imposto valori nei vari campi
-        populateFields()
+        populateFields(view)
 
         // Recupero lo spinner
         val genderSpinner = view.findViewById<Spinner>(R.id.gender_Spinner)
@@ -93,7 +93,7 @@ class Setup : Fragment() {
 
         btnSave.setOnClickListener {
             // Controllo se tutti i dati sono stati completati
-            if (!areAllFieldsFilled()){
+            if (!areAllFieldsFilled(view)){
                 alert.show()    // Mostro alert all'utente
                 return@setOnClickListener
             }
@@ -122,11 +122,11 @@ class Setup : Fragment() {
     /**
      * Controlla che tutti i campi siano riempiti
      */
-    private fun areAllFieldsFilled(): Boolean {
-        val nomeUtente: String = (view?.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.text ?: "").toString()
-        val peso: String = (view?.findViewById<TextInputLayout>(R.id.peso)?.editText?.text ?: "").toString()
-        val eta: String = (view?.findViewById<TextInputLayout>(R.id.eta)?.editText?.text ?: "").toString()
-        val kcalTarget: String = (view?.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.text ?: "").toString()
+    private fun areAllFieldsFilled(view: View): Boolean {
+        val nomeUtente: String = (view.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.text ?: "").toString()
+        val peso: String = (view.findViewById<TextInputLayout>(R.id.peso)?.editText?.text ?: "").toString()
+        val eta: String = (view.findViewById<TextInputLayout>(R.id.eta)?.editText?.text ?: "").toString()
+        val kcalTarget: String = (view.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.text ?: "").toString()
 
         return nomeUtente.isNotEmpty() && peso.isNotEmpty() && eta.isNotEmpty() && kcalTarget.isNotEmpty()
     }
@@ -134,7 +134,7 @@ class Setup : Fragment() {
     /**
      * Riempi TextInputLayout con i dati precedentemente inseriti
      */
-    private fun populateFields() {
+    private fun populateFields(view: View) {
         val nomeUtente = preferencesHelper.nome
         val peso = preferencesHelper.peso
         val eta = preferencesHelper.eta
@@ -142,11 +142,11 @@ class Setup : Fragment() {
         val positionSelected = preferencesHelper.spinnerPosition
 
 
-        view?.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.setText(nomeUtente)
-        view?.findViewById<TextInputLayout>(R.id.peso)?.editText?.setText(peso)
-        view?.findViewById<TextInputLayout>(R.id.eta)?.editText?.setText(eta)
-        view?.findViewById<Spinner>(R.id.gender_Spinner)?.setSelection(positionSelected)
-        view?.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.setText(kcalTarget.toString())
+        view.findViewById<TextInputLayout>(R.id.nome_utente)?.editText?.setText(nomeUtente)
+        view.findViewById<TextInputLayout>(R.id.peso)?.editText?.setText(peso)
+        view.findViewById<TextInputLayout>(R.id.eta)?.editText?.setText(eta)
+        view.findViewById<Spinner>(R.id.gender_Spinner)?.setSelection(positionSelected)
+        view.findViewById<TextInputLayout>(R.id.kcalTarget)?.editText?.setText(kcalTarget.toString())
     }
 
     /**
