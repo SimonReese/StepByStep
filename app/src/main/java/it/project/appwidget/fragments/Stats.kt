@@ -150,8 +150,8 @@ class Stats : Fragment() {
         lifecycleScope.launch {
             val trackSessionList = Datasource(requireActivity().applicationContext).getSessionList(selectedWeek.first, selectedWeek.second)
             val values = WeekHelper.convertTrackSessionInDistanceArray(trackSessionList)
-            barChart.days = WeekHelper.getDateList(selectedWeek.first, selectedWeek.second)
-            barChart.valueArray = values
+            barChart.labels = WeekHelper.getDateList(selectedWeek.first, selectedWeek.second)
+            barChart.values = values
         }
     }
 

@@ -14,23 +14,14 @@ import java.text.DecimalFormat
 /**
  * Classe che implementa un basilare grafico a barre. Viene utilizzato un [Canvas] per disegnare
  * rettangoli sullo schermo, scalati rispetto ad un certo valore massimo.
- * @property days Lista di etichette da applicare alla barra orizziontale del grafico.
- * @property valueArray Lista di valori da graficare tramite barre.
+ * @property labels Lista di etichette da applicare alla barra orizziontale del grafico.
+ * @property values Lista di valori da graficare tramite barre.
  */
 class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
-    // TODO: A che servono? Rimuovere dopo aver compreso dall'esempio
-    private var mShowText: Boolean
-
-    private var mTextPos: Int
-
-    /**
-     * Array di etichette da applicare lungo l'asse x.
-     */
-    var days: ArrayList<String> = arrayListOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
+    /** Array di etichette da applicare lungo l'asse x */
+    var labels: ArrayList<String> = arrayListOf("LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM")
         set(newArray) {
-            if (newArray.size != this.valueArray.size)
-                return
             field = newArray
             invalidate()
             requestLayout()
@@ -39,37 +30,22 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
     /**
      * Array di valori da rappresentare tramite barre.
      */
-    var valueArray: ArrayList<Double> = arrayListOf(10.0, 20.0, 70.0, 30.0, 60.0, 40.0, 50.0)
+    var values: ArrayList<Double> = arrayListOf(10.0, 20.0, 70.0, 30.0, 60.0, 40.0, 50.0)
         set(newArray) {
-            if (newArray.size != this.valueArray.size)
-                return
             field = newArray
             invalidate()
             requestLayout()
         }
 
     // Oggetti paint per definire le proprietà del disegno
+    /** Configurazione [Paint] per le barre verticali del grafico */
     private val barPaint: Paint
+    /** Configurazione [Paint] per il testo del grafico */
     private val textPaint: Paint
 
     init {
-        //Leggo gli attributi definiti per la classe dal file strings.xml
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.PieChart, 0, 0)
-
-
-        val nightModeFlags = getContext().resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK
-
-        typedArray.apply {
-            try {
-                mShowText = this.getBoolean(R.styleable.PieChart_showText, false)
-                mTextPos = this.getInteger(R.styleable.PieChart_labelPosition, 0)
-            }
-            finally {
-                recycle()
-            }
-        }
-
+        // Ottengo configurazione tema scuro dispositivo
+        val nightModeFlags = getContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
         //Impostazioni oggetto paint
         barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -79,12 +55,15 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
         textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         textPaint.apply {
+            // Colore testo in base a tema dispositivo
             when (nightModeFlags) {
                 Configuration.UI_MODE_NIGHT_YES -> color = Color.WHITE
                 Configuration.UI_MODE_NIGHT_NO -> color =Color.BLACK
                 Configuration.UI_MODE_NIGHT_UNDEFINED -> color = Color.BLACK
             }
+            // Allineamento testo
             textAlign = Paint.Align.LEFT
+            // Dimensione testo
             textSize = 35f
         }
     }
@@ -95,7 +74,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         val upperMargin = 100f
 
         //Numero di barre
-        val numbars = valueArray.size
+        val numbars = values.size
         //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
         val space = width / numbars
         //Distanza del centro della barra dall'inizio dello spazio
@@ -109,7 +88,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
 
         //Cerco l'elemento più grande
-        val maxValue: Float = valueArray.max().toFloat()
+        val maxValue: Float = values.max().toFloat()
 
         // 623.0, 723.0, 6159, 5873
         //$top, $bottom, $right, $left
@@ -118,7 +97,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         //return
 
         //Per ogni barra
-        for ((position, value) in valueArray.withIndex()){
+        for ((position, value) in values.withIndex()){
             //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
             val abs_center = relative_center + (position * space)
             //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
@@ -142,7 +121,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
                 canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
-            canvas?.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
+            canvas?.drawText(labels[position], left.toFloat(), bottom + 50, textPaint)
         }
 
     }
@@ -151,7 +130,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
      * Metodo che restituisce l'immagine del grafico a barre.
      * @return Bitmap rappresentante il grafico a barre.
      */
-    fun getChartImage(width: Int = 900, height: Int = 850, color: Int = Color.CYAN, label: String = "km"): Bitmap {
+    fun getChartImage(width: Int = 900, height: Int = 850, color: Int = Color.CYAN, dataLabel: String = "km"): Bitmap {
         // Aggiorno painter della classe
         barPaint.color = color
         // Creo una bitmap vuota
@@ -159,7 +138,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         // Creo un canvas sulla bitmap
         val canvas = Canvas(bitmap)
         // Disegno la view sul canvas
-        onDrawBit(canvas, width, height, label)
+        onDrawBit(canvas, width, height, dataLabel)
         // Restituisco la bitmap
         return bitmap
     }
@@ -169,7 +148,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         val lowerMargin = 50f
         val upperMargin = -700f
         //Numero di barre
-        val numbars = valueArray.size
+        val numbars = values.size
         //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
         val space = w / numbars
         //Distanza del centro della barra dall'inizio dello spazio
@@ -182,7 +161,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         val singleDecimal = DecimalFormat("#.#$label")
 
         //Cerco l'elemento più grande
-        val maxValue: Float = valueArray.max().toFloat()
+        val maxValue: Float = values.max().toFloat()
 
         // 623.0, 723.0, 6159, 5873
         //$top, $bottom, $right, $left
@@ -191,7 +170,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         //return
 
         //Per ogni barra
-        for ((position, value) in valueArray.withIndex()){
+        for ((position, value) in values.withIndex()){
             //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
             val abs_center = relative_center + (position * space)
             //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
@@ -214,7 +193,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
                 canvas.drawText(singleDecimal.format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
-            canvas.drawText(days[position], left.toFloat(), bottom + 50, textPaint)
+            canvas.drawText(labels[position], left.toFloat(), bottom + 50, textPaint)
         }
 
     }

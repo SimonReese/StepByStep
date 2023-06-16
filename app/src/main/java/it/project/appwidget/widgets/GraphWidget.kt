@@ -66,11 +66,11 @@ class GraphWidget : AppWidgetProvider() {
 
                 // Costruisco grafico
                 val chart = BarChart(context, null)
-                chart.days = labels
-                chart.valueArray = values
+                chart.labels = labels
+                chart.values = values
                 val image: Bitmap = when(settings){
-                    "Calorie" -> chart.getChartImage(color = Color.RED, label = "kcal")
-                    "Durata" -> chart.getChartImage(color = Color.GREEN, label = "min")
+                    "Calorie" -> chart.getChartImage(color = Color.RED, dataLabel = "kcal")
+                    "Durata" -> chart.getChartImage(color = Color.GREEN, dataLabel = "min")
                     else -> chart.getChartImage()
                 }
 
