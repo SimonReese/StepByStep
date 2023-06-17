@@ -37,6 +37,10 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             // Aggiorno somma velocità
             avgSpeed += location.speed
         }
+
+        // Controllo che la lista location non sia vuota
+        if (locationList.isNullOrEmpty())
+            return Result.failure()
         avgSpeed = avgSpeed / locationList.size
 
         // Calcolo la durata totale della sessione
