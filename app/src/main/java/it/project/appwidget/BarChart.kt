@@ -88,7 +88,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         // Spazio a disposizione per disegnare ogni barra (comprende la spaziatura)
         val space = width / numbars
         // Posizione del punto centrale della barra nel suo spazio relativo
-        val relative_center = space / 2
+        val relativeCenter = space / 2
 
         // Bordo inferiore con margine
         val bottom = height - lowerMargin
@@ -101,11 +101,11 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         // Per ogni barra
         for ((position, value) in values.withIndex()){
             // Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
-            val abs_center = relative_center + (position * space)
+            val absCenter = relativeCenter + (position * space)
             // Coordinata del bordo sinistro (un quarto a sinistra del centro)
-            val left = abs_center - space/4
+            val left = absCenter - space/4
             //Coordinata del bordo destro della barra (un quarto a destra del centro)
-            val right = abs_center + space/4
+            val right = absCenter + space/4
 
             // Calcolo lo scalamento del dato rispetto al massimo
             var scale = 0.0
@@ -158,7 +158,7 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         //Spazio a disposizione per disegnare ogni barra (comprende lo spazio vuoto attorno a sè)
         val space = w / numbars
         //Distanza del centro della barra dall'inizio dello spazio
-        val relative_center = space / 2
+        val relativeCenter = space / 2
 
         // Bordo inferiore con margine
         val bottom = h - lowerMargin
@@ -169,20 +169,14 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
         //Cerco l'elemento più grande
         val maxValue: Float = values.max().toFloat()
 
-        // 623.0, 723.0, 6159, 5873
-        //$top, $bottom, $right, $left
-        //canvas?.drawRect(0 + 20F, 0 + 20F, width -20F, height -20F, paint)
-
-        //return
-
         //Per ogni barra
         for ((position, value) in values.withIndex()){
             //Calcolo la posizione assoluta del i-esimo centro della barra rispetto alla width della view
-            val abs_center = relative_center + (position * space)
+            val absCenter = relativeCenter + (position * space)
             //Coordinata del bordo sinistro (metà della distanza tra centro e inizio spazio)
-            val left = abs_center - space/4
+            val left = absCenter - space/4
             //Coordinata del bordo destro della barra (a metà distanza tra centro e fine spazio)
-            val right = abs_center + space/4
+            val right = absCenter + space/4
 
             var scale = 0.0
             if(maxValue != 0f) {
