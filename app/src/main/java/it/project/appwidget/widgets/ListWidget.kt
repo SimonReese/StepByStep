@@ -62,7 +62,7 @@ class ListWidget : AppWidgetProvider() {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, ListWidget::class.java))
             // Notifico aggiornamento dati di tutti i widget di questo provider
-            onUpdate(context, appWidgetManager, appWidgetIds)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listview)
         }
     }
 
