@@ -39,7 +39,7 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
         }
 
         // Controllo che la lista location non sia vuota
-        if (locationList.isNullOrEmpty())
+        if (locationList.isEmpty())
             return Result.failure()
         avgSpeed = avgSpeed / locationList.size
 
