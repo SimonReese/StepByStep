@@ -119,10 +119,11 @@ class BarChart(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
             Log.d("BarChartView", "Disegno barra $position con coordinate (left, top, right, bottom): $left, $top, $right, $bottom")
 
-            //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
-            canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
-            // Evito di scrivere il testo se il valore è nullo
-            if (value != 0.0) {
+
+            // Evito di graficare il testo se il valore è inferiore a 100mt
+            if (value > 0.1) {
+                //Disegno rettangolo della barra tramite bordi sinistro, superiore, destro, inferiore
+                canvas?.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom, barPaint)
                 canvas?.drawText(DecimalFormat("#.#km").format(value), left.toFloat(), top.toFloat(), textPaint)
 
             }
