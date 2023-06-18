@@ -20,7 +20,7 @@ import java.text.DecimalFormat
 /**
  * Implementazione RunWidget, widget personalizzabile che fornisce informazioni sulla sessione di
  * camminata/corsa in tempo reale e permette all'utente di avviare e fermare la sessione direttamente dal widget stesso
- * App Widget Configuration implemented in [it.project.appwidget.activities.RunWidgetConfigureActivity]
+ * App Widget Configuration implementata in [RunWidgetConfigureActivity]
  */
 class RunWidget : AppWidgetProvider() {
 
@@ -342,6 +342,7 @@ class RunWidget : AppWidgetProvider() {
 
 
         //Determina view in base a dimensione
+        Log.d("RunWidget", "Ridimensione con valori $minWidth x $minHeight")
         val views = when {
             minWidth <= 255 && minHeight < 188 -> {RemoteViews(context.packageName,
                 R.layout.small_view_layout
