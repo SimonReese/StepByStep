@@ -26,7 +26,6 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
             val location = LocationParser.toLocation(stringLocation)
             locationList.add(location)
         }
-        // TODO: usare la classe utility SessionDataProcessor apposita
         // Calcolo media delle velocità e cerco velocità più alta
         var maxSpeed = 0f
         var avgSpeed = 0f
@@ -46,7 +45,6 @@ class TrackSessionWorker(context: Context, workerParams: WorkerParameters) : Wor
         // Calcolo la durata totale della sessione
         val duration = locationList.last().time - locationList.first().time
 
-        // TODO: Ricalcolare o leggere dal servizio? Da decidere, nel caso di lettura dal servizio servirà un dato extra
         var distance = 0f
         var index = 0
         while (index < locationList.size -1){

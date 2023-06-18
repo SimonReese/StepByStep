@@ -56,32 +56,55 @@ class Home : Fragment() {
     private var kcalTarget: Int = 0
     /** Nome utente */
     private var username: String = "Utente"
+    /** Chilocalorie della sessione in corso */
+    var sessionKcal = 0f
+    /** Distanza della sessione in corso */
+    var sessionDistance = 0.0
+    /** Passi della sessione in corso */
+    var sessionSteps = 0
 
 
     /** [BroadcastReceiver] che riceve aggiornamenti alla fine delle registrazioni delle sessioni */
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
     // Classe per ricezione broadcast messages TODO: REIMPLEMENTARE!
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            /*
-            val preferencesHelper = UserPreferencesHelper(requireActivity())
+        override fun onReceive(context: Context?, intent: Intent) {
 
-            Log.d("Home.LocationBroadcastReceiver", "Chiamato onReceive")
-            val distloc = intent?.getFloatExtra("distance", 0f)
-            val kcalloc = intent?.getFloatExtra("calories", 0f)
+            Log.d("Run.LocationBroadcastReceiver", "Chiamato onReceive con intent " + intent.action)
+
+            // Se la sessione è in corso somma ai valori giornalieri quelli della sessione attuale
+            if (intent.action == "location-update") {
+
+                distanceTextView = view!!.findViewById<TextView>(R.id.counterDistance)
+                passiTextView = view!!.findViewById<TextView>(R.id.counterPassi)
+                caloriesTextView = view!!.findViewById<TextView>(R.id.counterCalories)
+                progressBar = view!!.findViewById<ProgressBar>(R.id.progress_bar)
+
+                val distloc = intent.getFloatExtra("distance", 0f)
+                val kcalloc = intent.getFloatExtra("calories", 0f)
 
 
-            kcal += (kcalloc!!)
-            distance = distloc!!
-            steps = (distloc!! *3/2).roundToInt()
-            distanceTextView.text = (DecimalFormat("#.#").format(distance))
-            caloriesTextView.text = DecimalFormat("#.#").format(kcalloc/1000).toString() + "Kcal"
+                if (!distloc.toDouble().equals(sessionDistance))
+                {
+                    sessionDistance = distloc.toDouble()
+                    sessionSteps = (distloc*3/2).roundToInt()
 
+                    val totalDistance = distloc + distance
+                    val totalSessionSteps = (distloc*3/2).roundToInt() + steps
+                    distanceTextView.text = totalDistance.toInt().toString()
+                    passiTextView.text = totalSessionSteps.toString()
+                }
 
-            //TODO: progress = SommaCalorieOdierne + CalorieSessioneCorrente
-            //progressBar.progress = progress
-            println(preferencesHelper.nome)
-            */
+                if (!kcalloc.equals(sessionKcal))
+                {
+                    sessionKcal = kcalloc
+                    val totalKcal = kcalloc + kcal
+                    caloriesTextView.text = totalKcal.toString()
+                    progressBar.max = 100
+                    progressBar.progress = totalKcal.toInt()
+                }
+
+            }
         }
     }
 
@@ -106,6 +129,10 @@ class Home : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("HomeFragment", "Chiamato onViewCreated")
 
+        sessionKcal = 0f
+        sessionDistance = 0.0
+        sessionSteps = 0
+
         // Ottengo riferimenti alle Views
         distanceTextView = view.findViewById<TextView>(R.id.counterDistance)
         passiTextView = view.findViewById<TextView>(R.id.counterPassi)
@@ -116,9 +143,6 @@ class Home : Fragment() {
 
 
         // Imposto valori default alle Views
-        distanceTextView.text = DecimalFormat("#.##m").format(distance/1000)
-        passiTextView.text = steps.toString()
-        caloriesTextView.text = DecimalFormat("#.#Kcal").format(kcal/1000).toString()
         progressBar.max = 100
         progressBar.progress = kcal
         usernameTextView.text = username
