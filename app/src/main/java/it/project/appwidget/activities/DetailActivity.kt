@@ -44,7 +44,6 @@ class DetailActivity : AppCompatActivity() {
     /** [TextView] relativa alle calorie della [TrackSession] */
     private lateinit var tv_calorieData: TextView
 
-    // TODO: activity sparisce alla rotazione - ritorno al fragment precedente
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(mTAG, "Chiamato onCreate()")

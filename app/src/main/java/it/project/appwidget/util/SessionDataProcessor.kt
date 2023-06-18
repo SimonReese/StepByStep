@@ -2,7 +2,6 @@ package it.project.appwidget.util
 
 // Classe per elaborare i dati della sessione
 
-// TODO: Spostare l'analisi in workermanager
 class SessionDataProcessor {
     companion object {
         fun calculateActivityType(distance: Float, duration: Long): String {
@@ -17,15 +16,6 @@ class SessionDataProcessor {
             // Calcola la velocità media in base alla distanza e alla durata
             return if (duration > 0) {
                 (distance / duration)*1000.toDouble()
-            } else {
-                0.0
-            }
-        }
-
-        fun calculateMaxSpeed(speed: Float): Double {
-            // Calcola la velocità massima confrontando la velocità massima attuale con la velocità corrente
-            return if (speed > 0) {
-                return speed.toDouble()
             } else {
                 0.0
             }

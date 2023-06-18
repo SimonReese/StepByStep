@@ -217,7 +217,7 @@ class LocationService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, PendingIntent.FLAG_IMMUTABLE)
         // Impostazioni notifica
         notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID).apply {
-            setSmallIcon(R.drawable.runner) // TODO: controllare icona
+            setSmallIcon(R.drawable.runner)
             setContentTitle("Servizio di localizzazione")   // Titolo notifica
             setContentText("Servizio di localizzazione in esecuzione")  // Descrizione notifica
             priority = NotificationCompat.PRIORITY_DEFAULT    // Priorità notifica standard
