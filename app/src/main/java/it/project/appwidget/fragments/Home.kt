@@ -98,7 +98,7 @@ class Home : Fragment() {
                 {
                     sessionKcal = kcalloc
                     val totalKcal = kcalloc + kcal
-                    caloriesTextView.text = totalKcal.toString()
+                    caloriesTextView.text = totalKcal.toInt().toString()
                     progressBar.max = 100
                     progressBar.progress = totalKcal.toInt()
                 }
@@ -149,11 +149,6 @@ class Home : Fragment() {
         // Registro receiver
         requireActivity().registerReceiver(locationBroadcastReceiver, IntentFilter("location-update"))
 
-        // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
-        if (savedInstanceState != null) {
-            restoreState(savedInstanceState)
-        }
-
         // Avvio coroutine impostazione valori
         lifecycleScope.launch {
             // Leggo da sharedpreferences
@@ -190,6 +185,11 @@ class Home : Fragment() {
             updateProgressBar(kcalTarget)
             usernameTextView.text = username
         }
+
+        // Recupero stato del fragment, ma solo se onSaveInstanceState non è null
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState)
+        }
     }
 
     override fun onResume() {
@@ -210,18 +210,27 @@ class Home : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("HomeFragment", "Chiamato onSaveInstanceState")
-        super.onSaveInstanceState(outState)
-    }
 
-    override fun onDestroy() {
-        Log.d("HomeFragment", "Chiamato onDestroy")
-        super.onDestroy()
+        // Salvo lo stato di tutte le Views
+        outState.putCharSequence("distanceTextView_text", distanceTextView.text)
+        outState.putCharSequence("passiTextView_text", passiTextView.text)
+        outState.putCharSequence("kcalTextView_text", caloriesTextView.text)
+
+        super.onSaveInstanceState(outState)
     }
 
     // Recupero stato del fragment
     private fun restoreState(inState: Bundle) {
         Log.d("HomeFragment", "Chiamato restoreState")
-        // TODO: Implementare?
+        // Ripristino stato delle textviews
+        distanceTextView.text = inState.getCharSequence("distanceTextView_text")
+        passiTextView.text = inState.getCharSequence("passiTextView_text")
+        caloriesTextView.text = inState.getCharSequence("kcalTextView_text")
+    }
+
+    override fun onDestroy() {
+        Log.d("HomeFragment", "Chiamato onDestroy")
+        super.onDestroy()
     }
 
     /**
