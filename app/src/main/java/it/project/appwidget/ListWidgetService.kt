@@ -12,8 +12,13 @@ import it.project.appwidget.database.TrackSession
 import it.project.appwidget.util.WeekHelper
 import java.text.DecimalFormat
 
-// La classe ListWidgetService è responsabile di fornire una fabbrica di visualizzatori per il widget
-
+/**
+ * La classe [ListWidgetService] è responsabile di fornire un di adapter per il widget.
+ * Si noti che [RemoteViewsService] mantiene una [HashMap] tra [Intent] e adapter.
+ * Affinchè vengano effettivamente creati adapter differenti per widget differenti, è necessario creare
+ * [Intent] differenti, ad esempio impostando il parametro [Intent.setData] in modo univoco per ciascun widget.
+ * (vedi implementazione Android: [link](https://github.com/aosp-mirror/platform_frameworks_base/blob/540962a60ac38757123a8988c4d441848c7dbf93/core/java/android/widget/RemoteViewsService.java#L240C1-L249))
+ */
 class ListWidgetService : RemoteViewsService() {
 
     override fun onCreate() {
@@ -21,14 +26,15 @@ class ListWidgetService : RemoteViewsService() {
         Log.d("ListWidgetService", "Chiamato onCreate()")
     }
 
-    // Metodo che viene chiamato quando viene richiesta la fabbrica di views per il widget.
+    // Metodo che viene chiamato quando viene richiesto l'adapter per il widget,
+    // ma solo se l'intent è diverso da quelli salvati nella hash map del servizio
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         return ListWidgetFactory(applicationContext, intent)
     }
 
 
 
-    /* Classe interna ListWidgetFactory implementa l'interfaccia RemoteViewsService.RemoteViewsFactory
+    /** Classe interna ListWidgetFactory implementa l'interfaccia [RemoteViewsService.RemoteViewsFactory]
         e gestisce il caricamento dei dati per la ListView del widget. */
     class ListWidgetFactory(private val context: Context, private val intent: Intent) : RemoteViewsFactory {
 
@@ -50,6 +56,7 @@ class ListWidgetService : RemoteViewsService() {
             trackSessionList = arrayListOf()
             // Recupero widgetID dall' intent
             appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+            Log.d("ListWidgetFatory", "Creato nuovo ListWidgetFactory per Widget $appWidgetId")
         }
 
         /* Una volta che ListWidgetFactory viene creato, o quando viene aggiornato, viene chiamato
@@ -102,9 +109,9 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         // Ottieni la view per un determinato elemento della ListView del widget
-        //Serve per riempire con gli elementi della trackSession corrispondente
+        // Serve per riempire con gli elementi della trackSession corrispondente
         override fun getViewAt(position: Int): RemoteViews {
-            Log.d("ListWidgetFactory", "Chiamato getViewAt()")
+            //Log.d("ListWidgetFactory", "Chiamato getViewAt()")
 
             val remoteViews = RemoteViews(context.packageName, R.layout.list_item_widget)
             val trackSession: TrackSession = trackSessionList[position]
@@ -130,10 +137,10 @@ class ListWidgetService : RemoteViewsService() {
             remoteViews.setTextViewText(R.id.item_duration, duration_text)
 
 
-            //RIEMPIO I TEMPLATE CON I PARAMETRI CHE MI SERVONO
-            //clickIntent + fillIntent = in una riga
-            //Imposta intent sul singolo item della lista
-            //(da clickIntent prende component e da fillIntent prende il parametro specifico)
+            // RIEMPIO I TEMPLATE CON I PARAMETRI CHE MI SERVONO
+            // clickIntent + fillIntent = in una riga
+            // Imposta intent sul singolo item della lista
+            // (da clickIntent prende component e da fillIntent prende il parametro specifico)
             val fillInIntent = Intent()
             // Inserisco Id sessione nell'intent
             fillInIntent.putExtra("session:id", trackSession.id)
@@ -148,15 +155,17 @@ class ListWidgetService : RemoteViewsService() {
             // Ottengo la larghezza minima del widget e imposto visibilità elementi
             val options: Bundle = AppWidgetManager.getInstance(context).getAppWidgetOptions(appWidgetId)
             val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-
+            Log.d("ListWidgetFactory", "Chiamato getViewAt() di id $appWidgetId, posizione $position, largezza $minWidth")
             // Nascondo elementi che potrebbero non starci
             /**
              * Schema di dimensionamento
-             * Widget piccolo [minWidth 0 - 200] -> mostro solo la data
-             * Widget medio [minWidth 200 - 250] -> mostro data e distanza
+             * Widget piccolo [minWidth 0 - 150] -> mostro solo la data
+             * Widget medio [minWidth 150 - 200] -> mostro data e ora
+             * Widget medio-grande [minWidth 200-250] -> mostro data e distanza
              * Widget grande [minWidth 250-300] -> mostro data, distanza e durata
+             * Widget più grande [minWidth 250-300] -> mostro data, ora, distanza e durata
              */
-            Log.d("ListWidgetFactory", "Dimensione è $minWidth")
+            //Log.d("ListWidgetFactory", "Dimensione è $minWidth")
             when (minWidth) {
                 in 0..150 -> {
                     remoteViews.setViewVisibility(R.id.item_time, View.GONE)
