@@ -19,8 +19,6 @@ Altrimenti, viene utilizzato Room.databaseBuilder per creare l'istanza del datab
 Infine, l'istanza viene restituita.
  */
 
-//TODO: Verificare che Singleton funzioni correttamente
-
 
 @Database(entities = [TrackSession::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

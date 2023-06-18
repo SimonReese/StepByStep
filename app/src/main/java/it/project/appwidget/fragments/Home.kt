@@ -66,7 +66,6 @@ class Home : Fragment() {
 
     /** [BroadcastReceiver] che riceve aggiornamenti alla fine delle registrazioni delle sessioni */
     private lateinit var locationBroadcastReceiver: LocationBroadcastReceiver
-    // Classe per ricezione broadcast messages TODO: REIMPLEMENTARE!
     private inner class LocationBroadcastReceiver(): BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
 
