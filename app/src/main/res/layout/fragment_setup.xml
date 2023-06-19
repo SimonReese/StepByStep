@@ -78,6 +78,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLength="15"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins_semibold"/>
 
@@ -110,6 +111,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
                             android:layout_weight="1"
+                            android:maxLength="9"
                             android:fontFamily="@font/poppins_semibold"/>
 
 
@@ -140,6 +142,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
+                            android:maxLength="3"
                             android:layout_weight="1"
                             android:fontFamily="@font/poppins_semibold"/>
 
@@ -191,6 +194,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:inputType="numberDecimal"
+                            android:maxLength="9"
                             android:fontFamily="@font/poppins_semibold"/>
 
 
