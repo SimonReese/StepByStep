@@ -8,4 +8,4 @@ E' possibile utilizzare sia le Activity dell'applicazione che i tre Widget imple
 - ListViewWidget per visualizzare le sessioni registrate nel corso del giorno/settimana/mese corrente.
 
 Per funzionare, l'app richiede accesso alla posizione e alle notifiche.
-E' richiesta una versione Android pari o speriore a Android 12 (S) (API LEvel 31)
+E' richiesta una versione Android pari o speriore a Android 12 (S) (API Level 31)
