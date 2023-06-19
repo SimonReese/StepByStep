@@ -6,6 +6,7 @@
     android:minWidth="110dp"
     android:minHeight="110dp"
     android:previewLayout="@layout/long_view_layout"
+    android:previewImage="@drawable/run_preview_image"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="2"
     android:targetCellHeight="2"

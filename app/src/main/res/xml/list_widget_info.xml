@@ -5,7 +5,7 @@
     android:initialLayout="@layout/list_widget"
     android:minWidth="110dp"
     android:minHeight="110dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/list_preview_image"
     android:previewLayout="@layout/widget_preview"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="3"
