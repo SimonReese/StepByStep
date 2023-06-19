@@ -111,10 +111,6 @@ class Home : Fragment() {
         super.onCreate(savedInstanceState)
         // Creo BroadcastReceiver
         locationBroadcastReceiver = LocationBroadcastReceiver()
-        // Leggo valori stato
-        if (savedInstanceState == null){
-            // TODO: salvare stato?
-        }
         Log.d("HomeFragment", "Chiamato onCreate")
     }
 
@@ -194,7 +190,6 @@ class Home : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // TODO: Al resume aggiornare lo stato
         // Leggo da sharedpreferences
         val userPreferencesHelper = UserPreferencesHelper(requireActivity())
         kcalTarget = userPreferencesHelper.kcalTarget
@@ -242,7 +237,7 @@ class Home : Fragment() {
         progressBar.max = 100
         val progress = if (kcalTarget == 0) 100.0 else kcal.toDouble() / kcalTarget.toDouble() * 100
         progressBar.progress = progress.roundToInt()
-        percentTextView.text = "${progress.roundToInt()}%" //TODO: Decidere come sistemare questo warning
+        percentTextView.text = "${progress.roundToInt()}%"
         Log.d("HomeFragment", "Nuova percentuale = " + kcal + "/" + kcalTarget + "*100 = " + progressBar.progress + "%")
     }
 }

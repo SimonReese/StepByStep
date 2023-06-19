@@ -231,7 +231,7 @@ class LocationService : Service() {
             || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED
             || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
             Log.d("LocationService", "Attenzione. Non sono stati concessi tutti i permessi.")
-            stopSelf() // TODO: testare
+            stopSelf()
             return START_NOT_STICKY
         }
 

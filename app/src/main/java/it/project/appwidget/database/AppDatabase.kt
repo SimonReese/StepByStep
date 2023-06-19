@@ -34,7 +34,6 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(context: Context): AppDatabase {
             Log.d("AppDatabase", "Tentativo accesso istanza database tramite getInstance().")
             return INSTANCE ?: synchronized(this) {
-                // TODO: Perchè permettere operazioni dal main thread?? Le query dovrebbero essere asincrone.
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "app_database").allowMainThreadQueries().build()
                 INSTANCE = instance
                 Log.d("AppDatabase", "Creato nuovo oggetto database $instance")

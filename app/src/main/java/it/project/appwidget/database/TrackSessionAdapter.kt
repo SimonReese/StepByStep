@@ -9,18 +9,9 @@ import it.project.appwidget.R
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
-// TODO: Ri-organizzare layout della lista
 class TrackSessionAdapter(private val trackSessionList: ArrayList<TrackSession>, private val onClickListener: (TrackSession) -> Unit) :
     RecyclerView.Adapter<TrackSessionAdapter.TrackSessionViewHolder>() {
 
-    // TODO: Impostare listener tramite parametro su costruttore
-//    private val onClickListener = View.OnClickListener { v ->
-//        //Passa id alla nuova activity
-//        val sessionId = v.findViewById<TextView>(R.id.trackSessionIdTextView).text
-//        val intent = Intent(v.context, DetailActivity::class.java)
-//        intent.putExtra(DetailActivity.ARG_SESSION_ID, sessionId)
-//        v.context.startActivity(intent)
-//    }
 
     // Describes an item view and its place within the RecyclerView
     class TrackSessionViewHolder(itemView: View, val onClickListener: (TrackSession) -> Unit) : RecyclerView.ViewHolder(itemView) {
