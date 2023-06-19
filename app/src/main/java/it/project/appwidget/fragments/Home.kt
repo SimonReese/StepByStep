@@ -101,6 +101,7 @@ class Home : Fragment() {
                     caloriesTextView.text = totalKcal.toInt().toString()
                     progressBar.max = 100
                     progressBar.progress = totalKcal.toInt()
+                    updateProgressBar(kcalTarget, totalKcal.toInt())
                 }
 
             }
@@ -178,7 +179,7 @@ class Home : Fragment() {
             distanceTextView.text = distance.toInt().toString()
             passiTextView.text = steps.toString()
             caloriesTextView.text = kcal.toString()
-            updateProgressBar(kcalTarget)
+            updateProgressBar(kcalTarget, kcal)
             usernameTextView.text = username
         }
 
@@ -193,7 +194,7 @@ class Home : Fragment() {
         // Leggo da sharedpreferences
         val userPreferencesHelper = UserPreferencesHelper(requireActivity())
         kcalTarget = userPreferencesHelper.kcalTarget
-        updateProgressBar(kcalTarget)
+        updateProgressBar(kcalTarget, kcal)
     }
 
     override fun onDestroyView() {
@@ -232,7 +233,7 @@ class Home : Fragment() {
      * Questo metodo aggiorna il progresso della [progressBar] e la percentuale [percentTextView]
      * inserita al suo interno in base al rapporto sul nuovo obiettivo calorico [kcalTarget]
      */
-    private fun updateProgressBar(newKcalTarget: Int) {
+    private fun updateProgressBar(newKcalTarget: Int, kcal: Int) {
         kcalTarget = newKcalTarget
         progressBar.max = 100
         val progress = if (kcalTarget == 0) 100.0 else kcal.toDouble() / kcalTarget.toDouble() * 100
